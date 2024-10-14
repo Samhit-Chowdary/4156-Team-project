@@ -1,6 +1,7 @@
 package com.nullterminators.project.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -10,7 +11,6 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import io.micrometer.common.lang.NonNull;
 
 /**
  * Database fields for an employee's profile
@@ -26,43 +26,43 @@ public class EmployeeProfile implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
 
-    @NonNull
+    @NotNull
     @Size(min = 1, max = 255)
     private String name;
 
-    @NonNull
+    @NotNull
     @Size(min = 10, max = 17)
     @Column(name = "Phone_number")
     private String phoneNumber;
 
-    @NonNull
+    @NotNull
     @Size(min = 1, max = 255)
     private String gender;
 
-    @NonNull
+    @NotNull
     @Min(18)
     private Integer age;
 
-    @NonNull
+    @NotNull
     @Column(name = "Start_Date")
     private LocalDate startDate;
 
-    @NonNull
+    @NotNull
     @Size(min = 1, max = 255)
     private String designation;
 
-    @NonNull
+    @NotNull
     @Email
     @Size(min = 5, max = 255)
     @Column(name = "Email_Id")
     private String email;
 
-    @NonNull
+    @NotNull
     @Size(min = 10, max = 17)
     @Column(name = "Emergency_Contact_Number")
     private String emergencyContactNumber;
 
-    @NonNull
+    @NotNull
     @Min(0)
     @Column(name = "Base_Salary")
     private Integer baseSalary;
