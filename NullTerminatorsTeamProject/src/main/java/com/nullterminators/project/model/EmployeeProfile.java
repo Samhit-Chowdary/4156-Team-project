@@ -1,6 +1,9 @@
 package com.nullterminators.project.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 
@@ -26,6 +29,7 @@ public class EmployeeProfile implements Serializable {
     private String name;
 
     @NonNull
+    @Size(max = 17, message = "A phone number can have at max of 17 characters")
     private String phoneNumber;
 
     @NonNull
@@ -35,12 +39,14 @@ public class EmployeeProfile implements Serializable {
     private String address;
 
     @NonNull
+    @Min(18)
     private Integer age;
 
     @NonNull
     private LocalDate startDate;
 
     @NonNull
+    @Email
     private String email;
 
     @NonNull
@@ -50,6 +56,7 @@ public class EmployeeProfile implements Serializable {
     private String emergencyContactRelation;
 
     @NonNull
+    @Size(max = 17, message = "A phone number can have at max of 17 characters")
     private String emergencyContactNumber;
     
 }
