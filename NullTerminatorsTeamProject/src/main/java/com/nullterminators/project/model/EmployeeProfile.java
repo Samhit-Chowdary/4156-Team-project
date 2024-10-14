@@ -32,7 +32,6 @@ public class EmployeeProfile implements Serializable {
 
     @NotNull
     @Size(min = 10, max = 17)
-    @Column(name = "Phone_number")
     private String phoneNumber;
 
     @NotNull
@@ -44,7 +43,6 @@ public class EmployeeProfile implements Serializable {
     private Integer age;
 
     @NotNull
-    @Column(name = "Start_Date")
     private LocalDate startDate;
 
     @NotNull
@@ -59,12 +57,10 @@ public class EmployeeProfile implements Serializable {
 
     @NotNull
     @Size(min = 10, max = 17)
-    @Column(name = "Emergency_Contact_Number")
     private String emergencyContactNumber;
 
     @NotNull
     @Min(0)
-    @Column(name = "Base_Salary")
     private Integer baseSalary;
     
 }
