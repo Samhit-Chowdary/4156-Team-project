@@ -2,13 +2,12 @@ package com.nullterminators.project.service;
 
 import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.model.Payroll;
+import com.nullterminators.project.repository.EmployeeProfileRepository;
 import com.nullterminators.project.repository.PayrollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
 import java.util.List;
 import java.util.Map;
 
@@ -16,10 +15,12 @@ import java.util.Map;
 public class PayrollService {
 
     private final PayrollRepository payrollRepository;
+    private final EmployeeProfileRepository employeeProfileRepository;
 
     @Autowired
-    public PayrollService(PayrollRepository payrollRepository) {
+    public PayrollService(PayrollRepository payrollRepository, EmployeeProfileRepository employeeProfileRepository) {
         this.payrollRepository = payrollRepository;
+        this.employeeProfileRepository = employeeProfileRepository;
     }
 
     public String getPayrollByEmployeeId(Integer employeeId) {
@@ -76,9 +77,9 @@ public class PayrollService {
     }
 
     public Integer addPayrollByEmployeeId(Integer employeeId, Map<String, Object> updates) {
-        Integer paymentMonth = Integer.parseInt((String) updates.get("month"));
-        Integer paymentYear = Integer.parseInt((String) updates.get("year"));
-        Integer paymentDay = Integer.parseInt((String) updates.get("day"));
+        int paymentMonth = Integer.parseInt((String) updates.get("month"));
+        int paymentYear = Integer.parseInt((String) updates.get("year"));
+        int paymentDay = Integer.parseInt((String) updates.get("day"));
         Integer salary = Integer.parseInt((String) updates.get("salary"));
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
         if (payroll != null) { return 0; }
@@ -107,9 +108,9 @@ public class PayrollService {
     }
 
     public Integer adjustPaymentDayByEmployeeId(Integer employeeId, Map<String, Object> updates) {
-        Integer paymentMonth = Integer.parseInt((String) updates.get("month"));
-        Integer paymentYear = Integer.parseInt((String) updates.get("year"));
-        Integer paymentDay = Integer.parseInt((String) updates.get("day"));
+        int paymentMonth = Integer.parseInt((String) updates.get("month"));
+        int paymentYear = Integer.parseInt((String) updates.get("year"));
+        int paymentDay = Integer.parseInt((String) updates.get("day"));
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
         if (payroll == null) { return 0; }
         else {
@@ -117,6 +118,37 @@ public class PayrollService {
             payrollRepository.save(payroll);
             return 1;
         }
+    }
+
+    public String generatePayroll(Map<String, Object> updates) {
+        List<EmployeeProfile> employeeInformation = employeeProfileRepository.findAll();
+        StringBuilder result = new StringBuilder();
+        for (EmployeeProfile employee : employeeInformation) {
+            updates.put("salary", String.valueOf(employee.getBaseSalary()));
+            Integer status = addPayrollByEmployeeId(employee.getId(), updates);
+            if (status == 0) {
+                result.append(employee.getId()).append("\n");
+            }
+        }
+        if (!result.isEmpty()) {
+            result.insert(0, "Payroll for the following employees have already been generated and were not added:\n");
+        }
+        return result.toString();
+    }
+
+    public String deletePayroll(Map<String, Object> updates) {
+        List<EmployeeProfile> employeeInformation = employeeProfileRepository.findAll();
+        StringBuilder result = new StringBuilder();
+        for (EmployeeProfile employee : employeeInformation) {
+            Integer status = deletePayrollByEmployeeId(employee.getId(), updates);
+            if (status == 0) {
+                result.append(employee.getId()).append("\n");
+            }
+        }
+        if (!result.isEmpty()) {
+            result.insert(0, "Payroll for the following employees have already been deleted and were not deleted:\n");
+        }
+        return result.toString();
     }
 
 }

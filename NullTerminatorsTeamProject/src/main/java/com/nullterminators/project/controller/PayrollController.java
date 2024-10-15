@@ -1,15 +1,12 @@
 package com.nullterminators.project.controller;
 
-import com.nullterminators.project.model.Payroll;
 import com.nullterminators.project.service.PayrollService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
@@ -117,6 +114,34 @@ public class PayrollController {
                 case 1 -> new ResponseEntity<>("Attribute was updated successfully", HttpStatus.OK);
                 default -> new ResponseEntity<>("An Error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
             };
+        } catch (Exception e) {
+            return handleException(e);
+        }
+    }
+
+    @PostMapping(value = "/generatePayroll", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> generatePayroll(@RequestBody Map<String, Object> updates) {
+        try{
+            String result = payrollService.generatePayroll(updates);
+            if (result.isEmpty()) {
+                return new ResponseEntity<>("Payroll for this month and year has been generated", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return handleException(e);
+        }
+    }
+
+    @DeleteMapping(value = "/deletePayroll", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deletePayroll(@RequestBody Map<String, Object> updates) {
+        try{
+            String result = payrollService.deletePayroll(updates);
+            if (result.isEmpty()) {
+                return new ResponseEntity<>("Payroll for this month and year has been deleted", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }
         } catch (Exception e) {
             return handleException(e);
         }
