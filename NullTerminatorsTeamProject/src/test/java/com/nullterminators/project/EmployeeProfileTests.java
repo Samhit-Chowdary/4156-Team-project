@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.nullterminators.project.model.EmployeeProfile;
+import com.nullterminators.project.repository.EmployeeProfileRepository;
+import com.nullterminators.project.service.EmployeeProfileService;
 import java.time.LocalDate;
-import java.util.Optional;
-import java.util.List;
 import java.util.ArrayList;
-
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,227 +22,227 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.nullterminators.project.model.EmployeeProfile;
-import com.nullterminators.project.repository.EmployeeProfileRepository;
-import com.nullterminators.project.service.EmployeeProfileService;
-
-import jakarta.validation.constraints.AssertTrue;
-
-
+/**
+ * Tests for employee profile service functions.
+ */
 @SpringBootTest
 @ContextConfiguration
 public class EmployeeProfileTests {
 
-    @Mock
-    private EmployeeProfileRepository employeeProfileRepository;
+  @Mock
+  private EmployeeProfileRepository employeeProfileRepository;
 
-    @InjectMocks
-    private EmployeeProfileService employeeProfileService;
+  @InjectMocks
+  private EmployeeProfileService employeeProfileService;
 
-    private EmployeeProfile employeeProfile1;
-    private EmployeeProfile employeeProfile2;
+  private EmployeeProfile employeeProfile1;
+  private EmployeeProfile employeeProfile2;
+  
+  /**
+   * Setting up employee profiles.
+   */
+  @BeforeEach
+  public void setUp() {
+    MockitoAnnotations.openMocks(this);
+
+    employeeProfile1 = new EmployeeProfile();
+    employeeProfile1.setId(1);
+    employeeProfile1.setName("Employee One");
+    employeeProfile1.setAge(50);
+    employeeProfile1.setEmail("employeeOne@email.com");
+    employeeProfile1.setDesignation("Manager");
+    employeeProfile1.setPhoneNumber("+1-123-456-7904");
+    employeeProfile1.setGender("Female");
+    employeeProfile1.setStartDate(LocalDate.now());
+    employeeProfile1.setEmergencyContactNumber("9876543210");
+    employeeProfile1.setBaseSalary(233445);
+
+    employeeProfile2 = new EmployeeProfile();
+    employeeProfile2.setId(2);
+    employeeProfile2.setName("Employee Two");
+    employeeProfile2.setAge(50);
+    employeeProfile2.setEmail("employeeTwo@email.com");
+    employeeProfile2.setDesignation("Manager");
+    employeeProfile2.setPhoneNumber("+1-123-456-7905");
+    employeeProfile2.setGender("Male");
+    employeeProfile2.setStartDate(LocalDate.now());
+    employeeProfile2.setEmergencyContactNumber("9876543210");
+    employeeProfile2.setBaseSalary(233445);
+  }
+
+  @Test
+  public void createNewEmployeeProfileTest() {
+    // create employee profile for employee 1 & 2
+    employeeProfileService.createNewEmployee(employeeProfile1);
+    Mockito.verify(employeeProfileRepository).save(employeeProfile1);
+    employeeProfileService.createNewEmployee(employeeProfile2);
+    Mockito.verify(employeeProfileRepository).save(employeeProfile2);
+  }
+
+  @Test
+  public void getEmployeeProfileTest() {
+    when(employeeProfileRepository.findById(1)).thenReturn(Optional.of(employeeProfile1));
+    when(employeeProfileRepository.findById(2)).thenReturn(Optional.of(employeeProfile2));
+
+    Optional<EmployeeProfile> result1 = employeeProfileService.getEmployeeProfile(1);
     
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+    verify(employeeProfileRepository).findById(1);
+    assertEquals(Optional.of(employeeProfile1), result1);
 
-        employeeProfile1 = new EmployeeProfile();
-        employeeProfile1.setId(1);
-        employeeProfile1.setName("Employee One");
-        employeeProfile1.setAge(50);
-        employeeProfile1.setEmail("employeeOne@email.com");
-        employeeProfile1.setDesignation("Manager");
-        employeeProfile1.setPhoneNumber("+1-123-456-7904");
-        employeeProfile1.setGender("Female");
-        employeeProfile1.setStartDate(LocalDate.now());
-        employeeProfile1.setEmergencyContactNumber("9876543210");
-        employeeProfile1.setBaseSalary(233445);
+    Optional<EmployeeProfile> result2 = employeeProfileService.getEmployeeProfile(2);
+    
+    verify(employeeProfileRepository).findById(2);
+    assertEquals(Optional.of(employeeProfile2), result2);
+  }
 
-        employeeProfile2 = new EmployeeProfile();
-        employeeProfile2.setId(2);
-        employeeProfile2.setName("Employee Two");
-        employeeProfile2.setAge(50);
-        employeeProfile2.setEmail("employeeTwo@email.com");
-        employeeProfile2.setDesignation("Manager");
-        employeeProfile2.setPhoneNumber("+1-123-456-7905");
-        employeeProfile2.setGender("Male");
-        employeeProfile2.setStartDate(LocalDate.now());
-        employeeProfile2.setEmergencyContactNumber("9876543210");
-        employeeProfile2.setBaseSalary(233445);
-    }
+  @Test
+  public void getAllEmployeesTest() {
+    List<EmployeeProfile> allEmployees = new ArrayList<>();
+    allEmployees.add(employeeProfile1);
+    allEmployees.add(employeeProfile2);
 
-    @Test
-    public void createNewEmployeeProfileTest() {
-       // create employee profile for employee 1 & 2
-       employeeProfileService.createNewEmployee(employeeProfile1);
-       Mockito.verify(employeeProfileRepository).save(employeeProfile1);
-       employeeProfileService.createNewEmployee(employeeProfile2);
-       Mockito.verify(employeeProfileRepository).save(employeeProfile2);
-    }
+    when(employeeProfileRepository.findAll()).thenReturn(allEmployees);
 
-    @Test
-    public void getEmployeeProfileTest() {
-        when(employeeProfileRepository.findById(1)).thenReturn(Optional.of(employeeProfile1));
-        when(employeeProfileRepository.findById(2)).thenReturn(Optional.of(employeeProfile2));
+    List<EmployeeProfile> result = employeeProfileService.getAllEmployees();
+    assertEquals(allEmployees, result);
+  }
 
-        Optional<EmployeeProfile> result1 = employeeProfileService.getEmployeeProfile(1);
-        Optional<EmployeeProfile> result2 = employeeProfileService.getEmployeeProfile(2);
-        
-        verify(employeeProfileRepository).findById(1);
-        assertEquals(Optional.of(employeeProfile1), result1);
+  @Test
+  public void updateEmployeeNameTestSuccess() {
+    String newName = "New Name";
+    int id = 1;
 
-        verify(employeeProfileRepository).findById(2);
-        assertEquals(Optional.of(employeeProfile2), result2);
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
 
-    @Test
-    public void getAllEmployeesTest() {
-        List<EmployeeProfile> allEmployees = new ArrayList<>();
-        allEmployees.add(employeeProfile1);
-        allEmployees.add(employeeProfile2);
+    boolean result = employeeProfileService.updateEmployeeName(id, newName);
+    assertTrue(result);
+    assertEquals(newName, employeeProfile1.getName());
+  }
 
-        when(employeeProfileRepository.findAll()).thenReturn(allEmployees);
+  @Test
+  public void updateEmployeeNameTestFailure() {
+    String newName = "New Name";
+    int id = 1;
 
-        List<EmployeeProfile> result = employeeProfileService.getAllEmployees();
-        assertEquals(allEmployees, result);
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
 
-    @Test
-    public void updateEmployeeNameTestSuccess() {
-        String newName = "New Name";
-        int id = 1;
+    boolean result = employeeProfileService.updateEmployeeName(id, newName);
+    assertFalse(result);
+  }
 
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
+  @Test
+  public void updateEmployeeEmailIdTestSuccess() {
+    String newEmail = "newemail@example.com";
+    int id = 1;
 
-        boolean result = employeeProfileService.updateEmployeeName(id, newName);
-        assertTrue(result);
-        assertEquals(newName, employeeProfile1.getName());
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
 
-    @Test
-    public void updateEmployeeNameTestFailure() {
-        String newName = "New Name";
-        int id = 1;
+    boolean result = employeeProfileService.updateEmployeeEmailId(id, newEmail);
+    assertTrue(result);
+    assertEquals(newEmail, employeeProfile1.getEmail());
+  }
 
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
+  @Test
+  public void updateEmployeeEmailIdTestFailure() {
+    String newEmail = "newemail@example.com";
+    int id = 1;
 
-        boolean result = employeeProfileService.updateEmployeeName(id, newName);
-        assertFalse(result);
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
 
-    @Test
-    public void updateEmployeeEmailIdTestSuccess() {
-        String newEmail = "newemail@example.com";
-        int id = 1;
+    boolean result = employeeProfileService.updateEmployeeEmailId(id, newEmail);
+    assertFalse(result);
+  }
 
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
+  @Test
+  public void updateEmployeeDesignationTestSuccess() {
+    String newDesignation = "Senior Manager";
+    int id = 1;
 
-        boolean result = employeeProfileService.updateEmployeeEmailId(id, newEmail);
-        assertTrue(result);
-        assertEquals(newEmail, employeeProfile1.getEmail());
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
 
-    @Test
-    public void updateEmployeeEmailIdTestFailure() {
-        String newEmail = "newemail@example.com";
-        int id = 1;
+    boolean result = employeeProfileService.updateEmployeeDesignation(id, newDesignation);
+    assertTrue(result);
+    assertEquals(newDesignation, employeeProfile1.getDesignation());
+  }
 
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
+  @Test
+  public void updateEmployeeDesignationTestFailure() {
+    String newDesignation = "Senior Manager";
+    int id = 1;
 
-        boolean result = employeeProfileService.updateEmployeeEmailId(id, newEmail);
-        assertFalse(result);
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
 
-    @Test
-    public void updateEmployeeDesignationTestSuccess() {
-        String newDesignation = "Senior Manager";
-        int id = 1;
+    boolean result = employeeProfileService.updateEmployeeDesignation(id, newDesignation);
+    assertFalse(result);
+  }
 
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
+  @Test
+  public void updateEmployeePhoneNumberTestSuccess() {
+    String newPhoneNum = "0000000000";
+    int id = 1;
 
-        boolean result = employeeProfileService.updateEmployeeDesignation(id, newDesignation);
-        assertTrue(result);
-        assertEquals(newDesignation, employeeProfile1.getDesignation());
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
 
-    @Test
-    public void updateEmployeeDesignationTestFailure() {
-        String newDesignation = "Senior Manager";
-        int id = 1;
+    boolean result = employeeProfileService.updateEmployeePhoneNumber(id, newPhoneNum);
+    assertTrue(result);
+    assertEquals(newPhoneNum, employeeProfile1.getPhoneNumber());
+  }
 
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
+  @Test
+  public void updateEmployeePhoneNumberTestFailure() {
+    String newPhoneNum = "0000000000";
+    int id = 1;
 
-        boolean result = employeeProfileService.updateEmployeeDesignation(id, newDesignation);
-        assertFalse(result);
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
 
-    @Test
-    public void updateEmployeePhoneNumberTestSuccess() {
-        String newPhoneNum = "0000000000";
-        int id = 1;
+    boolean result = employeeProfileService.updateEmployeePhoneNumber(id, newPhoneNum);
+    assertFalse(result);
+  }
 
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
+  @Test
+  public void updateBaseSalaryTestSuccess() {
+    int newSalary = 500000;
+    int id = 1;
 
-        boolean result = employeeProfileService.updateEmployeePhoneNumber(id, newPhoneNum);
-        assertTrue(result);
-        assertEquals(newPhoneNum, employeeProfile1.getPhoneNumber());
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
 
-    @Test
-    public void updateEmployeePhoneNumberTestFailure() {
-        String newPhoneNum = "0000000000";
-        int id = 1;
+    boolean result = employeeProfileService.updateBaseSalary(id, newSalary);
+    assertTrue(result);
+    assertEquals(newSalary, employeeProfile1.getBaseSalary());
+  }
 
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
+  @Test
+  public void updateBaseSalaryTestFailure() {
+    int newSalary = 500000;
+    int id = 1;
 
-        boolean result = employeeProfileService.updateEmployeePhoneNumber(id, newPhoneNum);
-        assertFalse(result);
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
 
-    @Test
-    public void updateBaseSalaryTestSuccess() {
-        int newSalary = 500000;
-        int id = 1;
+    boolean result = employeeProfileService.updateBaseSalary(id, newSalary);
+    assertFalse(result);
+  }
 
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
+  @Test
+  public void updateupdateEmergencyContactTestSuccess() {
+    String newPhoneNum = "0000000000";
+    int id = 1;
 
-        boolean result = employeeProfileService.updateBaseSalary(id, newSalary);
-        assertTrue(result);
-        assertEquals(newSalary, employeeProfile1.getBaseSalary());
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
 
-    @Test
-    public void updateBaseSalaryTestFailure() {
-        int newSalary = 500000;
-        int id = 1;
+    boolean result = employeeProfileService.updateEmergencyContact(id, newPhoneNum);
+    assertTrue(result);
+    assertEquals(newPhoneNum, employeeProfile1.getEmergencyContactNumber());
+  }
 
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
+  @Test
+  public void updateEmergencyContactTestFailure() {
+    String newPhoneNum = "0000000000";
+    int id = 1;
 
-        boolean result = employeeProfileService.updateBaseSalary(id, newSalary);
-        assertFalse(result);
-    }
+    when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
 
-    @Test
-    public void updateupdateEmergencyContactTestSuccess() {
-        String newPhoneNum = "0000000000";
-        int id = 1;
-
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.of(employeeProfile1));
-
-        boolean result = employeeProfileService.updateEmergencyContact(id, newPhoneNum);
-        assertTrue(result);
-        assertEquals(newPhoneNum, employeeProfile1.getEmergencyContactNumber());
-    }
-
-    @Test
-    public void updateEmergencyContactTestFailure() {
-        String newPhoneNum = "0000000000";
-        int id = 1;
-
-        when(employeeProfileRepository.findById(id)).thenReturn(Optional.empty());
-
-        boolean result = employeeProfileService.updateEmergencyContact(id, newPhoneNum);
-        assertFalse(result);
-    }
+    boolean result = employeeProfileService.updateEmergencyContact(id, newPhoneNum);
+    assertFalse(result);
+  }
 
 }
