@@ -12,5 +12,5 @@ public interface PayrollRepository extends JpaRepository<Payroll, Integer> {
     List<Payroll> findAllByEmployeeIdOrderByPaymentDateDesc(Integer employeeId);
 
     @Query(value = "SELECT * FROM Payroll p WHERE p.employee_id = ?1 AND EXTRACT(MONTH FROM p.payment_date) = ?2 AND EXTRACT(YEAR FROM p.payment_date) = ?3", nativeQuery = true)
-    Payroll findByEmployeeIdOrderByPaymentMonthAndYear(Integer employeeId, Integer paymentMonth , Integer paymentYear);
+    Payroll findByEmployeeIdPaymentMonthAndYear(Integer employeeId, Integer paymentMonth , Integer paymentYear);
 }

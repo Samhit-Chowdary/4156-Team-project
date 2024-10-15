@@ -35,7 +35,7 @@ public class PayrollService {
     public Integer markAsPaid(Integer employeeId, String paymentMonth, String paymentYear) {
         Integer month = Integer.parseInt(paymentMonth);
         Integer year = Integer.parseInt(paymentYear);
-        Payroll payroll = payrollRepository.findByEmployeeIdOrderByPaymentMonthAndYear(employeeId, month, year);
+        Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, month, year);
         if (payroll == null) { return 0; }
         else {
             Month latestPaymentMonth = payroll.getPaymentDate().getMonth();
@@ -55,7 +55,7 @@ public class PayrollService {
     public Integer markAsUnpaid(Integer employeeId, String paymentMonth, String paymentYear) {
         Integer month = Integer.parseInt(paymentMonth);
         Integer year = Integer.parseInt(paymentYear);
-        Payroll payroll = payrollRepository.findByEmployeeIdOrderByPaymentMonthAndYear(employeeId, month, year);
+        Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, month, year);
         if (payroll == null) { return 0; }
         else {
             Month latestPaymentMonth = payroll.getPaymentDate().getMonth();
@@ -72,4 +72,31 @@ public class PayrollService {
         }
     }
 
+    public Integer deletePayrollByEmployeeId(Integer employeeId, String paymentMonth, String paymentYear) {
+        Integer month = Integer.parseInt(paymentMonth);
+        Integer year = Integer.parseInt(paymentYear);
+        Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, month, year);
+        if (payroll == null) { return 1; }
+        else {
+            payrollRepository.delete(payroll);
+            return 2;
+        }
+    }
+
+    public Integer addPayrollByEmployeeId(Integer employeeId, String salary, String paymentMonth, String paymentYear) {
+        Integer Salary = Integer.parseInt(salary);
+        Integer month = Integer.parseInt(paymentMonth);
+        Integer year = Integer.parseInt(paymentYear);
+        Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, month, year);
+        if (payroll != null) { return 0; }
+        else {
+            Payroll newPayrollEntry = new Payroll();
+            newPayrollEntry.setEmployeeId(employeeId);
+            newPayrollEntry.setSalary(Salary);
+            newPayrollEntry.setPaymentDate(LocalDate.of(year, month, 1));
+            newPayrollEntry.setPaid(1);
+            payrollRepository.save(newPayrollEntry);
+            return 1;
+        }
+    }
 }

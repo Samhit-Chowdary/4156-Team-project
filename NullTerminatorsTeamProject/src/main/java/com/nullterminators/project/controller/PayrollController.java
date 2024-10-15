@@ -42,7 +42,7 @@ public class PayrollController {
             Integer result = payrollService.markAsPaid(employeeId, (String) updates.get("paymentMonth"), (String) updates.get("paymentYear"));
             return switch (result) {
                 case 0 -> new ResponseEntity<>("Employee Not Found", HttpStatus.NOT_FOUND);
-                case 1 -> new ResponseEntity<>("Payroll for this month is Not Found", HttpStatus.BAD_REQUEST);
+                case 1 -> new ResponseEntity<>("Payroll for this month and year Not Found", HttpStatus.BAD_REQUEST);
                 case 2 -> new ResponseEntity<>("Employee has already been paid", HttpStatus.BAD_REQUEST);
                 case 3 -> new ResponseEntity<>("Attribute was updated successfully", HttpStatus.OK);
                 default -> new ResponseEntity<>("An Error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -58,9 +58,38 @@ public class PayrollController {
             Integer result = payrollService.markAsUnpaid(employeeId, (String) updates.get("paymentMonth"), (String) updates.get("paymentYear"));
             return switch (result) {
                 case 0 -> new ResponseEntity<>("Employee Not Found", HttpStatus.NOT_FOUND);
-                case 1 -> new ResponseEntity<>("Payroll for this month is Not Found", HttpStatus.BAD_REQUEST);
+                case 1 -> new ResponseEntity<>("Payroll for this month and year Not Found", HttpStatus.BAD_REQUEST);
                 case 2 -> new ResponseEntity<>("Employee has not been paid", HttpStatus.BAD_REQUEST);
                 case 3 -> new ResponseEntity<>("Attribute was updated successfully", HttpStatus.OK);
+                default -> new ResponseEntity<>("An Error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+            };
+        } catch (Exception e) {
+            return handleException(e);
+        }
+    }
+
+    @DeleteMapping(value = "/{employeeId}/deletePayroll", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deletePayroll(@PathVariable("employeeId") Integer employeeId, @RequestBody Map<String, Object> updates) {
+        try{
+            Integer result = payrollService.deletePayrollByEmployeeId(employeeId, (String) updates.get("paymentMonth"), (String) updates.get("paymentYear"));
+            return switch (result) {
+                case 0 -> new ResponseEntity<>("Employee Not Found", HttpStatus.NOT_FOUND);
+                case 1 -> new ResponseEntity<>("Payroll for this month and year Not Found", HttpStatus.BAD_REQUEST);
+                case 2 -> new ResponseEntity<>("Attribute was deleted successfully", HttpStatus.OK);
+                default -> new ResponseEntity<>("An Error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+            };
+        } catch (Exception e) {
+            return handleException(e);
+        }
+    }
+
+    @PostMapping(value = "/{employeeId}/addPayroll", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createPayroll(@PathVariable("employeeId") Integer employeeId, @RequestBody Map<String, Object> updates) {
+        try{
+            Integer result = payrollService.addPayrollByEmployeeId(employeeId, (String) updates.get("salary"), (String) updates.get("paymentMonth"), (String) updates.get("paymentYear"));
+            return switch (result) {
+                case 0 -> new ResponseEntity<>("Employee Not Found", HttpStatus.NOT_FOUND);
+                case 1 -> new ResponseEntity<>("Attribute was created successfully", HttpStatus.OK);
                 default -> new ResponseEntity<>("An Error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
             };
         } catch (Exception e) {
