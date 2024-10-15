@@ -1,7 +1,6 @@
 package com.nullterminators.project.repository;
 
 import com.nullterminators.project.model.Payroll;
-import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
