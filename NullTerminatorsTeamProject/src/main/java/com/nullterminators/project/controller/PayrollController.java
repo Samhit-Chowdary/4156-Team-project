@@ -1,13 +1,19 @@
 package com.nullterminators.project.controller;
 
 import com.nullterminators.project.service.PayrollService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/payroll")
@@ -22,7 +28,7 @@ public class PayrollController {
 
     @GetMapping(value = "/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getPayrollByEmployeeId(@PathVariable("employeeId") Integer employeeId) {
-        try{
+        try {
             String result = payrollService.getPayrollByEmployeeId(employeeId);
             if (result.isEmpty()) {
                 return new ResponseEntity<>("Details Not Found", HttpStatus.NOT_FOUND);
@@ -35,7 +41,7 @@ public class PayrollController {
 
     @PatchMapping(value = "/{employeeId}/markPaid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> markAsPaid(@PathVariable("employeeId") Integer employeeId, @RequestBody Map<String, Object> updates) {
-        try{
+        try {
             Integer result = payrollService.markAsPaid(employeeId, updates);
             return switch (result) {
                 case 0 -> new ResponseEntity<>("Payroll for this month and year Not Found", HttpStatus.NOT_FOUND);
@@ -50,7 +56,7 @@ public class PayrollController {
 
     @PatchMapping(value = "/{employeeId}/markUnpaid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> markAsUnpaid(@PathVariable("employeeId") Integer employeeId, @RequestBody Map<String, Object> updates) {
-        try{
+        try {
             Integer result = payrollService.markAsUnpaid(employeeId, updates);
             return switch (result) {
                 case 0 -> new ResponseEntity<>("Payroll for this month and year Not Found", HttpStatus.NOT_FOUND);
@@ -65,7 +71,7 @@ public class PayrollController {
 
     @DeleteMapping(value = "/{employeeId}/deletePayroll", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deletePayroll(@PathVariable("employeeId") Integer employeeId, @RequestBody Map<String, Object> updates) {
-        try{
+        try {
             Integer result = payrollService.deletePayrollByEmployeeId(employeeId, updates);
             return switch (result) {
                 case 0 -> new ResponseEntity<>("Payroll for this month and year Not Found", HttpStatus.NOT_FOUND);
@@ -79,7 +85,7 @@ public class PayrollController {
 
     @PostMapping(value = "/{employeeId}/addPayroll", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createPayroll(@PathVariable("employeeId") Integer employeeId, @RequestBody Map<String, Object> updates) {
-        try{
+        try {
             Integer result = payrollService.addPayrollByEmployeeId(employeeId, updates);
             return switch (result) {
                 case 0 -> new ResponseEntity<>("Payroll for this month and year already exists", HttpStatus.CONFLICT);
@@ -93,7 +99,7 @@ public class PayrollController {
 
     @PatchMapping(value = "/{employeeId}/adjustSalary", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> adjustSalary(@PathVariable("employeeId") Integer employeeID, @RequestBody Map<String, Object> updates) {
-        try{
+        try {
             Integer result = payrollService.adjustSalaryByEmployeeId(employeeID, updates);
             return switch (result) {
                 case 0 -> new ResponseEntity<>("Payroll for this month and year Not Found", HttpStatus.NOT_FOUND);
@@ -107,7 +113,7 @@ public class PayrollController {
 
     @PatchMapping(value = "/{employeeId}/adjustDay", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> adjustDay(@PathVariable("employeeId") Integer employeeID, @RequestBody Map<String, Object> updates) {
-        try{
+        try {
             Integer result = payrollService.adjustPaymentDayByEmployeeId(employeeID, updates);
             return switch (result) {
                 case 0 -> new ResponseEntity<>("Payroll for this month and year Not Found", HttpStatus.NOT_FOUND);
@@ -121,7 +127,7 @@ public class PayrollController {
 
     @PostMapping(value = "/generatePayroll", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> generatePayroll(@RequestBody Map<String, Object> updates) {
-        try{
+        try {
             String result = payrollService.generatePayroll(updates);
             if (result.isEmpty()) {
                 return new ResponseEntity<>("Payroll for this month and year has been generated", HttpStatus.OK);
@@ -135,7 +141,7 @@ public class PayrollController {
 
     @DeleteMapping(value = "/deletePayroll", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deletePayroll(@RequestBody Map<String, Object> updates) {
-        try{
+        try {
             String result = payrollService.deletePayroll(updates);
             if (result.isEmpty()) {
                 return new ResponseEntity<>("Payroll for this month and year has been deleted", HttpStatus.OK);

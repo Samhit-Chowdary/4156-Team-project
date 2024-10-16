@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface EmployeeProfileRepository extends JpaRepository<EmployeeProfile, Integer> {
 
-  /*
-    * Check if any employee has both the same email and phone number.
-    */
-  Optional<EmployeeProfile> findByEmailAndPhoneNumber(String phoneNumber, String email);
-    
+    /*
+     * Check if any employee has both the same email and phone number.
+     */
+    Optional<EmployeeProfile> findByEmailAndPhoneNumber(String phoneNumber, String email);
+
 }

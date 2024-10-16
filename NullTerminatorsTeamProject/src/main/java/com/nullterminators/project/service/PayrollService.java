@@ -4,12 +4,11 @@ import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.model.Payroll;
 import com.nullterminators.project.repository.EmployeeProfileRepository;
 import com.nullterminators.project.repository.PayrollRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PayrollService {
@@ -39,10 +38,12 @@ public class PayrollService {
         Integer paymentMonth = Integer.parseInt((String) updates.get("month"));
         Integer paymentYear = Integer.parseInt((String) updates.get("year"));
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
-        if (payroll == null) { return 0; }
-        else {
-            if (payroll.getPaid() == 1) { return 1; }
-            else {
+        if (payroll == null) {
+            return 0;
+        } else {
+            if (payroll.getPaid() == 1) {
+                return 1;
+            } else {
                 payroll.setPaid(1);
                 payrollRepository.save(payroll);
                 return 2;
@@ -54,10 +55,12 @@ public class PayrollService {
         Integer paymentMonth = Integer.parseInt((String) updates.get("month"));
         Integer paymentYear = Integer.parseInt((String) updates.get("year"));
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
-        if (payroll == null) { return 0; }
-        else {
-            if (payroll.getPaid() == 0) { return 1; }
-            else {
+        if (payroll == null) {
+            return 0;
+        } else {
+            if (payroll.getPaid() == 0) {
+                return 1;
+            } else {
                 payroll.setPaid(0);
                 payrollRepository.save(payroll);
                 return 2;
@@ -69,8 +72,9 @@ public class PayrollService {
         Integer paymentMonth = Integer.parseInt((String) updates.get("month"));
         Integer paymentYear = Integer.parseInt((String) updates.get("year"));
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
-        if (payroll == null) { return 0; }
-        else {
+        if (payroll == null) {
+            return 0;
+        } else {
             payrollRepository.delete(payroll);
             return 1;
         }
@@ -82,8 +86,9 @@ public class PayrollService {
         int paymentDay = Integer.parseInt((String) updates.get("day"));
         Integer salary = Integer.parseInt((String) updates.get("salary"));
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
-        if (payroll != null) { return 0; }
-        else {
+        if (payroll != null) {
+            return 0;
+        } else {
             Payroll newPayrollEntry = new Payroll();
             newPayrollEntry.setEmployeeId(employeeId);
             newPayrollEntry.setSalary(salary);
@@ -99,8 +104,9 @@ public class PayrollService {
         Integer paymentYear = Integer.parseInt((String) updates.get("year"));
         Integer salary = Integer.parseInt((String) updates.get("salary"));
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
-        if (payroll == null) { return 0; }
-        else {
+        if (payroll == null) {
+            return 0;
+        } else {
             payroll.setSalary(salary);
             payrollRepository.save(payroll);
             return 1;
@@ -112,8 +118,9 @@ public class PayrollService {
         int paymentYear = Integer.parseInt((String) updates.get("year"));
         int paymentDay = Integer.parseInt((String) updates.get("day"));
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
-        if (payroll == null) { return 0; }
-        else {
+        if (payroll == null) {
+            return 0;
+        } else {
             payroll.setPaymentDate(LocalDate.of(paymentYear, paymentMonth, paymentDay));
             payrollRepository.save(payroll);
             return 1;

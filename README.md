@@ -64,3 +64,37 @@ This section describes the endpoints that our service provides, as well as their
 * Deletes existing employee profile
 * Upon Success: HTTP 200 Status Code is returned along with "Employee profile successfully deleted." in the response body.
 * Upon Failure: HTTP 404 Status Code is returned along with appropriate message in the response body.
+
+### Timeoff Records Management (/timeoff):
+
+#### GET /timeoff/{employeeId}
+
+* Expected Input Parameters: employeeId (Integer)
+* Expected Output: List of TimeOff records or error message
+* Retrieves all time-off requests for a specific employee
+* Upon Success: HTTP 200 Status Code is returned along with the list of time-off records in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist or no time-off records are found.
+
+#### GET /timeoff/{employeeId}/range
+
+* Expected Input Parameters: employeeId (Integer), startDate (String), endDate (String)
+* Expected Output: List of TimeOff records or error message
+* Retrieves time-off requests for a specific employee within a specified date range
+* Upon Success: HTTP 200 Status Code is returned along with the list of time-off records in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist, no time-off requests are found in the specified range, or if validation fails.
+
+#### POST /timeoff/create
+
+* Expected Input Parameters: timeOff (TimeOff)
+* Expected Output: Success or failure message
+* Creates a new time-off request for a specific employee
+* Upon Success: HTTP 201 Status Code is returned along with the created time-off request in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist or any other validation error occurs.
+
+#### PUT /timeoff/{employeeId}/{timeOffId}/update-status
+
+* Expected Input Parameters: employeeId (Integer), timeOffId (Integer), action (String)
+* Expected Output: Success or failure message
+* Updates the status of a specific time-off request
+* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist, the time-off request is not found, or if the action is not applicable.
