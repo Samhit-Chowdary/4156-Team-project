@@ -13,7 +13,7 @@ public class CompanyEmployees implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer companyId;
+    private String companyUsername;
 
     private Integer employeeId;
 }

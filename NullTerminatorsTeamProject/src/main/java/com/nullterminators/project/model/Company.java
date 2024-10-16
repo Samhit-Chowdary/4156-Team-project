@@ -13,13 +13,14 @@ public class Company implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true)
     private String name;
+
+    @Column(unique = true)
+    private String username;
 
     private String address;
 
     private String state;
 
-    @Column(unique = true)
-    private String apiKey;
+    private String password;
 }
