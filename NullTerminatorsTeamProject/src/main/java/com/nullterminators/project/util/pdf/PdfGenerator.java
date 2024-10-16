@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
+/**
+ * Pdf Generator class.
+ */
 @Component("pdfGenerator")
 public class PdfGenerator {
 
@@ -26,6 +29,11 @@ public class PdfGenerator {
   private static final Font COURIER_SMALL = new Font(Font.FontFamily.COURIER, 16, Font.BOLD);
   private static final Font COURIER_SMALL_FOOTER = new Font(Font.FontFamily.COURIER, 12, Font.BOLD);
 
+  /**
+   * Generate Pdf Report based on the payroll details.
+   *
+   * @param payroll (Payroll) : Payroll details
+   */
   public void generatePdfReport(Payroll payroll) {
     Document document = new Document();
 

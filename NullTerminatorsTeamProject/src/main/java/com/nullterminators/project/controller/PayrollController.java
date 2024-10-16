@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * API Endpoints for Payroll.
+ */
 @RestController
 @RequestMapping("/payroll")
 public class PayrollController {
@@ -27,6 +30,16 @@ public class PayrollController {
     this.payrollService = payrollService;
   }
 
+  /**
+   * Get Payroll by employee id.
+   *
+   * @param employeeId    A (@code int) representing the employee id the user wishes to get
+   *                      the payrolls for.
+   *
+   * @return              A (@code ResponseEntity) object containing either a list of required
+   *                      details and an HTTP 200 response or, an appropriate message
+   *                      indicating the proper response.
+   */
   @GetMapping(value = "/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getPayrollByEmployeeId(@PathVariable("employeeId") Integer employeeId) {
     try {
@@ -40,6 +53,18 @@ public class PayrollController {
     }
   }
 
+  /**
+   * Attempt to mark a payroll as paid.
+   *
+   * @param employeeId    A (@code int) representing the employee id the user wishes to get
+   *                      the payrolls for.
+   * @param updates       A (@code Map) of details that the user provides to update the
+   *                      payroll for a particular month and year.
+   *
+   * @return              A (@code ResponseEntity) object containing either a response and
+   *                      an HTTP 200 response or, an appropriate message indicating the
+   *                      proper response.
+   */
   @PatchMapping(value = "/{employeeId}/markPaid", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> markAsPaid(@PathVariable("employeeId") Integer employeeId,
                                       @RequestBody Map<String, Object> updates) {
@@ -66,6 +91,18 @@ public class PayrollController {
     }
   }
 
+  /**
+   * Attempt to mark a payroll as unpaid.
+   *
+   * @param employeeId    A (@code int) representing the employee id the user wishes to update
+   *                      the payroll for.
+   * @param updates       A (@code Map) of details that the user provides to update the
+   *                      payroll for a particular month and year.
+   *
+   * @return              A (@code ResponseEntity) object containing either a response and
+   *                      an HTTP 200 response or, an appropriate message indicating the
+   *                      proper response.
+   */
   @PatchMapping(value = "/{employeeId}/markUnpaid", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> markAsUnpaid(@PathVariable("employeeId") Integer employeeId,
                                         @RequestBody Map<String, Object> updates) {
@@ -92,6 +129,18 @@ public class PayrollController {
     }
   }
 
+  /**
+   * Attempt to delete a payroll entry.
+   *
+   * @param employeeId    A (@code int) representing the employee id the user wishes to delete
+   *                      the payroll for.
+   * @param updates       A (@code Map) of details that the user provides to update the
+   *                      payroll for a particular month and year.
+   *
+   * @return              A (@code ResponseEntity) object containing either a response and
+   *                      an HTTP 200 response or, an appropriate message indicating the
+   *                      proper response.
+   */
   @DeleteMapping(value = "/{employeeId}/deletePayroll", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deletePayrollByEmployeeId(@PathVariable("employeeId") Integer employeeId,
                                                      @RequestBody Map<String, Object> updates) {
@@ -115,6 +164,19 @@ public class PayrollController {
     }
   }
 
+  /**
+   * Attempt to add a payroll entry.
+   *
+   * @param employeeId    A (@code int) representing the employee id the user wishes to add
+   *                      the payrolls for.
+   * @param updates       A (@code Map) of details that the user provides to add the
+   *                      payroll for a particular month and year including details about
+   *                      day of payment and salary.
+   *
+   * @return              A (@code ResponseEntity) object containing either a response and
+   *                      an HTTP 200 response or, an appropriate message indicating
+   *                      the proper response.
+   */
   @PostMapping(value = "/{employeeId}/addPayroll", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> createPayroll(@PathVariable("employeeId") Integer employeeId,
                                          @RequestBody Map<String, Object> updates) {
@@ -138,6 +200,18 @@ public class PayrollController {
     }
   }
 
+  /**
+   * Attempt to adjust the salary of an employee.
+   *
+   * @param employeeId    A (@code int) representing the employee id the user wishes to adjust
+   *                      the salary for.
+   * @param updates       A (@code Map) of details that the user provides to adjust the
+   *                      salary for a particular month and year.
+   *
+   * @return              A (@code ResponseEntity) object containing either a response and
+   *                      an HTTP 200 response or, an appropriate message indicating the
+   *                      proper response.
+   */
   @PatchMapping(value = "/{employeeId}/adjustSalary", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> adjustSalary(@PathVariable("employeeId") Integer employeeId,
                                         @RequestBody Map<String, Object> updates) {
@@ -162,6 +236,18 @@ public class PayrollController {
     }
   }
 
+  /**
+   * Attempt to adjust the day of payment of an employee.
+   *
+   * @param employeeId    A (@code int) representing the employee id the user wishes to adjust
+   *                      the day of payment for.
+   * @param updates       A (@code Map) of details that the user provides to adjust the
+   *                      day of payment for a particular month and year.
+   *
+   * @return              A (@code ResponseEntity) object containing either a response and
+   *                      an HTTP 200 response or, an appropriate message indicating the
+   *                      proper response.
+   */
   @PatchMapping(value = "/{employeeId}/adjustDay", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> adjustDay(@PathVariable("employeeId") Integer employeeId,
                                      @RequestBody Map<String, Object> updates) {
@@ -186,6 +272,16 @@ public class PayrollController {
     }
   }
 
+  /**
+   * Attempt to generate a payroll for the entire company.
+   *
+   * @param updates       A (@code Map) of details that the user provides to generate
+   *                      the payrolls for a particular month and year.
+   *
+   * @return              A (@code ResponseEntity) object containing either a response and
+   *                      an HTTP 200 response or, an appropriate message indicating the
+   *                      proper response.
+   */
   @PostMapping(value = "/generatePayroll", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> generatePayroll(@RequestBody Map<String, Object> updates) {
     try {
@@ -196,6 +292,16 @@ public class PayrollController {
     }
   }
 
+  /**
+   * Attempt to delete a payroll for the entire company.
+   *
+   * @param updates       A (@code Map) of details that the user provides to delete
+   *                      the payrolls for a particular month and year.
+   *
+   * @return              A (@code ResponseEntity) object containing either a response and
+   *                      an HTTP 200 response or, an appropriate message indicating the
+   *                      proper response.
+   */
   @DeleteMapping(value = "/deletePayroll", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deletePayroll(@RequestBody Map<String, Object> updates) {
     try {

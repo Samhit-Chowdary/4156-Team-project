@@ -13,6 +13,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for Payroll.
+ */
 @Service
 public class PayrollService {
 
@@ -20,6 +23,13 @@ public class PayrollService {
   private final EmployeeProfileService employeeProfileService;
   private final PdfGenerator pdfGenerator;
 
+  /**
+   * Constructor for PayrollService.
+   *
+   * @param payrollRepository : {@link PayrollRepository}
+   * @param employeeProfileService : {@link EmployeeProfileService}
+   * @param pdfGenerator : {@link PdfGenerator}
+   */
   @Autowired
   public PayrollService(PayrollRepository payrollRepository,
                         EmployeeProfileService employeeProfileService,
@@ -29,6 +39,12 @@ public class PayrollService {
     this.pdfGenerator = pdfGenerator;
   }
 
+  /**
+   * Get all Payroll entries by employee id.
+   *
+   * @param employeeId (Integer) : Employee ID
+   * @return (List) : List of Payroll entries for the employee
+   */
   public List<Map<String, Object>> getPayrollByEmployeeId(Integer employeeId) {
     List<Payroll> payrollInformation =
             payrollRepository.findAllByEmployeeIdOrderByPaymentDateDesc(employeeId);
@@ -48,6 +64,13 @@ public class PayrollService {
     return returnValue;
   }
 
+  /**
+   * Update the paid status of Payroll entry by employee id.
+   *
+   * @param employeeId (Integer) : Employee ID
+   * @param updates (Map) : Map consisting of month and year
+   * @return (Integer) : Status of update
+   */
   public Integer markAsPaid(Integer employeeId, Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
     Map<String, Integer> data = checkError(updates, flags);
@@ -72,6 +95,13 @@ public class PayrollService {
     }
   }
 
+  /**
+   * Update the paid status of Payroll entry by employee id.
+   *
+   * @param employeeId (Integer) : Employee ID
+   * @param updates (Map) : Map consisting of month and year
+   * @return (Integer) : Status of update
+   */
   public Integer markAsUnpaid(Integer employeeId, Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
     Map<String, Integer> data = checkError(updates, flags);
@@ -96,6 +126,13 @@ public class PayrollService {
     }
   }
 
+  /**
+   * Delete Payroll entry by employee id.
+   *
+   * @param employeeId (Integer) : Employee ID
+   * @param updates (Map) : Map consisting of month and year
+   * @return (Integer) : Status of update
+   */
   public Integer deletePayrollByEmployeeId(Integer employeeId, Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
     Map<String, Integer> data = checkError(updates, flags);
@@ -115,6 +152,13 @@ public class PayrollService {
     }
   }
 
+  /**
+   * Add Payroll entry by employee id.
+   *
+   * @param employeeId (Integer) : Employee ID
+   * @param updates (Map) : Map consisting of month and year
+   * @return (Integer) : Status of update
+   */
   public Integer addPayrollByEmployeeId(Integer employeeId, Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.day,
             UpdateField.month, UpdateField.year, UpdateField.salary));
@@ -144,6 +188,13 @@ public class PayrollService {
     }
   }
 
+  /**
+   * Adjust salary by employee id.
+   *
+   * @param employeeId (Integer) : Employee ID
+   * @param updates (Map) : Map consisting of month, year and salary
+   * @return (Integer) : Status of update
+   */
   public Integer adjustSalaryByEmployeeId(Integer employeeId, Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year,
             UpdateField.salary));
@@ -166,6 +217,13 @@ public class PayrollService {
     }
   }
 
+  /**
+   * Adjust payment day by employee id.
+   *
+   * @param employeeId (Integer) : Employee ID
+   * @param updates (Map) : Map consisting of day, month and year
+   * @return (Integer) : Status of update
+   */
   public Integer adjustPaymentDayByEmployeeId(Integer employeeId, Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.day, UpdateField.month,
             UpdateField.year));
@@ -187,6 +245,12 @@ public class PayrollService {
     }
   }
 
+  /**
+   * Adds Payroll for all employees in a company.
+   *
+   * @param updates (Map) : Map consisting of month and year
+   * @return (Map) : Map consisting of response and employeeList
+   */
   public Map<String, Object> generatePayroll(Map<String, Object> updates) {
     List<EmployeeProfile> employeeInformation = employeeProfileService.getAllEmployees();
     List<Integer> result = new ArrayList<>();
@@ -222,6 +286,12 @@ public class PayrollService {
     return returnValue;
   }
 
+  /**
+   * Deletes Payroll for all employees in a company.
+   *
+   * @param updates (Map) : Map consisting of month and year
+   * @return (Map) : Map consisting of response and employeeList
+   */
   public Map<String, Object> deletePayroll(Map<String, Object> updates) {
     List<EmployeeProfile> employeeInformation = employeeProfileService.getAllEmployees();
     List<Integer> result = new ArrayList<>();

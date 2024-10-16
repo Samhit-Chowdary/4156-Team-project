@@ -13,6 +13,11 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import lombok.Data;
 
+/**
+ * Database fields for Payroll.
+ * Contains fields: id, employee id, salary, tax, payslip,
+ *     payment date and paid
+ */
 @Data
 @Entity
 @Table(name = "payroll")
