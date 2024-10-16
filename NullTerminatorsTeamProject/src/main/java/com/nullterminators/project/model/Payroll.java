@@ -1,9 +1,11 @@
 package com.nullterminators.project.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.GenerationType;
 import lombok.Data;
-
-
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -25,4 +27,6 @@ public class Payroll implements Serializable {
     private String payslip;
 
     private LocalDate paymentDate;
+
+    private Integer paid;
 }
