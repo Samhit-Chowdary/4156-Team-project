@@ -1,10 +1,6 @@
 package com.nullterminators.project.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -15,7 +11,9 @@ import java.time.LocalDate;
 public class Payroll implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="payrollIdGenerationSeq", sequenceName="payroll_id_generation_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="payrollIdGenerationSeq")
+    @Column(name = "id", updatable=false)
     private Integer id;
 
     private Integer employeeId;

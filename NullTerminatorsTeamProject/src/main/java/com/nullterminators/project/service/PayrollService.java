@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,21 +25,13 @@ public class PayrollService {
         this.employeeProfileRepository = employeeProfileRepository;
     }
 
-    public String getPayrollByEmployeeId(Integer employeeId) {
-        List<Payroll> payrollInformation = payrollRepository.findAllByEmployeeIdOrderByPaymentDateDesc(employeeId);
-        StringBuilder result = new StringBuilder();
-
-        for (Payroll payroll : payrollInformation) {
-            result.append("Payment Date: ").append(payroll.getPaymentDate()).append("\n");
-            result.append("Payslip: ").append(payroll.getPayslip()).append("\n");
-        }
-
-        return result.toString();
+    public List<Payroll> getPayrollByEmployeeId(Integer employeeId) {
+        return payrollRepository.findAllByEmployeeIdOrderByPaymentDateDesc(employeeId);
     }
 
     public Integer markAsPaid(Integer employeeId, Map<String, Object> updates) {
-        Integer paymentMonth = Integer.parseInt((String) updates.get("month"));
-        Integer paymentYear = Integer.parseInt((String) updates.get("year"));
+        Integer paymentMonth = (Integer) updates.get("month");
+        Integer paymentYear = (Integer) updates.get("year");
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
         if (payroll == null) { return 0; }
         else {
@@ -51,8 +45,8 @@ public class PayrollService {
     }
 
     public Integer markAsUnpaid(Integer employeeId, Map<String, Object> updates) {
-        Integer paymentMonth = Integer.parseInt((String) updates.get("month"));
-        Integer paymentYear = Integer.parseInt((String) updates.get("year"));
+        Integer paymentMonth = (Integer) updates.get("month");
+        Integer paymentYear = (Integer) updates.get("year");
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
         if (payroll == null) { return 0; }
         else {
@@ -66,8 +60,8 @@ public class PayrollService {
     }
 
     public Integer deletePayrollByEmployeeId(Integer employeeId, Map<String, Object> updates) {
-        Integer paymentMonth = Integer.parseInt((String) updates.get("month"));
-        Integer paymentYear = Integer.parseInt((String) updates.get("year"));
+        Integer paymentMonth = (Integer) updates.get("month");
+        Integer paymentYear = (Integer) updates.get("year");
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
         if (payroll == null) { return 0; }
         else {
@@ -77,16 +71,18 @@ public class PayrollService {
     }
 
     public Integer addPayrollByEmployeeId(Integer employeeId, Map<String, Object> updates) {
-        int paymentMonth = Integer.parseInt((String) updates.get("month"));
-        int paymentYear = Integer.parseInt((String) updates.get("year"));
-        int paymentDay = Integer.parseInt((String) updates.get("day"));
-        Integer salary = Integer.parseInt((String) updates.get("salary"));
+        Integer paymentMonth = (Integer) updates.get("month");
+        Integer paymentYear = (Integer) updates.get("year");
+        Integer paymentDay = (Integer) updates.get("day");
+        Integer salary = (Integer) updates.get("salary");
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
         if (payroll != null) { return 0; }
         else {
             Payroll newPayrollEntry = new Payroll();
             newPayrollEntry.setEmployeeId(employeeId);
             newPayrollEntry.setSalary(salary);
+            newPayrollEntry.setTax(0);
+            newPayrollEntry.setPayslip("N/A");
             newPayrollEntry.setPaymentDate(LocalDate.of(paymentYear, paymentMonth, paymentDay));
             newPayrollEntry.setPaid(1);
             payrollRepository.save(newPayrollEntry);
@@ -95,9 +91,9 @@ public class PayrollService {
     }
 
     public Integer adjustSalaryByEmployeeId(Integer employeeId, Map<String, Object> updates) {
-        Integer paymentMonth = Integer.parseInt((String) updates.get("month"));
-        Integer paymentYear = Integer.parseInt((String) updates.get("year"));
-        Integer salary = Integer.parseInt((String) updates.get("salary"));
+        Integer paymentMonth = (Integer) updates.get("month");
+        Integer paymentYear = (Integer) updates.get("year");
+        Integer salary = (Integer) updates.get("salary");
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
         if (payroll == null) { return 0; }
         else {
@@ -108,9 +104,9 @@ public class PayrollService {
     }
 
     public Integer adjustPaymentDayByEmployeeId(Integer employeeId, Map<String, Object> updates) {
-        int paymentMonth = Integer.parseInt((String) updates.get("month"));
-        int paymentYear = Integer.parseInt((String) updates.get("year"));
-        int paymentDay = Integer.parseInt((String) updates.get("day"));
+        Integer paymentMonth = (Integer) updates.get("month");
+        Integer paymentYear = (Integer) updates.get("year");
+        Integer paymentDay = (Integer) updates.get("day");
         Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId, paymentMonth, paymentYear);
         if (payroll == null) { return 0; }
         else {
@@ -120,35 +116,43 @@ public class PayrollService {
         }
     }
 
-    public String generatePayroll(Map<String, Object> updates) {
+    public Map<String, Object> generatePayroll(Map<String, Object> updates) {
         List<EmployeeProfile> employeeInformation = employeeProfileRepository.findAll();
-        StringBuilder result = new StringBuilder();
+        List<Integer> result = new ArrayList<>();
+        Map<String, Object> returnValue = new HashMap<>();
         for (EmployeeProfile employee : employeeInformation) {
-            updates.put("salary", String.valueOf(employee.getBaseSalary()));
+            updates.put("salary", employee.getBaseSalary());
             Integer status = addPayrollByEmployeeId(employee.getId(), updates);
             if (status == 0) {
-                result.append(employee.getId()).append("\n");
+                result.add(employee.getId());
             }
         }
         if (!result.isEmpty()) {
-            result.insert(0, "Payroll for the following employees have already been generated and were not added:\n");
+            returnValue.put("response", "Payroll for the employees in list have already been generated and were not added");
+            returnValue.put("employeeList", result);
+        } else {
+            returnValue.put("response", "Payroll for this month and year has been generated");
         }
-        return result.toString();
+        return returnValue;
     }
 
-    public String deletePayroll(Map<String, Object> updates) {
+    public Map<String, Object> deletePayroll(Map<String, Object> updates) {
         List<EmployeeProfile> employeeInformation = employeeProfileRepository.findAll();
-        StringBuilder result = new StringBuilder();
+        List<Integer> result = new ArrayList<>();
+        Map<String, Object> returnValue = new HashMap<>();
         for (EmployeeProfile employee : employeeInformation) {
             Integer status = deletePayrollByEmployeeId(employee.getId(), updates);
             if (status == 0) {
-                result.append(employee.getId()).append("\n");
+                result.add(employee.getId());
             }
         }
         if (!result.isEmpty()) {
-            result.insert(0, "Payroll for the following employees have already been deleted and were not deleted:\n");
+            returnValue.put("response", "Payroll for the employees in list have already been deleted and were not deleted");
+            returnValue.put("employeeList", result);
+        } else {
+            returnValue.put("response", "Payroll for this month and year has been deleted");
         }
-        return result.toString();
+        return returnValue;
     }
 
 }
