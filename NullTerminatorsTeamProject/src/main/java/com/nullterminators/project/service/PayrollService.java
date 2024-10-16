@@ -81,7 +81,7 @@ public class PayrollService {
             Payroll newPayrollEntry = new Payroll();
             newPayrollEntry.setEmployeeId(employeeId);
             newPayrollEntry.setSalary(salary);
-            newPayrollEntry.setTax(0);
+            newPayrollEntry.setTax(calculateTax(salary));
             newPayrollEntry.setPayslip("N/A");
             newPayrollEntry.setPaymentDate(LocalDate.of(paymentYear, paymentMonth, paymentDay));
             newPayrollEntry.setPaid(1);
@@ -98,6 +98,7 @@ public class PayrollService {
         if (payroll == null) { return 0; }
         else {
             payroll.setSalary(salary);
+            payroll.setTax(calculateTax(salary));
             payrollRepository.save(payroll);
             return 1;
         }
@@ -153,6 +154,10 @@ public class PayrollService {
             returnValue.put("response", "Payroll for this month and year has been deleted");
         }
         return returnValue;
+    }
+
+    private Integer calculateTax(Integer salary) {
+        return (int) (salary * 0.3);
     }
 
 }
