@@ -10,7 +10,9 @@ import java.io.Serializable;
 public class Company implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "companyIdSeq",
+                      sequenceName = "company_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "companyIdSeq")
     private Integer id;
 
     private String name;

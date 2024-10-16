@@ -3,6 +3,7 @@ package com.nullterminators.project.service;
 import com.nullterminators.project.model.Company;
 import com.nullterminators.project.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,5 +31,9 @@ public class CompanyService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("User with name: " + username + " not found");
         }
+    }
+
+    public String getCompanyUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }
