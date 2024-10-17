@@ -1,10 +1,12 @@
 package com.nullterminators.project.repository;
 
 import com.nullterminators.project.model.Company;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
+/**
+ *  Repository for company table.
+ */
 public interface CompanyRepository extends JpaRepository<Company, Integer> {
-    Optional<Company> findByUsername(String username);
+  Optional<Company> findByUsername(String username);
 }

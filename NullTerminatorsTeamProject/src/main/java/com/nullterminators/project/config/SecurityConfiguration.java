@@ -14,34 +14,58 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Basic auth security configuration for the API'S.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    @Autowired
-    private CompanyService companyService;
+  @Autowired private CompanyService companyService;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/registerCompany").permitAll()
-                        .requestMatchers("/").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-        ).httpBasic(Customizer.withDefaults());
-        return httpSecurity.build();
-    }
+  /**
+   * This method configures the basic security filter chain. CSRF is disabled.
+   * The endpoint for registering a company is permitted for all users. All other
+   * endpoints must be authenticated. The default HTTP Basic authentication is used.
+   *
+   * @param httpSecurity the http security object
+   * @return the security filter chain
+   * @throws Exception if an error occurs
+   */
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    httpSecurity
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
+            (requests) ->
+                requests
+                    .requestMatchers("/registerCompany")
+                    .permitAll()
+                    .requestMatchers("/")
+                    .hasRole("ADMIN")
+                    .anyRequest()
+                    .authenticated())
+        .httpBasic(Customizer.withDefaults());
+    return httpSecurity.build();
+  }
 
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(companyService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  /**
+   * Returns an {@link AuthenticationProvider} that uses the company service to
+   * authenticate users. The {@link PasswordEncoder} is set to a
+   * {@link BCryptPasswordEncoder}.
+   *
+   * @return an authentication provider
+   */
+  public AuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    provider.setUserDetailsService(companyService);
+    provider.setPasswordEncoder(passwordEncoder());
+    return provider;
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }
