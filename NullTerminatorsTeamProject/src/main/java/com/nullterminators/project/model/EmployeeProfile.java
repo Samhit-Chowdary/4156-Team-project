@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -22,8 +21,7 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = "Employee", uniqueConstraints = {@UniqueConstraint(columnNames
-    = {"Phone_Number", "Email_Id"})})
+@Table(name = "Employee")
 public class EmployeeProfile implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

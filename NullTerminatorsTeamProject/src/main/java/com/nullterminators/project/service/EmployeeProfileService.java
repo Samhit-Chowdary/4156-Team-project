@@ -26,6 +26,22 @@ public class EmployeeProfileService {
   }
 
   /**
+   * Checks if a profile with the same email and phone number combination exists. 
+   *
+   * @param email (String) : email Id
+   * @param phoneNumber (String) : phone number
+   * @return true if exists, false otherwise
+   */
+  public boolean employeeProfileExists(String email, String phoneNumber) {
+    Optional<EmployeeProfile> employeeProfileOptional = employeeProfileRepository
+        .findByEmailAndPhoneNumber(phoneNumber, email);
+    if (employeeProfileOptional.isPresent()) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Gets the employee profile given the ID.
    *
    * @param id (int)
@@ -159,8 +175,8 @@ public class EmployeeProfileService {
    * @return true if successful, false otherwise
    */
   public boolean deleteEmployeeProfile(int id) {
-    boolean isEmployeePresent = employeeProfileRepository.findById(id) != null;
-    if (isEmployeePresent) {
+    Optional<EmployeeProfile> employeeOptional = employeeProfileRepository.findById(id);
+    if (employeeOptional.isPresent()) {
       employeeProfileRepository.deleteById(id);
       return true;
     }
