@@ -3,11 +3,13 @@ package com.nullterminators.project;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.repository.EmployeeProfileRepository;
+import com.nullterminators.project.service.CompanyEmployeesService;
 import com.nullterminators.project.service.EmployeeProfileService;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,6 +33,9 @@ public class EmployeeProfileTests {
 
   @Mock
   private EmployeeProfileRepository employeeProfileRepository;
+
+  @Mock
+  private CompanyEmployeesService companyEmployeesService;
 
   @InjectMocks
   private EmployeeProfileService employeeProfileService;
@@ -68,6 +73,8 @@ public class EmployeeProfileTests {
     employeeProfile2.setStartDate(LocalDate.now());
     employeeProfile2.setEmergencyContactNumber("9876543210");
     employeeProfile2.setBaseSalary(233445);
+
+    when(companyEmployeesService.verifyIfEmployeeInCompany(anyInt())).thenReturn(true);
   }
 
   @Test
@@ -75,8 +82,10 @@ public class EmployeeProfileTests {
     // create employee profile for employee 1 & 2
     employeeProfileService.createNewEmployee(employeeProfile1);
     Mockito.verify(employeeProfileRepository).save(employeeProfile1);
+    Mockito.verify(companyEmployeesService).addEmployeeToCompany(employeeProfile1.getId());
     employeeProfileService.createNewEmployee(employeeProfile2);
     Mockito.verify(employeeProfileRepository).save(employeeProfile2);
+    Mockito.verify(companyEmployeesService).addEmployeeToCompany(employeeProfile2.getId());
   }
 
   @Test
@@ -102,6 +111,7 @@ public class EmployeeProfileTests {
     allEmployees.add(employeeProfile2);
 
     when(employeeProfileRepository.findAll()).thenReturn(allEmployees);
+    when(companyEmployeesService.getAllEmployeesInCompany()).thenReturn(List.of(1, 2));
 
     List<EmployeeProfile> result = employeeProfileService.getAllEmployees();
     assertEquals(allEmployees, result);
