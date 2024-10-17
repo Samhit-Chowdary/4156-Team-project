@@ -18,6 +18,9 @@ public class EmployeeProfileService {
   @Autowired
   private EmployeeProfileRepository employeeProfileRepository;
 
+  @Autowired
+  private CompanyEmployeesService companyEmployeesService;
+
   /**
    * Creates a new employee profile and saves it in the DB.
    *
@@ -25,6 +28,7 @@ public class EmployeeProfileService {
    */
   public void createNewEmployee(EmployeeProfile employee) {
     employeeProfileRepository.save(employee);
+    companyEmployeesService.addEmployeeToCompany(employee.getId());
   }
 
   /**
