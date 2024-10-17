@@ -26,6 +26,7 @@ public class SecurityConfiguration {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/registerCompany").permitAll()
                         .requestMatchers("/").hasRole("ADMIN")
                         .anyRequest().authenticated()
         ).httpBasic(Customizer.withDefaults());

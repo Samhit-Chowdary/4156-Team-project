@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -31,6 +32,11 @@ public class CompanyService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("User with name: " + username + " not found");
         }
+    }
+
+    public void registerCompany(Company company) {
+        company.setPassword(new BCryptPasswordEncoder().encode(company.getPassword()));
+        companyRepository.save(company);
     }
 
     public String getCompanyUsername() {
