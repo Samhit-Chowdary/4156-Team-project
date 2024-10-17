@@ -35,7 +35,7 @@ public class EmployeeProfileController {
     try {
       List<EmployeeProfile> allEmployees = employeeProfileService.getAllEmployees();
       return new ResponseEntity<>(
-          allEmployees.toString(), HttpStatus.OK);
+          allEmployees, HttpStatus.OK);
     } catch (Exception e) {
       return handleException(e);
     }
@@ -52,7 +52,7 @@ public class EmployeeProfileController {
     try {
       Optional<EmployeeProfile> employee = employeeProfileService.getEmployeeProfile(id);
       if (employee.isPresent()) {
-        return new ResponseEntity<>(employee.get().toString(), HttpStatus.OK);
+        return new ResponseEntity<>(employee.get(), HttpStatus.OK);
       } else {
         return new ResponseEntity<>("Employee with id " + id + " does not exist.",
           HttpStatus.NOT_FOUND);

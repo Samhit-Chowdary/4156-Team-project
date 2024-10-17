@@ -6,6 +6,7 @@ import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.repository.EmployeeProfileRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,9 @@ public class EmployeeProfileService {
   @Autowired
   private EmployeeProfileRepository employeeProfileRepository;
 
+  @Autowired
+  private CompanyEmployeesService companyEmployeesService;
+
   /**
    * Creates a new employee profile and saves it in the DB.
    *
@@ -25,19 +29,22 @@ public class EmployeeProfileService {
    */
   public void createNewEmployee(EmployeeProfile employee) {
     employeeProfileRepository.save(employee);
+    companyEmployeesService.addEmployeeToCompany(employee.getId());
   }
 
   /**
-   * Checks if a profile with the same email and phone number combination exists. 
+   * Checks if a profile with the same email and phone number combination exists.
    *
    * @param email (String) : email Id
    * @param phoneNumber (String) : phone number
    * @return true if exists, false otherwise
    */
   public boolean employeeProfileExists(String email, String phoneNumber) {
-    Optional<EmployeeProfile> employeeProfileOptional = employeeProfileRepository
-        .findByEmailAndPhoneNumber(phoneNumber, email);
-    if (employeeProfileOptional.isPresent()) {
+    Optional<EmployeeProfile> employeeProfileOptional =
+        employeeProfileRepository.findByEmailAndPhoneNumber(phoneNumber, email);
+    if (employeeProfileOptional.isPresent()
+        && companyEmployeesService.verifyIfEmployeeInCompany(
+            employeeProfileOptional.get().getId())) {
       return true;
     }
     return false;
@@ -50,7 +57,11 @@ public class EmployeeProfileService {
    * @return employee profile if available, else returns null
    */
   public Optional<EmployeeProfile> getEmployeeProfile(int id) {
-    return employeeProfileRepository.findById(id);
+    Optional<EmployeeProfile> employeeProfile = employeeProfileRepository.findById(id);
+    if (employeeProfile.isPresent() && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
+      return employeeProfile;
+    }
+    return Optional.empty();
   }
 
   /**
@@ -59,7 +70,11 @@ public class EmployeeProfileService {
    * @return list of employee profiles
    */
   public List<EmployeeProfile> getAllEmployees() {
-    return employeeProfileRepository.findAll();
+    List<Integer> empIds = companyEmployeesService.getAllEmployeesInCompany();
+
+    return employeeProfileRepository.findAll().stream()
+        .filter(employeeProfile -> empIds.contains(employeeProfile.getId()))
+        .collect(Collectors.toList());
   }
 
   /**
@@ -72,7 +87,7 @@ public class EmployeeProfileService {
   public boolean updateEmployeeName(int id, String name) {
     boolean isEmployeePresent = employeeProfileRepository.findById(id).isPresent();
 
-    if (isEmployeePresent) {
+    if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setName(name);
       return true;
@@ -90,7 +105,7 @@ public class EmployeeProfileService {
   public boolean updateEmployeeEmailId(int id, String emailId) {
     boolean isEmployeePresent = employeeProfileRepository.findById(id).isPresent();
 
-    if (isEmployeePresent) {
+    if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setEmail(emailId);
       return true;
@@ -108,7 +123,7 @@ public class EmployeeProfileService {
   public boolean updateEmployeeDesignation(int id, String designation) {
     boolean isEmployeePresent = employeeProfileRepository.findById(id).isPresent();
 
-    if (isEmployeePresent) {
+    if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setDesignation(designation);
       return true;
@@ -126,7 +141,7 @@ public class EmployeeProfileService {
   public boolean updateEmployeePhoneNumber(int id, String phoneNumber) {
     boolean isEmployeePresent = employeeProfileRepository.findById(id).isPresent();
 
-    if (isEmployeePresent) {
+    if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setPhoneNumber(phoneNumber);
       return true;
@@ -144,7 +159,7 @@ public class EmployeeProfileService {
   public boolean updateBaseSalary(int id, int baseSalary) {
     boolean isEmployeePresent = employeeProfileRepository.findById(id).isPresent();
 
-    if (isEmployeePresent) {
+    if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setBaseSalary(baseSalary);
       return true;
@@ -162,7 +177,7 @@ public class EmployeeProfileService {
   public boolean updateEmergencyContact(int id, String emergencyContact) {
     boolean isEmployeePresent = employeeProfileRepository.findById(id).isPresent();
 
-    if (isEmployeePresent) {
+    if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setEmergencyContactNumber(emergencyContact);
       return true;
@@ -178,7 +193,7 @@ public class EmployeeProfileService {
    */
   public boolean deleteEmployeeProfile(int id) {
     Optional<EmployeeProfile> employeeOptional = employeeProfileRepository.findById(id);
-    if (employeeOptional.isPresent()) {
+    if (employeeOptional.isPresent() && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       employeeProfileRepository.deleteById(id);
       return true;
     }
@@ -195,6 +210,7 @@ public class EmployeeProfileService {
     if (isNull(id) || id < 0) {
       return false;
     }
-    return employeeProfileRepository.findById(id).isPresent();
+    return employeeProfileRepository.findById(id).isPresent()
+        && companyEmployeesService.verifyIfEmployeeInCompany(id);
   }
 }
