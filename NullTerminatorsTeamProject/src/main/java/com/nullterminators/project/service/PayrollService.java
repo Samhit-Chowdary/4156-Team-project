@@ -297,7 +297,6 @@ public class PayrollService {
    */
   public Map<String, Object> deletePayroll(Map<String, Object> updates) {
     List<EmployeeProfile> employeeInformation = employeeProfileService.getAllEmployees();
-    List<Integer> result = new ArrayList<>();
     Map<String, Object> returnValue = new HashMap<>();
 
     for (EmployeeProfile employee : employeeInformation) {
@@ -310,21 +309,12 @@ public class PayrollService {
         case INVALID_FORMAT:
           returnValue.put("response", "Invalid format for month or year");
           return returnValue;
-        case ALREADY_EXISTS:
-          result.add(employee.getId());
-          break;
         default:
           break;
       }
     }
 
-    if (!result.isEmpty()) {
-      returnValue.put("response", "Payroll for the employees in list have already been deleted");
-      returnValue.put("employeeList", result);
-    } else {
-      returnValue.put("response", "Payroll for this month and year has been deleted");
-    }
-
+    returnValue.put("response", "Payroll for this month and year has been deleted");
     return returnValue;
   }
 
@@ -373,11 +363,11 @@ public class PayrollService {
         data.put(field.name(), value);
       }
       try {
-        LocalDate date;
+        LocalDate unusedDate;
         if (data.get("year") != null && data.get("month") != null && data.get("day") != null) {
-          date = LocalDate.of(data.get("year"), data.get("month"), data.get("day"));
+          unusedDate = LocalDate.of(data.get("year"), data.get("month"), data.get("day"));
         } else if (data.get("month") != null && data.get("year") != null) {
-          date = LocalDate.of(data.get("year"), data.get("month"), 1);
+          unusedDate = LocalDate.of(data.get("year"), data.get("month"), 1);
         }
       } catch (Exception e) {
         return Pair.of(PayrollStatus.INVALID_FORMAT, data);
