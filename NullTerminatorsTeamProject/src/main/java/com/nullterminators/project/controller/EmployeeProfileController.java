@@ -111,4 +111,17 @@ public class EmployeeProfileController {
         System.out.println(e.toString());
         return new ResponseEntity<>("An Error has occurred", HttpStatus.OK);
     }
+
+  }
+    
+  /**
+  * Return true/false depending on the employee existence
+  *
+  * @param id (int) : employee Id
+  * @return true if present, false otherwise
+  */
+  private ResponseEntity<?> handleException(Exception e) {
+    return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+  }
+
 }
