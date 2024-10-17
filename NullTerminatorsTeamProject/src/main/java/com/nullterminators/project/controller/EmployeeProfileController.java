@@ -108,7 +108,6 @@ public class EmployeeProfileController {
   }
     
   private ResponseEntity<?> handleException(Exception e) {
-    System.out.println(e.toString());
-    return new ResponseEntity<>("An Error has occurred", HttpStatus.OK);
+    return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
   }
 }
