@@ -10,8 +10,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 /**
@@ -76,12 +76,12 @@ public class PayrollService {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.getKey() != PayrollStatus.OK) {
-      return data.getKey();
+    if (data.getFirst() != PayrollStatus.OK) {
+      return data.getFirst();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.getValue().get("month"), data.getValue().get("year"));
+            data.getSecond().get("month"), data.getSecond().get("year"));
 
     if (payroll == null) {
       return PayrollStatus.NOT_FOUND;
@@ -107,12 +107,12 @@ public class PayrollService {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.getKey() != PayrollStatus.OK) {
-      return data.getKey();
+    if (data.getFirst() != PayrollStatus.OK) {
+      return data.getFirst();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.getValue().get("month"), data.getValue().get("year"));
+            data.getSecond().get("month"), data.getSecond().get("year"));
 
     if (payroll == null) {
       return PayrollStatus.NOT_FOUND;
@@ -138,12 +138,12 @@ public class PayrollService {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.getKey() != PayrollStatus.OK) {
-      return data.getKey();
+    if (data.getFirst() != PayrollStatus.OK) {
+      return data.getFirst();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.getValue().get("month"), data.getValue().get("year"));
+            data.getSecond().get("month"), data.getSecond().get("year"));
 
     if (payroll == null) {
       return PayrollStatus.NOT_FOUND;
@@ -165,23 +165,23 @@ public class PayrollService {
             UpdateField.month, UpdateField.year, UpdateField.salary));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.getKey() != PayrollStatus.OK) {
-      return data.getKey();
+    if (data.getFirst() != PayrollStatus.OK) {
+      return data.getFirst();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.getValue().get("month"), data.getValue().get("year"));
+            data.getSecond().get("month"), data.getSecond().get("year"));
 
     if (payroll != null) {
       return PayrollStatus.ALREADY_EXISTS;
     } else {
       Payroll newPayrollEntry = new Payroll();
       newPayrollEntry.setEmployeeId(employeeId);
-      newPayrollEntry.setSalary(data.getValue().get("salary"));
-      newPayrollEntry.setTax(calculateTax(data.getValue().get("salary")));
+      newPayrollEntry.setSalary(data.getSecond().get("salary"));
+      newPayrollEntry.setTax(calculateTax(data.getSecond().get("salary")));
       newPayrollEntry.setPayslip("N/A");
-      newPayrollEntry.setPaymentDate(LocalDate.of(data.getValue().get("year"),
-              data.getValue().get("month"), data.getValue().get("day")));
+      newPayrollEntry.setPaymentDate(LocalDate.of(data.getSecond().get("year"),
+              data.getSecond().get("month"), data.getSecond().get("day")));
       pdfGenerator.generatePdfReport(newPayrollEntry);
       newPayrollEntry.setPaid(1);
       payrollRepository.save(newPayrollEntry);
@@ -201,18 +201,18 @@ public class PayrollService {
             UpdateField.salary));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.getKey() != PayrollStatus.OK) {
-      return data.getKey();
+    if (data.getFirst() != PayrollStatus.OK) {
+      return data.getFirst();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.getValue().get("month"), data.getValue().get("year"));
+            data.getSecond().get("month"), data.getSecond().get("year"));
 
     if (payroll == null) {
       return PayrollStatus.NOT_FOUND;
     } else {
-      payroll.setSalary(data.getValue().get("salary"));
-      payroll.setTax(calculateTax(data.getValue().get("salary")));
+      payroll.setSalary(data.getSecond().get("salary"));
+      payroll.setTax(calculateTax(data.getSecond().get("salary")));
       payrollRepository.save(payroll);
       return PayrollStatus.SUCCESS;
     }
@@ -231,18 +231,18 @@ public class PayrollService {
             UpdateField.year));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.getKey() != PayrollStatus.OK) {
-      return data.getKey();
+    if (data.getFirst() != PayrollStatus.OK) {
+      return data.getFirst();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.getValue().get("month"), data.getValue().get("year"));
+            data.getSecond().get("month"), data.getSecond().get("year"));
 
     if (payroll == null) {
       return PayrollStatus.NOT_FOUND;
     } else {
-      payroll.setPaymentDate(LocalDate.of(data.getValue().get("year"),
-              data.getValue().get("month"), data.getValue().get("day")));
+      payroll.setPaymentDate(LocalDate.of(data.getSecond().get("year"),
+              data.getSecond().get("month"), data.getSecond().get("day")));
       payrollRepository.save(payroll);
       return PayrollStatus.SUCCESS;
     }
@@ -368,7 +368,7 @@ public class PayrollService {
       for (UpdateField field : flags) {
         Integer value = (Integer) updates.get(field.name());
         if (value == null) {
-          return new Pair<>(PayrollStatus.INVALID_DATA, data);
+          return Pair.of(PayrollStatus.INVALID_DATA, data);
         }
         data.put(field.name(), value);
       }
@@ -380,12 +380,12 @@ public class PayrollService {
           date = LocalDate.of(data.get("year"), data.get("month"), 1);
         }
       } catch (Exception e) {
-        return new Pair<>(PayrollStatus.INVALID_FORMAT, data);
+        return Pair.of(PayrollStatus.INVALID_FORMAT, data);
       }
     } catch (Exception e) {
-      return new Pair<>(PayrollStatus.INVALID_FORMAT, data);
+      return Pair.of(PayrollStatus.INVALID_FORMAT, data);
     }
 
-    return new Pair<>(PayrollStatus.OK, data);
+    return Pair.of(PayrollStatus.OK, data);
   }
 }
