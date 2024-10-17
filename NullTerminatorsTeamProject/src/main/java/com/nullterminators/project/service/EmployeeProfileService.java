@@ -1,5 +1,7 @@
 package com.nullterminators.project.service;
 
+import static java.util.Objects.isNull;
+
 import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.repository.EmployeeProfileRepository;
 import java.util.List;
@@ -181,5 +183,18 @@ public class EmployeeProfileService {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Return true/false depending on the employee existence.
+   *
+   * @param id (int) : employee Id
+   * @return true if present, false otherwise
+   */
+  public boolean doesEmployeeExist(Integer id) {
+    if (isNull(id) || id < 0) {
+      return false;
+    }
+    return employeeProfileRepository.findById(id).isPresent();
   }
 }
