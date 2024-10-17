@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 /**
- * Repository for storing payroll DB.
+ * Repository for payroll DB.
  */
 public interface PayrollRepository extends JpaRepository<Payroll, Integer> {
   @Query(value = "SELECT * FROM Payroll p "

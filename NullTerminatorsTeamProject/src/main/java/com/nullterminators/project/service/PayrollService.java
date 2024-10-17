@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,26 +72,26 @@ public class PayrollService {
    * @param updates (Map) : Map consisting of month and year
    * @return (Integer) : Status of update
    */
-  public Integer markAsPaid(Integer employeeId, Map<String, Object> updates) {
+  public PayrollStatus markAsPaid(Integer employeeId, Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
-    Map<String, Integer> data = checkError(updates, flags);
+    Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.get("result") != 0) {
-      return data.get("result");
+    if (data.getKey() != PayrollStatus.OK) {
+      return data.getKey();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.get("month"), data.get("year"));
+            data.getValue().get("month"), data.getValue().get("year"));
 
     if (payroll == null) {
-      return 3;
+      return PayrollStatus.NOT_FOUND;
     } else {
       if (payroll.getPaid() == 1) {
-        return 4;
+        return PayrollStatus.ALREADY_COMPLETED;
       } else {
         payroll.setPaid(1);
         payrollRepository.save(payroll);
-        return 5;
+        return PayrollStatus.SUCCESS;
       }
     }
   }
@@ -102,26 +103,26 @@ public class PayrollService {
    * @param updates (Map) : Map consisting of month and year
    * @return (Integer) : Status of update
    */
-  public Integer markAsUnpaid(Integer employeeId, Map<String, Object> updates) {
+  public PayrollStatus markAsUnpaid(Integer employeeId, Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
-    Map<String, Integer> data = checkError(updates, flags);
+    Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.get("result") != 0) {
-      return data.get("result");
+    if (data.getKey() != PayrollStatus.OK) {
+      return data.getKey();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.get("month"), data.get("year"));
+            data.getValue().get("month"), data.getValue().get("year"));
 
     if (payroll == null) {
-      return 3;
+      return PayrollStatus.NOT_FOUND;
     } else {
       if (payroll.getPaid() == 0) {
-        return 4;
+        return PayrollStatus.ALREADY_COMPLETED;
       } else {
         payroll.setPaid(0);
         payrollRepository.save(payroll);
-        return 5;
+        return PayrollStatus.SUCCESS;
       }
     }
   }
@@ -133,22 +134,22 @@ public class PayrollService {
    * @param updates (Map) : Map consisting of month and year
    * @return (Integer) : Status of update
    */
-  public Integer deletePayrollByEmployeeId(Integer employeeId, Map<String, Object> updates) {
+  public PayrollStatus deletePayrollByEmployeeId(Integer employeeId, Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
-    Map<String, Integer> data = checkError(updates, flags);
+    Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.get("result") != 0) {
-      return data.get("result");
+    if (data.getKey() != PayrollStatus.OK) {
+      return data.getKey();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.get("month"), data.get("year"));
+            data.getValue().get("month"), data.getValue().get("year"));
 
     if (payroll == null) {
-      return 3;
+      return PayrollStatus.NOT_FOUND;
     } else {
       payrollRepository.delete(payroll);
-      return 4;
+      return PayrollStatus.SUCCESS;
     }
   }
 
@@ -159,32 +160,32 @@ public class PayrollService {
    * @param updates (Map) : Map consisting of month and year
    * @return (Integer) : Status of update
    */
-  public Integer addPayrollByEmployeeId(Integer employeeId, Map<String, Object> updates) {
+  public PayrollStatus addPayrollByEmployeeId(Integer employeeId, Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.day,
             UpdateField.month, UpdateField.year, UpdateField.salary));
-    Map<String, Integer> data = checkError(updates, flags);
+    Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.get("result") != 0) {
-      return data.get("result");
+    if (data.getKey() != PayrollStatus.OK) {
+      return data.getKey();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.get("month"), data.get("year"));
+            data.getValue().get("month"), data.getValue().get("year"));
 
     if (payroll != null) {
-      return 3;
+      return PayrollStatus.ALREADY_EXISTS;
     } else {
       Payroll newPayrollEntry = new Payroll();
       newPayrollEntry.setEmployeeId(employeeId);
-      newPayrollEntry.setSalary(data.get("salary"));
-      newPayrollEntry.setTax(calculateTax(data.get("salary")));
+      newPayrollEntry.setSalary(data.getValue().get("salary"));
+      newPayrollEntry.setTax(calculateTax(data.getValue().get("salary")));
       newPayrollEntry.setPayslip("N/A");
-      newPayrollEntry.setPaymentDate(LocalDate.of(data.get("year"),
-              data.get("month"), data.get("day")));
+      newPayrollEntry.setPaymentDate(LocalDate.of(data.getValue().get("year"),
+              data.getValue().get("month"), data.getValue().get("day")));
       pdfGenerator.generatePdfReport(newPayrollEntry);
       newPayrollEntry.setPaid(1);
       payrollRepository.save(newPayrollEntry);
-      return 4;
+      return PayrollStatus.SUCCESS;
     }
   }
 
@@ -195,25 +196,25 @@ public class PayrollService {
    * @param updates (Map) : Map consisting of month, year and salary
    * @return (Integer) : Status of update
    */
-  public Integer adjustSalaryByEmployeeId(Integer employeeId, Map<String, Object> updates) {
+  public PayrollStatus adjustSalaryByEmployeeId(Integer employeeId, Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year,
             UpdateField.salary));
-    Map<String, Integer> data = checkError(updates, flags);
+    Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.get("result") != 0) {
-      return data.get("result");
+    if (data.getKey() != PayrollStatus.OK) {
+      return data.getKey();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.get("month"), data.get("year"));
+            data.getValue().get("month"), data.getValue().get("year"));
 
     if (payroll == null) {
-      return 3;
+      return PayrollStatus.NOT_FOUND;
     } else {
-      payroll.setSalary(data.get("salary"));
-      payroll.setTax(calculateTax(data.get("salary")));
+      payroll.setSalary(data.getValue().get("salary"));
+      payroll.setTax(calculateTax(data.getValue().get("salary")));
       payrollRepository.save(payroll);
-      return 4;
+      return PayrollStatus.SUCCESS;
     }
   }
 
@@ -224,24 +225,26 @@ public class PayrollService {
    * @param updates (Map) : Map consisting of day, month and year
    * @return (Integer) : Status of update
    */
-  public Integer adjustPaymentDayByEmployeeId(Integer employeeId, Map<String, Object> updates) {
+  public PayrollStatus adjustPaymentDayByEmployeeId(Integer employeeId,
+                                                    Map<String, Object> updates) {
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.day, UpdateField.month,
             UpdateField.year));
-    Map<String, Integer> data = checkError(updates, flags);
+    Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
-    if (data.get("result") != 0) {
-      return data.get("result");
+    if (data.getKey() != PayrollStatus.OK) {
+      return data.getKey();
     }
 
     Payroll payroll = payrollRepository.findByEmployeeIdPaymentMonthAndYear(employeeId,
-            data.get("month"), data.get("year"));
+            data.getValue().get("month"), data.getValue().get("year"));
 
     if (payroll == null) {
-      return 3;
+      return PayrollStatus.NOT_FOUND;
     } else {
-      payroll.setPaymentDate(LocalDate.of(data.get("year"), data.get("month"), data.get("day")));
+      payroll.setPaymentDate(LocalDate.of(data.getValue().get("year"),
+              data.getValue().get("month"), data.getValue().get("day")));
       payrollRepository.save(payroll);
-      return 4;
+      return PayrollStatus.SUCCESS;
     }
   }
 
@@ -258,16 +261,16 @@ public class PayrollService {
 
     for (EmployeeProfile employee : employeeInformation) {
       updates.put("salary", employee.getBaseSalary());
-      Integer status = addPayrollByEmployeeId(employee.getId(), updates);
+      PayrollStatus status = addPayrollByEmployeeId(employee.getId(), updates);
 
       switch (status) {
-        case 1:
+        case INVALID_DATA:
           returnValue.put("response", "Invalid day or month or year");
           return returnValue;
-        case 2:
+        case INVALID_FORMAT:
           returnValue.put("response", "Invalid format for day or month or year");
           return returnValue;
-        case 3:
+        case ALREADY_EXISTS:
           result.add(employee.getId());
           break;
         default:
@@ -298,16 +301,16 @@ public class PayrollService {
     Map<String, Object> returnValue = new HashMap<>();
 
     for (EmployeeProfile employee : employeeInformation) {
-      Integer status = deletePayrollByEmployeeId(employee.getId(), updates);
+      PayrollStatus status = deletePayrollByEmployeeId(employee.getId(), updates);
 
       switch (status) {
-        case 1:
+        case INVALID_DATA:
           returnValue.put("response", "Invalid month or year");
           return returnValue;
-        case 2:
+        case INVALID_FORMAT:
           returnValue.put("response", "Invalid format for month or year");
           return returnValue;
-        case 3:
+        case ALREADY_EXISTS:
           result.add(employee.getId());
           break;
         default:
@@ -332,18 +335,40 @@ public class PayrollService {
     year
   }
 
+  /**
+   * Enumerator of possible updates returned by Payroll service.
+   */
+  public enum PayrollStatus {
+    INVALID_DATA,
+    INVALID_FORMAT,
+    ALREADY_EXISTS,
+    SUCCESS,
+    NOT_FOUND,
+    ALREADY_COMPLETED,
+    ERROR,
+    OK
+  }
+
   private Integer calculateTax(Integer salary) {
     return (int) (salary * 0.3);
   }
 
-  private Map<String, Integer> checkError(Map<String, Object> updates, List<UpdateField> flags) {
+  /**
+   * Checks if data is valid or returns appropriate status.
+   *
+   * @param updates (Map) : Map may consist some fields such as day, month, year and salary
+   * @param flags (List) : List of UpdateField which may consist some fields such
+   *                       as day, month, year and salary
+   * @return (Pair) : Pair consisting of status and data converted into Integer values
+   */
+  private Pair<PayrollStatus, Map<String, Integer>> checkError(Map<String, Object> updates,
+                                                               List<UpdateField> flags) {
     Map<String, Integer> data = new HashMap<>();
     try {
       for (UpdateField field : flags) {
         Integer value = (Integer) updates.get(field.name());
         if (value == null) {
-          data.put("result", 1);
-          return data;
+          return new Pair<>(PayrollStatus.INVALID_DATA, data);
         }
         data.put(field.name(), value);
       }
@@ -355,15 +380,12 @@ public class PayrollService {
           date = LocalDate.of(data.get("year"), data.get("month"), 1);
         }
       } catch (Exception e) {
-        data.put("result", 2);
-        return data;
+        return new Pair<>(PayrollStatus.INVALID_FORMAT, data);
       }
     } catch (Exception e) {
-      data.put("result", 2);
-      return data;
+      return new Pair<>(PayrollStatus.INVALID_FORMAT, data);
     }
 
-    data.put("result", 0);
-    return data;
+    return new Pair<>(PayrollStatus.OK, data);
   }
 }
