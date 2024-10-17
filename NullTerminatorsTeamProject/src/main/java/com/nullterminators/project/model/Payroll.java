@@ -1,32 +1,50 @@
 package com.nullterminators.project.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
-import lombok.Data;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import lombok.Data;
 
+/**
+ * Database fields for Payroll.
+ * Contains fields: id, employee id, salary, tax, payslip,
+ *     payment date and paid
+ */
 @Data
 @Entity
 @Table(name = "payroll")
 public class Payroll implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @SequenceGenerator(name = "payrollIdGenerationSeq",
+          sequenceName = "payroll_id_generation_seq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payrollIdGenerationSeq")
+  @Column(name = "id", updatable = false)
+  private Integer id;
 
-    private Integer employeeId;
+  @NotNull
+  private Integer employeeId;
 
-    private Integer salary;
+  @NotNull
+  private Integer salary;
 
-    private Integer tax;
+  @NotNull
+  private Integer tax;
 
-    private String payslip;
+  @Size(min = 1, max = 255)
+  private String payslip;
 
-    private LocalDate paymentDate;
+  @NotNull
+  private LocalDate paymentDate;
 
-    private Integer paid;
+  @NotNull
+  private Integer paid;
 }
