@@ -35,10 +35,14 @@ Steps followed:
 
 This section describes the endpoints that our service provides, as well as their inputs and outputs.
 
+### Authentication:
+
+All API's listed below except for registerCompany are protected by basic authentication. the client (Company) must provide a valid username and password to access the API's and each client can only access data which they have created and cannot access other clients data.
+
 ### Company Management:
 
 POST /registerCompany
-* Expected Input Parameters: company (Company)
+* Expected Input Parameters: company (Company) {username, password, name, address, state}
 * Expected Output: Success or failure message
 * Registers a new company with given details.
 * Upon Success: HTTP 201 Status Code is returned along with "Company is registered successfully." in the response body.
