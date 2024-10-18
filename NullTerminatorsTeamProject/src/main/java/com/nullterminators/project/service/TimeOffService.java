@@ -7,6 +7,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,7 @@ public class TimeOffService {
         return false;
       }
 
-      switch (action.toLowerCase()) {
+      switch (action.toLowerCase(Locale.US)) {
         case "approve":
           timeOff.setStatus(LeaveStatus.APPROVED);
           break;
