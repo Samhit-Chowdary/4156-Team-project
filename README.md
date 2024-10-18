@@ -99,3 +99,79 @@ This section describes the endpoints that our service provides, as well as their
 * Updates the status of a specific time-off request
 * Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
 * Upon Failure: HTTP 404 Status Code is returned if the employee does not exist, the time-off request is not found, or if the action is not applicable.
+
+### Payroll Management (/payroll):
+
+#### GET /payroll/{employeeId}
+
+* Expected Input Parameters: employeeId (Integer)
+* Expected Output: List of Payroll records or error message
+* Retrieves all payroll records for a specific employee which includes the salary, deductions and link to the payroll PDF for that month and year
+* Upon Success: HTTP 200 Status Code is returned along with the list of payroll records in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist or no records are found.
+
+#### PATCH /payroll/{employeeId}/markPaid
+
+* Expected Input Parameters: employeeId (Integer), month (Integer) in MM, year (Integer) in YYYY in request body (JSON format).
+* Expected Output: Success or failure message
+* Marks a specific payroll record as paid for a given month and year
+* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist or if payroll for the month and year does not exist or if the flag is already set and HTTP 400 Status Code if month and year are missing or not in the correct format.
+
+#### PATCH /payroll/{employeeId}/markUnpaid
+
+* Expected Input Parameters: employeeId (Integer), month (Integer) in MM, year (Integer) in YYYY in request body (JSON format).
+* Expected Output: Success or failure message
+* Marks a specific payroll record as unpaid for a given month and year
+* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist or if payroll for the month and year does not exist or if the flag is already not set and HTTP 400 Status Code if month and year are missing or not in the correct format.
+
+#### PATCH /payroll/{employeeId}/adjustSalary
+
+* Expected Input Parameters: employeeId (Integer), month (Integer) in MM, year (Integer) in YYYY, salary (Integer) in request body (JSON format).
+* Expected Output: Success or failure message
+* Adjusts the salary for a specific employee for a given month and year
+* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist or if payroll for the month and year does not exist and HTTP 400 Status Code if month, year and salary are missing or not in the correct format.
+
+#### PATCH /payroll/{employeeId}/adjustDay
+
+* Expected Input Parameters: employeeId (Integer), day (Integer) in DD, month (Integer) in MM, year (Integer) in YYYY in request body (JSON format).
+* Expected Output: Success or failure message
+* Adjusts the payment day for a specific employee for a given month and year
+* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist or if payroll for the month and year does not exist and HTTP 400 Status Code if day, month, and year are missing or in the correct format.
+
+#### POST /payroll/{employeeId}/addPayroll
+
+* Expected Input Parameters: employeeId (Integer), day (Integer) in DD, month (Integer) in MM, year (Integer) in YYYY and salary (Integer) in request body (JSON format).
+* Expected Output: Success or failure message
+* Creates a new payroll record for a specific employee
+* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist and HTTP 409 Status Code if the payroll for the month and year already exists and HTTP 400 Status Code day, month, year and salary are missing or not in the correct format.
+
+#### DELETE /payroll/{employeeId}/deletePayroll
+
+* Expected Input Parameters: employeeId (Integer), month (Integer) in MM, year (Integer) in YYYY in request body (JSON format).
+* Expected Output: Success or failure message
+* Deletes a specific payroll record for a specific employee
+* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist or if payroll for the month and year does not exist and HTTP 400 Status Code if day, month, and year are missing or in the correct format.
+
+#### POST /payroll/generatePayroll
+
+* Expected Input Parameters: month (Integer) in MM, year (Integer) in YYYY in request body (JSON format).
+* Expected Output: Success or failure message
+* Generates payroll records for all employees in the company for a given month and year
+* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Upon Failure: HTTP 400 Status Code is returned if month and year are missing or not in the correct format.
+
+#### DELETE /payroll/deletePayroll
+
+* Expected Input Parameters: month (Integer) in MM, year (Integer) in YYYY in request body (JSON format).
+* Expected Output: Success or failure message
+* Deletes all payroll records for all employees in the company for a given month and year
+* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Upon Failure: HTTP 400 Status Code is returned if month and year are missing or not in the correct format.
+
+

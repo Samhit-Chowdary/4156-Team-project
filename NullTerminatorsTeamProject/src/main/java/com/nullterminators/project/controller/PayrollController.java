@@ -1,9 +1,11 @@
 package com.nullterminators.project.controller;
 
+import com.nullterminators.project.enums.PayrollStatus;
 import com.nullterminators.project.service.PayrollService;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,11 +45,15 @@ public class PayrollController {
   @GetMapping(value = "/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getPayrollByEmployeeId(@PathVariable("employeeId") Integer employeeId) {
     try {
-      List<Map<String, Object>> result = payrollService.getPayrollByEmployeeId(employeeId);
-      if (result.isEmpty()) {
+      Pair<PayrollStatus, List<Map<String, Object>>> result =
+              payrollService.getPayrollByEmployeeId(employeeId);
+      if (result.getFirst() == PayrollStatus.EMPLOYEE_NOT_FOUND) {
+        return new ResponseEntity<>(Map.of("response",
+                "Employee Not Found in Company"), HttpStatus.NOT_FOUND);
+      } else if (result.getSecond().isEmpty()) {
         return new ResponseEntity<>(Map.of("response", "Details Not Found"), HttpStatus.NOT_FOUND);
       }
-      return new ResponseEntity<>(result, HttpStatus.OK);
+      return new ResponseEntity<>(result.getSecond(), HttpStatus.OK);
     } catch (Exception e) {
       return handleException(e);
     }
@@ -69,12 +75,14 @@ public class PayrollController {
   public ResponseEntity<?> markAsPaid(@PathVariable("employeeId") Integer employeeId,
                                       @RequestBody Map<String, Object> updates) {
     try {
-      PayrollService.PayrollStatus result = payrollService.markAsPaid(employeeId, updates);
+      PayrollStatus result = payrollService.markAsPaid(employeeId, updates);
       return switch (result) {
         case INVALID_DATA -> new ResponseEntity<>(Map.of("response", "Invalid month or year"),
                 HttpStatus.BAD_REQUEST);
         case INVALID_FORMAT -> new ResponseEntity<>(Map.of("response",
                 "Invalid format for month or year"), HttpStatus.BAD_REQUEST);
+        case EMPLOYEE_NOT_FOUND -> new ResponseEntity<>(Map.of("response",
+                "Employee Not Found in Company"), HttpStatus.NOT_FOUND);
         case NOT_FOUND -> new ResponseEntity<>(Map.of("response",
                 "Payroll for this month and year Not Found"),
                 HttpStatus.NOT_FOUND);
@@ -107,12 +115,14 @@ public class PayrollController {
   public ResponseEntity<?> markAsUnpaid(@PathVariable("employeeId") Integer employeeId,
                                         @RequestBody Map<String, Object> updates) {
     try {
-      PayrollService.PayrollStatus result = payrollService.markAsUnpaid(employeeId, updates);
+      PayrollStatus result = payrollService.markAsUnpaid(employeeId, updates);
       return switch (result) {
         case INVALID_DATA -> new ResponseEntity<>(Map.of("response", "Invalid month or year"),
                 HttpStatus.BAD_REQUEST);
         case INVALID_FORMAT -> new ResponseEntity<>(Map.of("response",
                 "Invalid format for month or year"), HttpStatus.BAD_REQUEST);
+        case EMPLOYEE_NOT_FOUND -> new ResponseEntity<>(Map.of("response",
+                "Employee Not Found in Company"), HttpStatus.NOT_FOUND);
         case NOT_FOUND -> new ResponseEntity<>(Map.of("response",
                 "Payroll for this month and year Not Found"),
                 HttpStatus.NOT_FOUND);
@@ -145,13 +155,15 @@ public class PayrollController {
   public ResponseEntity<?> deletePayrollByEmployeeId(@PathVariable("employeeId") Integer employeeId,
                                                      @RequestBody Map<String, Object> updates) {
     try {
-      PayrollService.PayrollStatus result =
+      PayrollStatus result =
               payrollService.deletePayrollByEmployeeId(employeeId, updates);
       return switch (result) {
         case INVALID_DATA -> new ResponseEntity<>(Map.of("response", "Invalid month or year"),
                 HttpStatus.BAD_REQUEST);
         case INVALID_FORMAT -> new ResponseEntity<>(Map.of("response",
                 "Invalid format for month or year"), HttpStatus.BAD_REQUEST);
+        case EMPLOYEE_NOT_FOUND -> new ResponseEntity<>(Map.of("response",
+                "Employee Not Found in Company"), HttpStatus.NOT_FOUND);
         case NOT_FOUND -> new ResponseEntity<>(Map.of("response",
                 "Payroll for this month and year Not Found"),
                 HttpStatus.NOT_FOUND);
@@ -182,13 +194,15 @@ public class PayrollController {
   public ResponseEntity<?> createPayroll(@PathVariable("employeeId") Integer employeeId,
                                          @RequestBody Map<String, Object> updates) {
     try {
-      PayrollService.PayrollStatus result =
+      PayrollStatus result =
               payrollService.addPayrollByEmployeeId(employeeId, updates);
       return switch (result) {
         case INVALID_DATA -> new ResponseEntity<>(Map.of("response", "Invalid month or year"),
                 HttpStatus.BAD_REQUEST);
         case INVALID_FORMAT -> new ResponseEntity<>(Map.of("response",
                 "Invalid format for month or year"), HttpStatus.BAD_REQUEST);
+        case EMPLOYEE_NOT_FOUND -> new ResponseEntity<>(Map.of("response",
+                "Employee Not Found in Company"), HttpStatus.NOT_FOUND);
         case ALREADY_EXISTS -> new ResponseEntity<>(Map.of("response",
                 "Payroll for this month and year already exists"),
                 HttpStatus.CONFLICT);
@@ -218,7 +232,7 @@ public class PayrollController {
   public ResponseEntity<?> adjustSalary(@PathVariable("employeeId") Integer employeeId,
                                         @RequestBody Map<String, Object> updates) {
     try {
-      PayrollService.PayrollStatus result =
+      PayrollStatus result =
               payrollService.adjustSalaryByEmployeeId(employeeId, updates);
       return switch (result) {
         case INVALID_DATA -> new ResponseEntity<>(Map.of("response",
@@ -226,6 +240,8 @@ public class PayrollController {
         case INVALID_FORMAT -> new ResponseEntity<>(Map.of("response",
                 "Invalid format for month or year or salary"),
                 HttpStatus.BAD_REQUEST);
+        case EMPLOYEE_NOT_FOUND -> new ResponseEntity<>(Map.of("response",
+                "Employee Not Found in Company"), HttpStatus.NOT_FOUND);
         case NOT_FOUND -> new ResponseEntity<>(Map.of("response",
                 "Payroll for this month and year Not Found"),
                 HttpStatus.NOT_FOUND);
@@ -255,7 +271,7 @@ public class PayrollController {
   public ResponseEntity<?> adjustDay(@PathVariable("employeeId") Integer employeeId,
                                      @RequestBody Map<String, Object> updates) {
     try {
-      PayrollService.PayrollStatus result =
+      PayrollStatus result =
               payrollService.adjustPaymentDayByEmployeeId(employeeId, updates);
       return switch (result) {
         case INVALID_DATA -> new ResponseEntity<>(Map.of("response",
@@ -263,6 +279,8 @@ public class PayrollController {
         case INVALID_FORMAT -> new ResponseEntity<>(Map.of("response",
                 "Invalid format for day or month or year"),
                 HttpStatus.BAD_REQUEST);
+        case EMPLOYEE_NOT_FOUND -> new ResponseEntity<>(Map.of("response",
+                "Employee Not Found in Company"), HttpStatus.NOT_FOUND);
         case NOT_FOUND -> new ResponseEntity<>(Map.of("response",
                 "Payroll for this month and year Not Found"),
                 HttpStatus.NOT_FOUND);

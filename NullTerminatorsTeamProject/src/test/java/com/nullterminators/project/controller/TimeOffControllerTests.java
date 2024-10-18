@@ -21,7 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /** Tests for timeoff controller methods. */
-class TimeOffControllerTest {
+class TimeOffControllerTests {
 
   @InjectMocks private TimeOffController timeOffController;
 

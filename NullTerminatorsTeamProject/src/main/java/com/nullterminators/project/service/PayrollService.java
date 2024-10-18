@@ -1,5 +1,6 @@
 package com.nullterminators.project.service;
 
+import com.nullterminators.project.enums.PayrollStatus;
 import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.model.Payroll;
 import com.nullterminators.project.repository.PayrollRepository;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ public class PayrollService {
 
   private final PayrollRepository payrollRepository;
   private final EmployeeProfileService employeeProfileService;
+  private final CompanyEmployeesService companyEmployeesService;
   private final PdfGenerator pdfGenerator;
 
   /**
@@ -34,9 +37,11 @@ public class PayrollService {
   @Autowired
   public PayrollService(PayrollRepository payrollRepository,
                         EmployeeProfileService employeeProfileService,
+                        CompanyEmployeesService companyEmployeesService,
                         PdfGenerator pdfGenerator) {
     this.payrollRepository = payrollRepository;
     this.employeeProfileService = employeeProfileService;
+    this.companyEmployeesService = companyEmployeesService;
     this.pdfGenerator = pdfGenerator;
   }
 
@@ -46,10 +51,15 @@ public class PayrollService {
    * @param employeeId (Integer) : Employee ID
    * @return (List) : List of Payroll entries for the employee
    */
-  public List<Map<String, Object>> getPayrollByEmployeeId(Integer employeeId) {
+  public Pair<PayrollStatus, List<Map<String, Object>>> getPayrollByEmployeeId(Integer employeeId) {
+    List<Map<String, Object>> returnValue = new ArrayList<>();
+    Boolean status = companyEmployeesService.verifyIfEmployeeInCompany(employeeId);
+    if (!status) {
+      return Pair.of(PayrollStatus.EMPLOYEE_NOT_FOUND, returnValue);
+    }
+
     List<Payroll> payrollInformation =
             payrollRepository.findAllByEmployeeIdOrderByPaymentDateDesc(employeeId);
-    List<Map<String, Object>> returnValue = new ArrayList<>();
 
     for (Payroll payroll : payrollInformation) {
       Map<String, Object> data = new HashMap<>();
@@ -62,7 +72,7 @@ public class PayrollService {
       returnValue.add(data);
     }
 
-    return returnValue;
+    return Pair.of(PayrollStatus.OK, returnValue);
   }
 
   /**
@@ -73,6 +83,11 @@ public class PayrollService {
    * @return (Integer) : Status of update
    */
   public PayrollStatus markAsPaid(Integer employeeId, Map<String, Object> updates) {
+    Boolean status = companyEmployeesService.verifyIfEmployeeInCompany(employeeId);
+    if (!status) {
+      return PayrollStatus.EMPLOYEE_NOT_FOUND;
+    }
+
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
@@ -104,6 +119,11 @@ public class PayrollService {
    * @return (Integer) : Status of update
    */
   public PayrollStatus markAsUnpaid(Integer employeeId, Map<String, Object> updates) {
+    Boolean status = companyEmployeesService.verifyIfEmployeeInCompany(employeeId);
+    if (!status) {
+      return PayrollStatus.EMPLOYEE_NOT_FOUND;
+    }
+
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
@@ -135,6 +155,11 @@ public class PayrollService {
    * @return (Integer) : Status of update
    */
   public PayrollStatus deletePayrollByEmployeeId(Integer employeeId, Map<String, Object> updates) {
+    Boolean status = companyEmployeesService.verifyIfEmployeeInCompany(employeeId);
+    if (!status) {
+      return PayrollStatus.EMPLOYEE_NOT_FOUND;
+    }
+
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
 
@@ -161,6 +186,11 @@ public class PayrollService {
    * @return (Integer) : Status of update
    */
   public PayrollStatus addPayrollByEmployeeId(Integer employeeId, Map<String, Object> updates) {
+    Boolean status = companyEmployeesService.verifyIfEmployeeInCompany(employeeId);
+    if (!status) {
+      return PayrollStatus.EMPLOYEE_NOT_FOUND;
+    }
+
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.day,
             UpdateField.month, UpdateField.year, UpdateField.salary));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
@@ -197,6 +227,11 @@ public class PayrollService {
    * @return (Integer) : Status of update
    */
   public PayrollStatus adjustSalaryByEmployeeId(Integer employeeId, Map<String, Object> updates) {
+    Boolean status = companyEmployeesService.verifyIfEmployeeInCompany(employeeId);
+    if (!status) {
+      return PayrollStatus.EMPLOYEE_NOT_FOUND;
+    }
+
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.month, UpdateField.year,
             UpdateField.salary));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
@@ -227,6 +262,11 @@ public class PayrollService {
    */
   public PayrollStatus adjustPaymentDayByEmployeeId(Integer employeeId,
                                                     Map<String, Object> updates) {
+    Boolean status = companyEmployeesService.verifyIfEmployeeInCompany(employeeId);
+    if (!status) {
+      return PayrollStatus.EMPLOYEE_NOT_FOUND;
+    }
+
     List<UpdateField> flags = new ArrayList<>(Arrays.asList(UpdateField.day, UpdateField.month,
             UpdateField.year));
     Pair<PayrollStatus, Map<String, Integer>> data = checkError(updates, flags);
@@ -255,13 +295,17 @@ public class PayrollService {
    * @return (Map) : Map consisting of response and employeeList
    */
   public Map<String, Object> generatePayroll(Map<String, Object> updates) {
-    List<EmployeeProfile> employeeInformation = employeeProfileService.getAllEmployees();
+    List<Integer> employeeList = companyEmployeesService.getAllEmployeesInCompany();
     List<Integer> result = new ArrayList<>();
     Map<String, Object> returnValue = new HashMap<>();
 
-    for (EmployeeProfile employee : employeeInformation) {
-      updates.put("salary", employee.getBaseSalary());
-      PayrollStatus status = addPayrollByEmployeeId(employee.getId(), updates);
+    for (Integer employeeId : employeeList) {
+      Optional<EmployeeProfile> employee = employeeProfileService.getEmployeeProfile(employeeId);
+      if (employee.isEmpty()) {
+        continue;
+      }
+      updates.put("salary", employee.get().getBaseSalary());
+      PayrollStatus status = addPayrollByEmployeeId(employee.get().getId(), updates);
 
       switch (status) {
         case INVALID_DATA:
@@ -271,7 +315,7 @@ public class PayrollService {
           returnValue.put("response", "Invalid format for day or month or year");
           return returnValue;
         case ALREADY_EXISTS:
-          result.add(employee.getId());
+          result.add(employee.get().getId());
           break;
         default:
           break;
@@ -296,11 +340,15 @@ public class PayrollService {
    * @return (Map) : Map consisting of response and employeeList
    */
   public Map<String, Object> deletePayroll(Map<String, Object> updates) {
-    List<EmployeeProfile> employeeInformation = employeeProfileService.getAllEmployees();
+    List<Integer> employeeList = companyEmployeesService.getAllEmployeesInCompany();
     Map<String, Object> returnValue = new HashMap<>();
 
-    for (EmployeeProfile employee : employeeInformation) {
-      PayrollStatus status = deletePayrollByEmployeeId(employee.getId(), updates);
+    for (Integer employeeId : employeeList) {
+      Optional<EmployeeProfile> employee = employeeProfileService.getEmployeeProfile(employeeId);
+      if (employee.isEmpty()) {
+        continue;
+      }
+      PayrollStatus status = deletePayrollByEmployeeId(employee.get().getId(), updates);
 
       switch (status) {
         case INVALID_DATA:
@@ -323,20 +371,6 @@ public class PayrollService {
     day,
     month,
     year
-  }
-
-  /**
-   * Enumerator of possible updates returned by Payroll service.
-   */
-  public enum PayrollStatus {
-    INVALID_DATA,
-    INVALID_FORMAT,
-    ALREADY_EXISTS,
-    SUCCESS,
-    NOT_FOUND,
-    ALREADY_COMPLETED,
-    ERROR,
-    OK
   }
 
   private Integer calculateTax(Integer salary) {

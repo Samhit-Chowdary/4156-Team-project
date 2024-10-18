@@ -29,7 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
  */
 @SpringBootTest
 @ContextConfiguration
-public class EmployeeProfileTests {
+public class EmployeeProfileServiceTests {
 
   @Mock
   private EmployeeProfileRepository employeeProfileRepository;
