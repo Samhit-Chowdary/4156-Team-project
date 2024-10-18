@@ -174,44 +174,44 @@ This section describes the endpoints that our service provides, as well as their
 * Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
 * Upon Failure: HTTP 400 Status Code is returned if month and year are missing or not in the correct format.
 
-### Employee Hierarchy (/employeeHierarchy)
+### Employee Hierarchy (/api/employee-hierarchy)
 
-#### GET /employeeHierarchy/{employeeId}/subtree
+#### POST /addEdge/{supervisorId}/{employeeId}
 
-* Expected Input Parameters: employeeId (Long)
-* Expected Output: Employee Hierarchy subtree for the given employee
-* Retrieves the subtree of an employee with the given id
-* Upon Success: HTTP 200 Status Code is returned along with the subtree of the given employee in the response body.
-* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist.
-
-#### GET /employeeHierarchy/{employeeId}/supervisor
-
-* Expected Input Parameters: employeeId (Long)
-* Expected Output: Supervisor ID for the given employee
-* Retrieves the supervisor of an employee with the given id
-* Upon Success: HTTP 200 Status Code is returned along with the id of the supervisor of the given employee in the response body.
-* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist.
-
-#### GET /employeeHierarchy/{employeeId}/subordinates
-
-* Expected Input Parameters: employeeId (Long)
-* Expected Output: List of subordinate IDs for the given employee
-* Retrieves the subordinates of an employee with the given id
-* Upon Success: HTTP 200 Status Code is returned along with the list of subordinates of the given employee in the response body.
-* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist.
-
-#### POST /employeeHierarchy/addSupervisor
-
-* Expected Input Parameters: supervisorId (Long), employeeId (Long)
+* Expected Input Parameters: supervisorId (Integer), employeeId (Integer)
 * Expected Output: Success or failure message
-* Adds a supervisor-employee edge
+* Adds a new edge in the employee hierarchy
 * Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
-* Upon Failure: HTTP 404 Status Code is returned if either the supervisor or employee does not exist.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist and HTTP 400 Status Code if the supervisor is not an employee and HTTP 409 Status Code if the edge already exists.
 
-#### DELETE /employeeHierarchy/{employeeId}/removeSupervisor
+#### GET /subordinates/{fromEmployeeId}
 
-* Expected Input Parameters: employeeId (Long)
-* Expected Output: Success or failure message
-* Removes a supervisor-employee edge
-* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Expected Input Parameters: fromEmployeeId (Integer)
+* Expected Output: List of subordinates of the employee or error message
+* Retrieves all subordinates of a specific employee
+* Upon Success: HTTP 200 Status Code is returned along with the list of subordinates in the response body.
 * Upon Failure: HTTP 404 Status Code is returned if the employee does not exist.
+
+#### GET /supervisor/{toEmployeeId}
+
+* Expected Input Parameters: toEmployeeId (Integer)
+* Expected Output: Supervisor of the employee or error message
+* Retrieves the supervisor of a specific employee
+* Upon Success: HTTP 200 Status Code is returned along with the supervisor in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist or if the employee has no supervisor.
+
+#### GET /tree/{employeeId}
+
+* Expected Input Parameters: employeeId (Integer)
+* Expected Output: The tree of employees with the specified employee as the root or error message
+* Retrieves the tree of employees with the specified employee as the root
+* Upon Success: HTTP 200 Status Code is returned along with the tree in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist.
+
+#### DELETE /removeEdge/{employeeId}
+
+* Expected Input Parameters: employeeId (Integer)
+* Expected Output: Success or failure message
+* Deletes the edge from a specific employee to their supervisor
+* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist and HTTP 400 Status Code if the employee is not an employee and HTTP 409 Status Code if the edge does not exist.
