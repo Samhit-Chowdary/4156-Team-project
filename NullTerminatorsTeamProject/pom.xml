@@ -84,7 +84,7 @@
 			<version>5.5.13.4</version>
 		</dependency>
 
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<plugins>
