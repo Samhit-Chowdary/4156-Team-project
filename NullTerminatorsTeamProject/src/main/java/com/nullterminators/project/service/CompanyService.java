@@ -4,6 +4,7 @@ import com.nullterminators.project.model.Company;
 import com.nullterminators.project.repository.CompanyRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,10 +42,16 @@ public class CompanyService implements UserDetailsService {
    *
    * @param company company to be registered
    */
-  public void registerCompany(Company company) {
+  public String registerCompany(Company company) {
     company.setId(null);
     company.setPassword(new BCryptPasswordEncoder().encode(company.getPassword()));
-    companyRepository.save(company);
+    try {
+      companyRepository.save(company);
+      return null;
+    } catch (DataIntegrityViolationException e) {
+      System.out.println(e.toString());
+      return "company with same username already exists";
+    }
   }
 
   public String getCompanyUsername() {

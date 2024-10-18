@@ -2,6 +2,7 @@ package com.nullterminators.project.controller;
 
 import com.nullterminators.project.model.Company;
 import com.nullterminators.project.service.CompanyService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,14 @@ public class CompanyController {
   @PostMapping("/registerCompany")
   public ResponseEntity<?> registerCompany(@RequestBody Company company) {
     try {
-      companyService.registerCompany(company);
-      return new ResponseEntity<>("Company is registered successfully", HttpStatus.CREATED);
+      String error = companyService.registerCompany(company);
+      if (error == null) {
+        return new ResponseEntity<>(
+                Map.of("response", "Company is created successfully."),
+                HttpStatus.CREATED
+        );
+      }
+      return new ResponseEntity<>(Map.of("response", error), HttpStatus.BAD_REQUEST);
     } catch (Exception e) {
       return handleException(e);
     }

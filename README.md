@@ -35,6 +35,15 @@ Steps followed:
 
 This section describes the endpoints that our service provides, as well as their inputs and outputs.
 
+### Company Management:
+
+POST /registerCompany
+* Expected Input Parameters: company (Company)
+* Expected Output: Success or failure message
+* Registers a new company with given details.
+* Upon Success: HTTP 201 Status Code is returned along with "Company is registered successfully." in the response body.
+* Upon Failure: HTTP 400 Status Code is returned along with appropriate message in the response body.
+
 ### Employee Profile Management (/employeeProfile):
 
 #### GET/getAllEmployees, GET/
