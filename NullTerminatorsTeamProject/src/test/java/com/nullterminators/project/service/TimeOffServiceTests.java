@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /** Tests for timeoff service methods. */
-class TimeOffServiceTest {
+class TimeOffServiceTests {
 
   @Mock private TimeOffRepository timeOffRepository;
 
