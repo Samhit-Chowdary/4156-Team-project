@@ -38,7 +38,6 @@ class TimeOffServiceTests {
   void setUp() {
     MockitoAnnotations.openMocks(this);
 
-    // Initialize two TimeOff objects for testing
     timeOff1 = new TimeOff();
     timeOff1.setId(1);
     timeOff1.setEmployeeId(123);
@@ -83,7 +82,7 @@ class TimeOffServiceTests {
   }
 
   @Test
-  void testUpdateTimeOffStatus_Approved() {
+  void testUpdateTimeOffStatusApproved() {
     when(timeOffRepository.findById(1)).thenReturn(Optional.of(timeOff1));
 
     boolean result = timeOffService.updateTimeOffStatus(123, 1, "approve");
@@ -94,7 +93,7 @@ class TimeOffServiceTests {
   }
 
   @Test
-  void testUpdateTimeOffStatus_Rejected() {
+  void testUpdateTimeOffStatusRejected() {
     when(timeOffRepository.findById(1)).thenReturn(Optional.of(timeOff1));
 
     boolean result = timeOffService.updateTimeOffStatus(123, 1, "reject");
@@ -105,7 +104,7 @@ class TimeOffServiceTests {
   }
 
   @Test
-  void testUpdateTimeOffStatus_Cancelled() {
+  void testUpdateTimeOffStatusCancelled() {
     when(timeOffRepository.findById(1)).thenReturn(Optional.of(timeOff1));
 
     boolean result = timeOffService.updateTimeOffStatus(123, 1, "cancel");
@@ -116,7 +115,7 @@ class TimeOffServiceTests {
   }
 
   @Test
-  void testUpdateTimeOffStatus_InvalidAction() {
+  void testUpdateTimeOffStatusInvalidAction() {
     when(timeOffRepository.findById(1)).thenReturn(Optional.of(timeOff1));
 
     Exception exception =
@@ -131,7 +130,7 @@ class TimeOffServiceTests {
   }
 
   @Test
-  void testUpdateTimeOffStatus_NotFound() {
+  void testUpdateTimeOffStatusNotFound() {
     when(timeOffRepository.findById(1)).thenReturn(Optional.empty());
 
     boolean result = timeOffService.updateTimeOffStatus(123, 1, "approve");
@@ -141,7 +140,7 @@ class TimeOffServiceTests {
   }
 
   @Test
-  void testUpdateTimeOffStatus_EmployeeMismatch() {
+  void testUpdateTimeOffStatusEmployeeMismatch() {
     timeOff1.setEmployeeId(456); // Set a different employee ID
     when(timeOffRepository.findById(1)).thenReturn(Optional.of(timeOff1));
 

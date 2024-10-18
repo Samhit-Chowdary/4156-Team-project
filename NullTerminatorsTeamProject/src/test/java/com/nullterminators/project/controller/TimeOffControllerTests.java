@@ -35,7 +35,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testGetTimeOffByEmployeeId_EmployeeNotFound() {
+  void testGetTimeOffByEmployeeIdEmployeeNotFound() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(false);
 
     ResponseEntity<?> response = timeOffController.getTimeOffByEmployeeId(1);
@@ -44,7 +44,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testGetTimeOffByEmployeeId_NoRecordsFound() {
+  void testGetTimeOffByEmployeeIdNoRecordsFound() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(true);
     when(timeOffService.getTimeOffByEmployeeId(1)).thenReturn(Collections.emptyList());
 
@@ -54,7 +54,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testGetTimeOffByEmployeeId_Success() {
+  void testGetTimeOffByEmployeeIdSuccess() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(true);
     TimeOff timeOff = new TimeOff();
     timeOff.setEmployeeId(1);
@@ -67,7 +67,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testGetTimeOffInRange_EmployeeNotFound() {
+  void testGetTimeOffInRangeEmployeeNotFound() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(false);
 
     ResponseEntity<?> response = timeOffController.getTimeOffInRange(1, "2024-01-01", "2024-01-10");
@@ -76,7 +76,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testGetTimeOffInRange_InvalidDateRange() {
+  void testGetTimeOffInRangeInvalidDateRange() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(true);
 
     ResponseEntity<?> response = timeOffController.getTimeOffInRange(1, "2024-01-10", "2024-01-01");
@@ -85,7 +85,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testGetTimeOffInRange_NoRecordsFound() {
+  void testGetTimeOffInRangeNoRecordsFound() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(true);
     when(timeOffService.getTimeOffByEmployeeIdWithDateRange(
             1, LocalDate.parse("2024-01-01"), LocalDate.parse("2024-01-10")))
@@ -97,7 +97,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testGetTimeOffInRange_Success() {
+  void testGetTimeOffInRangeSuccess() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(true);
     TimeOff timeOff = new TimeOff();
     timeOff.setEmployeeId(1);
@@ -112,7 +112,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testCreateTimeOffRequest_EmployeeNotFound() {
+  void testCreateTimeOffRequestEmployeeNotFound() {
     TimeOff timeOff = new TimeOff();
     timeOff.setEmployeeId(1);
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(false);
@@ -123,7 +123,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testCreateTimeOffRequest_Success() {
+  void testCreateTimeOffRequestSuccess() {
     TimeOff timeOff = new TimeOff();
     timeOff.setEmployeeId(1);
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(true);
@@ -131,7 +131,7 @@ class TimeOffControllerTests {
         .thenAnswer(
             invocation -> {
               TimeOff newTimeOff = invocation.getArgument(0);
-              newTimeOff.setId(1); // Simulate setting an ID
+              newTimeOff.setId(1);
               return newTimeOff;
             });
 
@@ -144,7 +144,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testUpdateTimeOffStatus_EmployeeNotFound() {
+  void testUpdateTimeOffStatusEmployeeNotFound() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(false);
 
     ResponseEntity<?> response = timeOffController.updateTimeOffStatus(1, 1, "approve");
@@ -153,7 +153,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testUpdateTimeOffStatus_InvalidTimeOffId() {
+  void testUpdateTimeOffStatusInvalidTimeOffId() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(true);
 
     ResponseEntity<?> response = timeOffController.updateTimeOffStatus(1, 0, "approve");
@@ -162,7 +162,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testUpdateTimeOffStatus_InvalidAction() {
+  void testUpdateTimeOffStatusInvalidAction() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(true);
 
     ResponseEntity<?> response = timeOffController.updateTimeOffStatus(1, 1, "");
@@ -171,7 +171,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testUpdateTimeOffStatus_Success() {
+  void testUpdateTimeOffStatusSuccess() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(true);
     when(timeOffService.updateTimeOffStatus(1, 1, "approve")).thenReturn(true);
 
@@ -181,7 +181,7 @@ class TimeOffControllerTests {
   }
 
   @Test
-  void testUpdateTimeOffStatus_TimeOffNotFound() {
+  void testUpdateTimeOffStatusTimeOffNotFound() {
     when(employeeProfileService.doesEmployeeExist(1)).thenReturn(true);
     when(timeOffService.updateTimeOffStatus(1, 1, "approve")).thenReturn(false);
 
