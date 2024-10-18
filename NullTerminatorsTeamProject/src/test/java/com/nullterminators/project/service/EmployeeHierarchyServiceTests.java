@@ -41,6 +41,36 @@ class EmployeeHierarchyServiceTests {
   }
 
   /**
+   * Tests that the service can find all subordinates of an employee given their id.
+   *
+   * <p>This test sets up a mock hierarchy of employees and verifies that the service can find the
+   * subordinates of a given employee.
+   *
+   * <p>The test calls the service method with the id of a supervisor and asserts that the result
+   * contains exactly two subordinates, which are the ones that are directly subordinate to the
+   * given supervisor.
+   */
+  @Test
+  void testGetSubordinates() {
+    Long supervisorId = 1L;
+
+    List<EmployeeHierarchy> mockSubordinates =
+        Arrays.asList(
+            new EmployeeHierarchy(supervisorId, 2L), new EmployeeHierarchy(supervisorId, 3L));
+    when(employeeHierarchyRepository.findByFromEmployeeId(supervisorId))
+        .thenReturn(mockSubordinates);
+
+    List<EmployeeHierarchy> result = employeeHierarchyService.getSubordinates(supervisorId);
+
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    assertEquals(2L, result.get(0).getToEmployeeId());
+    assertEquals(3L, result.get(1).getToEmployeeId());
+
+    verify(employeeHierarchyRepository, times(1)).findByFromEmployeeId(supervisorId);
+  }
+
+  /**
    * Tests that the service can build a tree structure given a root employee id.
    *
    * <p>This test sets up a mock hierarchy of employees and verifies that the service can build the
@@ -123,7 +153,7 @@ class EmployeeHierarchyServiceTests {
   }
 
   @Test
-  void testAddEdge_EmployeeAlreadyHasSupervisor() {
+  void testAddEdgeEmployeeAlreadyHasSupervisor() {
     Long supervisorId = 1L;
     Long employeeId = 2L;
 
@@ -136,7 +166,7 @@ class EmployeeHierarchyServiceTests {
   }
 
   @Test
-  void testAddEdge_CreatesCycle() {
+  void testAddEdgeCreatesCycle() {
     Long supervisorId = 1L;
     Long employeeId = 2L;
 
@@ -154,7 +184,7 @@ class EmployeeHierarchyServiceTests {
   }
 
   @Test
-  void testAddEdge_Success() {
+  void testAddEdgeSuccess() {
     Long supervisorId = 1L;
     Long employeeId = 2L;
 
@@ -172,7 +202,7 @@ class EmployeeHierarchyServiceTests {
   }
 
   @Test
-  void testRemoveEdge_NoSupervisorFound() {
+  void testRemoveEdgeNoSupervisorFound() {
     Long employeeId = 2L;
 
     when(employeeHierarchyRepository.existsByEmployeeId(employeeId)).thenReturn(true);
@@ -185,7 +215,7 @@ class EmployeeHierarchyServiceTests {
   }
 
   @Test
-  void testRemoveEdge_EdgeNotFound() {
+  void testRemoveEdgeEdgeNotFound() {
     Long employeeId = 2L;
     Long supervisorId = 1L;
 
@@ -203,7 +233,7 @@ class EmployeeHierarchyServiceTests {
   }
 
   @Test
-  void testRemoveEdge_Success() {
+  void testRemoveEdgeSuccess() {
     Long employeeId = 2L;
     Long supervisorId = 1L;
 

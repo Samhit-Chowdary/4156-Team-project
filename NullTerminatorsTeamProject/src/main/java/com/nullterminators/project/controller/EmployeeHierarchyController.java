@@ -7,8 +7,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -89,7 +91,7 @@ public class EmployeeHierarchyController {
    * @param employeeId the ID of the employee
    * @return a response entity with status
    */
-  @GetMapping("/addEdge/{supervisorId}/{employeeId}")
+  @PostMapping("/addEdge/{supervisorId}/{employeeId}")
   public ResponseEntity<?> addEmployeeSupervisorEdge(
       @PathVariable Long supervisorId, @PathVariable Long employeeId) {
     boolean supervisorExists = employeeHierarchyService.employeeExists(supervisorId);
@@ -117,7 +119,7 @@ public class EmployeeHierarchyController {
    * @param employeeId the ID of the employee whose supervisor edge is to be removed
    * @return a response entity with status
    */
-  @GetMapping("/removeEdge/{employeeId}")
+  @DeleteMapping("/removeEdge/{employeeId}")
   public ResponseEntity<?> removeEmployeeSupervisorEdge(@PathVariable Long employeeId) {
     boolean employeeExists = employeeHierarchyService.employeeExists(employeeId);
 

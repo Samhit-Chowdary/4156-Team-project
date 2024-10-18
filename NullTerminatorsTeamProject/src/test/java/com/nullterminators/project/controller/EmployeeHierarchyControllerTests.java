@@ -43,7 +43,7 @@ class EmployeeHierarchyControllerTests {
    * list of two subordinates of the given employee.
    */
   @Test
-  void testGetSubordinates_Success() {
+  void testGetSubordinatesSuccess() {
     Long fromEmployeeId = 1L;
     List<EmployeeHierarchy> mockSubordinates =
         Arrays.asList(new EmployeeHierarchy(1L, 2L), new EmployeeHierarchy(1L, 3L));
@@ -71,7 +71,7 @@ class EmployeeHierarchyControllerTests {
    * body containing an error message.
    */
   @Test
-  void testGetSubordinates_EmployeeNotFound() {
+  void testGetSubordinatesEmployeeNotFound() {
     Long fromEmployeeId = 999L;
 
     when(employeeHierarchyService.employeeExists(fromEmployeeId)).thenReturn(false);
@@ -91,7 +91,7 @@ class EmployeeHierarchyControllerTests {
    * containing the supervisor id.
    */
   @Test
-  void testGetSupervisorByEmployeeId_Success() {
+  void testGetSupervisorByEmployeeIdSuccess() {
     Long toEmployeeId = 2L;
     Long expectedSupervisorId = 1L;
 
@@ -114,7 +114,7 @@ class EmployeeHierarchyControllerTests {
    * body containing an error message.
    */
   @Test
-  void testGetSupervisorByEmployeeId_EmployeeNotFound() {
+  void testGetSupervisorByEmployeeIdEmployeeNotFound() {
     Long toEmployeeId = 999L;
 
     when(employeeHierarchyService.employeeExists(toEmployeeId)).thenReturn(false);
@@ -135,7 +135,7 @@ class EmployeeHierarchyControllerTests {
    * body containing an error message.
    */
   @Test
-  void testGetSupervisorByEmployeeId_SupervisorNotFound() {
+  void testGetSupervisorByEmployeeIdSupervisorNotFound() {
     Long toEmployeeId = 2L;
 
     when(employeeHierarchyService.employeeExists(toEmployeeId)).thenReturn(true);
@@ -159,7 +159,7 @@ class EmployeeHierarchyControllerTests {
    * 200 OK and a body containing the subtree of the given employee.
    */
   @Test
-  void testGetSubtree_Success() {
+  void testGetSubtreeSuccess() {
     Long employeeId = 1L;
     EmployeeNode mockEmployeeNode = new EmployeeNode(1L);
     mockEmployeeNode.getChildren().add(new EmployeeNode(2L));
@@ -186,7 +186,7 @@ class EmployeeHierarchyControllerTests {
    * containing an error message.
    */
   @Test
-  void testGetSubtree_EmployeeNotFound() {
+  void testGetSubtreeEmployeeNotFound() {
     Long employeeId = 999L;
 
     when(employeeHierarchyService.employeeExists(employeeId)).thenReturn(false);
@@ -198,7 +198,7 @@ class EmployeeHierarchyControllerTests {
   }
 
   @Test
-  void testAddEdge_EmployeeOrSupervisorNotFound() {
+  void testAddEdgeEmployeeOrSupervisorNotFound() {
     Long supervisorId = 1L;
     Long employeeId = 2L;
 
@@ -213,7 +213,7 @@ class EmployeeHierarchyControllerTests {
   }
 
   @Test
-  void testAddEdge_Success() {
+  void testAddEdgeSuccess() {
     Long supervisorId = 1L;
     Long employeeId = 2L;
 
@@ -230,7 +230,7 @@ class EmployeeHierarchyControllerTests {
   }
 
   @Test
-  void testAddEdge_CreatesCycle() {
+  void testAddEdgeCreatesCycle() {
     Long supervisorId = 1L;
     Long employeeId = 2L;
 
@@ -250,7 +250,7 @@ class EmployeeHierarchyControllerTests {
   }
 
   @Test
-  void testRemoveEdge_EmployeeNotFound() {
+  void testRemoveEdgeEmployeeNotFound() {
     Long employeeId = 2L;
 
     when(employeeHierarchyService.employeeExists(employeeId)).thenReturn(false);
@@ -263,7 +263,7 @@ class EmployeeHierarchyControllerTests {
   }
 
   @Test
-  void testRemoveEdge_Success() {
+  void testRemoveEdgeSuccess() {
     Long employeeId = 2L;
 
     when(employeeHierarchyService.employeeExists(employeeId)).thenReturn(true);
@@ -277,7 +277,7 @@ class EmployeeHierarchyControllerTests {
   }
 
   @Test
-  void testRemoveEdge_NoSupervisorFound() {
+  void testRemoveEdgeNoSupervisorFound() {
     Long employeeId = 2L;
 
     when(employeeHierarchyService.employeeExists(employeeId)).thenReturn(true);

@@ -96,7 +96,8 @@ public class EmployeeHierarchyService {
       return false;
     }
 
-    if (createsCycleUsingSubtree(supervisorId, employeeId)) {
+    if (createsCycleUsingSubtree(supervisorId, employeeId)
+        || createsCycleUsingSubtree(employeeId, supervisorId)) {
       System.out.println("Adding this edge would create a cycle.");
       return false;
     }
