@@ -42,9 +42,9 @@ public class EmployeeProfileService {
   public boolean employeeProfileExists(String email, String phoneNumber) {
     Optional<EmployeeProfile> employeeProfileOptional =
         employeeProfileRepository.findByEmailAndPhoneNumber(phoneNumber, email);
-    return (employeeProfileOptional.isPresent()
+    return employeeProfileOptional.isPresent()
         && companyEmployeesService.verifyIfEmployeeInCompany(
-            employeeProfileOptional.get().getId()));
+            employeeProfileOptional.get().getId());
   }
 
   /**
