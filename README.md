@@ -22,14 +22,26 @@ All our unit tests for this project are located in the directory "src/test". Run
 
 Command: `mvn checkstyle:check`
 
-## Debugging
+## Static Code Analysis
 
-Static bug analyzer used: PMD (https://pmd.github.io)
+To generate the static code analysis report, run the following command: 
 
-Steps followed:
-- Download pmd
-- Follow steps under "Quick Start" in https://pmd.github.io
-- Run: pmd check -f text -R rulesets/java/quickstart.xml -d /path-to-directory-with-files
+```bash
+mvn pmd:check
+```
+You can find the report at `target/pmd.xml`
+
+I used the following plugin for pmd static bug analyzer.
+```declarative
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-pmd-plugin</artifactId>
+    <version>3.25.0</version>
+    <configuration>
+        <rulesets> <ruleset>/rulesets/java/maven-pmd-plugin-default.xml</ruleset> </rulesets>
+    </configuration>
+</plugin>
+```
 
 ## Endpoints
 
@@ -50,11 +62,11 @@ POST /registerCompany
 
 ### Employee Profile Management (/employeeProfile):
 
-#### GET/getAllEmployees, GET/
+#### GET /getAllEmployees, GET/
 
 * Returns a String containing the list of all existing employee profiles.
 
-#### GET/employeeProfile/{id}
+#### GET /employeeProfile/{id}
 
 * Expected Input Parameters: id (int)
 * Expected Output: Details of the specified employee (String)
@@ -62,7 +74,7 @@ POST /registerCompany
 * Upon Success: HTTP 200 Status Code is returned along with details of the employee profile in the response body.
 * Upon Failure: HTTP 404 Status Code is returned along with appropriate message in the response body.
 
-#### POST/employeeProfile/createNewEmployee
+#### POST /employeeProfile/createNewEmployee
 
 * Expected Input Parameters: employeeProfile (EmployeeProfile)
 * Expected Output: Success or failure message
@@ -70,7 +82,7 @@ POST /registerCompany
 * Upon Success: HTTP 200 Status Code is returned along with "Employee profile created successfully." in the response body.
 * Upon Failure: HTTP 404 Status Code is returned along with appropriate message in the response body.
 
-#### DELETE/employeeProfile/{id}
+#### DELETE /employeeProfile/{id}
 
 * Expected Input Parameters: id (int)
 * Expected Output: Success or failure message
@@ -119,7 +131,7 @@ POST /registerCompany
 
 * Expected Input Parameters: employeeId (Integer)
 * Expected Output: List of Payroll records or error message
-* Retrieves all payroll records for a specific employee which includes the salary, deductions and link to the payroll PDF for that month and year
+* Retrieves all payroll records for a specific employee which includes the salary, deductions and net pay
 * Upon Success: HTTP 200 Status Code is returned along with the list of payroll records in the response body.
 * Upon Failure: HTTP 404 Status Code is returned if the employee does not exist or no records are found.
 
@@ -228,3 +240,24 @@ POST /registerCompany
 * Deletes the edge from a specific employee to their supervisor
 * Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
 * Upon Failure: HTTP 404 Status Code is returned if the employee does not exist and HTTP 400 Status Code if the employee is not an employee and HTTP 409 Status Code if the edge does not exist.
+
+## Postman Testing
+The Postman Collection is located in the `postman` folder.
+
+## Reporting
+
+#### Style Check Report
+After the style check command is run, the report is generated in the `target/site` folder as html file.
+
+![Style Check Report](reports/checkstyle.png)
+
+#### Branch Coverage Report
+After the test coverage command is run, the report is generated in the `target/site/jaCoCo` folder as html file.
+This project has 94% branch coverage.
+
+![Branch Coverage Report](reports/branchcoverage.png)
+
+#### PMD Report
+After the PMD check command is run, the report is generated in the `target/report` folder as html file.
+
+![PMD Report](reports/pmd.png)

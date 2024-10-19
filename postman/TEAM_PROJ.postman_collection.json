@@ -1,0 +1,492 @@
+{
+	"info": {
+		"_postman_id": "97b7b3dd-063c-4f44-b9da-1057c7866e71",
+		"name": "TEAM_PROJ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Employee Profile",
+			"item": [
+				{
+					"name": "createNewEmployee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\" : 3,\n    \"name\" : \"Jane Doe\",\n    \"gender\" : \"Male\",\n    \"age\" : 25,\n    \"designation\" : \"Software Engineer\",\n    \"emergencyContactNumber\" : \"+1-999-999-9998\",\n    \"baseSalary\" : 120000,\n    \"email\": \"example@example.com\",\n    \"startDate\" : \"2024-10-16\",\n    \"phoneNumber\": \"123-456-7891\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/employeeProfile/createNewEmployee"
+					},
+					"response": []
+				},
+				{
+					"name": "getEmployee",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/employeeProfile/3"
+					},
+					"response": []
+				},
+				{
+					"name": "getAllEmployees",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/employeeProfile/"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteEmployeeProfile",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/employeeProfile/3"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payroll",
+			"item": [
+				{
+					"name": "Get payroll information",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "http://127.0.0.1:8080/payroll/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Paid",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"month\": 9,\r\n    \"year\": 2024\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:8080/payroll/3/markPaid"
+					},
+					"response": []
+				},
+				{
+					"name": "Mark unpaid",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"month\": 9,\r\n    \"year\": 2024\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:8080/payroll/1/markUnpaid"
+					},
+					"response": []
+				},
+				{
+					"name": "Adjust day",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"month\": 9,\r\n    \"year\": 2024,\r\n    \"day\": 30\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:8080/payroll/3/adjustDay"
+					},
+					"response": []
+				},
+				{
+					"name": "Adjust salary",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"month\": 9,\r\n    \"year\": 2024,\r\n    \"salary\": 12000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:8080/payroll/3/adjustSalary"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Payroll By Employee ID",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"day\": 3,\r\n    \"month\": 3,\r\n    \"year\": 2024,\r\n    \"salary\": 12000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:8080/payroll/1/addPayroll"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Payroll By Emplyee ID",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"month\": 3,\r\n    \"year\": 2024\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:8080/payroll/1/deletePayroll"
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Payroll",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"month\": 9,\r\n    \"year\": 2026,\r\n    \"day\": 30\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:8080/payroll/generatePayroll"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Payroll",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"month\": 9,\r\n    \"year\": 2024\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:8080/payroll/deletePayroll"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Time Off",
+			"item": [
+				{
+					"name": "getTimeOffForEmployee",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/timeoff/1"
+					},
+					"response": []
+				},
+				{
+					"name": "getTimeOffForEmployee_dateRange",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/timeoff/1/range?startDate=2024-10-09&endDate=2024-08-15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"timeoff",
+								"1",
+								"range"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-10-09"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-08-15"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create timeoff",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"employeeId\" : 1,\n  \"leaveType\": \"SICK\",\n  \"startDate\": \"2024-10-15\",\n  \"endDate\": \"2024-10-17\",\n  \"reason\": \"Flu\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/timeoff/create"
+					},
+					"response": []
+				},
+				{
+					"name": "timeoff status update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/timeoff/1/10/update-status?action=reject",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"timeoff",
+								"1",
+								"10",
+								"update-status"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "reject"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Company",
+			"item": [
+				{
+					"name": "registerCompany",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testing1234556\",\n    \"name\": \"testing company\",\n    \"address\": \"NY\",\n    \"state\": \"NY\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/registerCompany"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employee Hierarchy",
+			"item": [
+				{
+					"name": "Add Edge",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "testing",
+								"password": "testing"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"url": "http://localhost:8080/api/employee-hierarchy/addEdge/1/33"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Subordinates",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "testing",
+								"password": "testing"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/employee-hierarchy/subordinates/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Supervisor",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "testing",
+								"password": "testing"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/employee-hierarchy/supervisor/37"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tree",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "testing",
+								"password": "testing"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/employee-hierarchy/tree/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Edge",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "testing",
+								"password": "testing"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/api/employee-hierarchy/removeEdge/33"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
