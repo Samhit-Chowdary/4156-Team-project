@@ -26,6 +26,8 @@ public class EmployeeHierarchy {
   @Column(name = "to_employee_id", nullable = false)
   private Long toEmployeeId;
 
+  public EmployeeHierarchy() {}
+
   public EmployeeHierarchy(Long fromEmployeeId, Long toEmployeeId) {
     this.fromEmployeeId = fromEmployeeId;
     this.toEmployeeId = toEmployeeId;
