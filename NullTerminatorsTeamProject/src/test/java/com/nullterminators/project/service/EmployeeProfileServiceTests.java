@@ -1,4 +1,4 @@
-package com.nullterminators.project;
+package com.nullterminators.project.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -9,8 +9,6 @@ import static org.mockito.Mockito.when;
 
 import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.repository.EmployeeProfileRepository;
-import com.nullterminators.project.service.CompanyEmployeesService;
-import com.nullterminators.project.service.EmployeeProfileService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
