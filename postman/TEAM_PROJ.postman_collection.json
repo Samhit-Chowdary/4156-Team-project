@@ -11,6 +11,13 @@
 				{
 					"name": "createNewEmployee",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -35,6 +42,13 @@
 				{
 					"name": "getEmployee",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"url": "http://localhost:8080/employeeProfile/3"
@@ -44,6 +58,13 @@
 				{
 					"name": "getAllEmployees",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"url": "http://localhost:8080/employeeProfile/"
@@ -53,9 +74,220 @@
 				{
 					"name": "deleteEmployeeProfile",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": "http://localhost:8080/employeeProfile/3"
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/employeeProfile/34/updateName?name=New Jane Doe",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/employeeProfile/34/updateName?name=New Jane Doe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"employeeProfile",
+								"34",
+								"updateName"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "New Jane Doe"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/employeeProfile/34/updateEmailId?emailId=newEmailId@gmail.com",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/employeeProfile/34/updateEmailId?emailId=newEmailId@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"employeeProfile",
+								"34",
+								"updateEmailId"
+							],
+							"query": [
+								{
+									"key": "emailId",
+									"value": "newEmailId@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/employeeProfile/34/updateDesignation?designation=New Designation",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/employeeProfile/34/updateDesignation?designation=New Designation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"employeeProfile",
+								"34",
+								"updateDesignation"
+							],
+							"query": [
+								{
+									"key": "designation",
+									"value": "New Designation"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/employeeProfile/34/updatePhoneNumber?phoneNumber=0000000000",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/employeeProfile/34/updatePhoneNumber?phoneNumber=0000000000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"employeeProfile",
+								"34",
+								"updatePhoneNumber"
+							],
+							"query": [
+								{
+									"key": "phoneNumber",
+									"value": "0000000000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/employeeProfile/34/updateBaseSalary?baseSalary=130000",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/employeeProfile/34/updateBaseSalary?baseSalary=130000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"employeeProfile",
+								"34",
+								"updateBaseSalary"
+							],
+							"query": [
+								{
+									"key": "baseSalary",
+									"value": "130000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/employeeProfile/34/updateEmergencyContact?emergencyContact=1-111-111-1111",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "testing",
+								"username": "testing"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/employeeProfile/34/updateEmergencyContact?emergencyContact=1-111-111-1111",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"employeeProfile",
+								"34",
+								"updateEmergencyContact"
+							],
+							"query": [
+								{
+									"key": "emergencyContact",
+									"value": "1-111-111-1111"
+								}
+							]
+						}
 					},
 					"response": []
 				}

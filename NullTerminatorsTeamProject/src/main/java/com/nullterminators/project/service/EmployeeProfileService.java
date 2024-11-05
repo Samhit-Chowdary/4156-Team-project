@@ -87,6 +87,7 @@ public class EmployeeProfileService {
     if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setName(name);
+      employeeProfileRepository.save(existingEmployeeProfile);
       return true;
     }
     return false;
@@ -105,6 +106,7 @@ public class EmployeeProfileService {
     if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setEmail(emailId);
+      employeeProfileRepository.save(existingEmployeeProfile);
       return true;
     }
     return false;
@@ -123,6 +125,7 @@ public class EmployeeProfileService {
     if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setDesignation(designation);
+      employeeProfileRepository.save(existingEmployeeProfile);
       return true;
     }
     return false;
@@ -141,6 +144,7 @@ public class EmployeeProfileService {
     if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setPhoneNumber(phoneNumber);
+      employeeProfileRepository.save(existingEmployeeProfile);
       return true;
     }
     return false;
@@ -159,6 +163,7 @@ public class EmployeeProfileService {
     if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setBaseSalary(baseSalary);
+      employeeProfileRepository.save(existingEmployeeProfile);
       return true;
     }
     return false;
@@ -177,6 +182,7 @@ public class EmployeeProfileService {
     if (isEmployeePresent && companyEmployeesService.verifyIfEmployeeInCompany(id)) {
       EmployeeProfile existingEmployeeProfile = employeeProfileRepository.findById(id).get();
       existingEmployeeProfile.setEmergencyContactNumber(emergencyContact);
+      employeeProfileRepository.save(existingEmployeeProfile);
       return true;
     }
     return false;
