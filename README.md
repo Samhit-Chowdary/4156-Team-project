@@ -82,6 +82,54 @@ POST /registerCompany
 * Upon Success: HTTP 200 Status Code is returned along with "Employee profile created successfully." in the response body.
 * Upon Failure: HTTP 404 Status Code is returned along with appropriate message in the response body.
 
+#### PATCH /employeeProfile/{id}/updateName
+
+* Expected Input Parameters: employee id (int), employee's name (String)
+* Expected Output: Success or failure message
+* Updates name of an existing employee
+* Upon Success: HTTP 200 Status Code is returned along with "Employee name updated successfully." in the response body.
+* Upon Failure: HTTP 400 Status Code is returned along with "Employee not found." in the response body.
+
+#### PATCH /employeeProfile/{id}/updateEmailId
+
+* Expected Input Parameters: employee id (int), employee's email id (String)
+* Expected Output: Success or failure message
+* Updates email-Id of an existing employee
+* Upon Success: HTTP 200 Status Code is returned along with "Employee email-id updated successfully." in the response body.
+* Upon Failure: HTTP 400 Status Code is returned along with "Employee not found." in the response body.
+
+#### PATCH /employeeProfile/{id}/updateDesignation
+
+* Expected Input Parameters: employee id (int), employee's email id (String)
+* Expected Output: Success or failure message
+* Updates designation of an existing employee
+* Upon Success: HTTP 200 Status Code is returned along with "Employee designation updated successfully." in the response body.
+* Upon Failure: HTTP 400 Status Code is returned along with "Employee not found." in the response body.
+
+#### PATCH /employeeProfile/{id}/updatePhoneNumber
+
+* Expected Input Parameters: employee id (int), employee's phone number (String)
+* Expected Output: Success or failure message
+* Updates phone number of an existing employee
+* Upon Success: HTTP 200 Status Code is returned along with "Employee phone number updated successfully." in the response body.
+* Upon Failure: HTTP 400 Status Code is returned along with "Employee not found." in the response body.
+
+#### PATCH /employeeProfile/{id}/updateBaseSalary
+
+* Expected Input Parameters: employee id (int), employee's Base Salary (int)
+* Expected Output: Success or failure message
+* Updates phone number of an existing employee
+* Upon Success: HTTP 200 Status Code is returned along with "Employee base salary updated successfully." in the response body.
+* Upon Failure: HTTP 400 Status Code is returned along with "Employee not found." in the response body.
+
+#### PATCH /employeeProfile/{id}/updateEmergencyContact
+
+* Expected Input Parameters: employee id (int), employee's Emergency Contact (string)
+* Expected Output: Success or failure message
+* Updates phone number of an existing employee
+* Upon Success: HTTP 200 Status Code is returned along with "Employee emergency contact updated successfully." in the response body.
+* Upon Failure: HTTP 400 Status Code is returned along with "Employee not found." in the response body.
+
 #### DELETE /employeeProfile/{id}
 
 * Expected Input Parameters: id (int)
