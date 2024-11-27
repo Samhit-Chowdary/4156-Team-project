@@ -45,6 +45,15 @@ public class PayrollControllerTests {
   }
 
   @Test
+  void testGetPayrollByEmployeeIdIsEmpty() {
+    when(payrollService.getPayrollByEmployeeId(1)).thenReturn(
+            Pair.of(PayrollStatus.SUCCESS, new ArrayList<>()));
+    ResponseEntity<?> result = payrollController.getPayrollByEmployeeId(1);
+    assertEquals(Map.of("response", "Details Not Found"), result.getBody());
+    assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+  }
+
+  @Test
   void testGetPayrollByEmployeeIdSuccess() {
     Map<String, Object> payrollInfo = Map.of("employeeId", 1, "date",
             LocalDate.of(2024, 10, 17),
