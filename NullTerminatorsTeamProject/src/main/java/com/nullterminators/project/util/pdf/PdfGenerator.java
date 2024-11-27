@@ -112,6 +112,12 @@ public class PdfGenerator {
     }
   }
 
+  /**
+   * Get the name of the pdf file from the payroll.
+   *
+   * @param payroll Payroll
+   * @return String
+   */
   public String getPdfName(Payroll payroll) {
     return payroll.getEmployeeId() + "_"
         + payroll.getPaymentDate().getMonthValue() + "_"

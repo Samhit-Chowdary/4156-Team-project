@@ -54,6 +54,12 @@ public class CompanyService implements UserDetailsService {
     }
   }
 
+  /**
+   * Updates the password of the company.
+   *
+   * @param password new password
+   * @return true
+   */
   public boolean changePassword(String password) {
     Company company = companyRepository.findByUsername(getCompanyUsername()).get();
     company.setPassword(new BCryptPasswordEncoder().encode(password));
