@@ -20,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 /**
  * Integration tests for {@link EmployeeHierarchyController} to verify that it correctly integrates
@@ -32,14 +33,12 @@ class EmployeeHierarchyInternalIntegrationTests {
 
   @MockBean private EmployeeHierarchyRepository employeeHierarchyRepository;
   @MockBean private CompanyEmployeesRepository companyEmployeesRepository;
-  @MockBean private CompanyService companyService;
+  @Autowired private CompanyService companyService;
 
   @BeforeEach
   void setUp() {
     SecurityContextHolder.getContext()
-        .setAuthentication(new UsernamePasswordAuthenticationToken("testUser", null));
-
-    when(companyService.getCompanyUsername()).thenReturn("testCompany");
+        .setAuthentication(new UsernamePasswordAuthenticationToken("testCompany", null));
 
     CompanyEmployees mockEmployee = new CompanyEmployees();
     mockEmployee.setId(1);
