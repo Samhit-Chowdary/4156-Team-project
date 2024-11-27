@@ -43,5 +43,5 @@ jobs:
     - name: JaCoCoSummary
       run: cat coveragereport/Summary.txt
     - name: Run PMD Static Analysis
-      run: mvn pmd:check || true
+      run: mvn pmd:check --file NullTerminatorsTeamProject/pom.xml
 
