@@ -44,4 +44,6 @@ jobs:
       run: cat coveragereport/Summary.txt
     - name: Run PMD Static Analysis
       run: mvn pmd:check --file NullTerminatorsTeamProject/pom.xml
+    - name: Run Style check
+      run: mvn checkstyle:check --file NullTerminatorsTeamProject/pom.xml
 
