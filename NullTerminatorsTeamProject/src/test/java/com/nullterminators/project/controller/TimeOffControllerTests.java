@@ -189,4 +189,30 @@ class TimeOffControllerTests {
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     assertEquals("Time-off request not found or action not applicable", response.getBody());
   }
+
+  @Test
+  void deleteTimeOffRequest_Success() {
+    Integer employeeId = 1;
+    Integer timeOffId = 101;
+    when(employeeProfileService.doesEmployeeExist(employeeId)).thenReturn(true);
+    when(timeOffService.deleteTimeOffRequest(employeeId, timeOffId)).thenReturn(true);
+
+    ResponseEntity<?> response = timeOffController.deleteTimeOffRequest(employeeId, timeOffId);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
+
+  @Test
+  void deleteTimeOffRequest_NotFound() {
+    Integer employeeId = 1;
+    Integer timeOffId = 101;
+    when(employeeProfileService.doesEmployeeExist(employeeId)).thenReturn(true);
+    when(timeOffService.deleteTimeOffRequest(employeeId, timeOffId)).thenReturn(false);
+
+    ResponseEntity<?> response = timeOffController.deleteTimeOffRequest(employeeId, timeOffId);
+
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    assertEquals("Time-off request not found or already deleted", response.getBody());
+  }
+
 }
