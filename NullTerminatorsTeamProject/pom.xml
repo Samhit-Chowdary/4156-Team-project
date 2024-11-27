@@ -122,6 +122,7 @@
 					<includeTestSourceDirectory>true</includeTestSourceDirectory>
 					<consoleOutput>true</consoleOutput>
 					<failsOnError>true</failsOnError>
+					<violationSeverity>warning</violationSeverity>
 					<linkXRef>false</linkXRef>
 				</configuration>
 				<executions>

@@ -80,8 +80,8 @@ public class EmployeeProfileServiceTests {
   public void employeeProfileExistsTestSuccess() {
     String email = "employeeOne@email.com";
     String phoneNum = "+1-123-456-7904";
-    when(employeeProfileRepository.findByEmailAndPhoneNumber(phoneNum, email)).
-        thenReturn(Optional.of(employeeProfile1));
+    when(employeeProfileRepository.findByEmailAndPhoneNumber(phoneNum, email))
+            .thenReturn(Optional.of(employeeProfile1));
 
     when(companyEmployeesService.verifyIfEmployeeInCompany(1)).thenReturn(true);
 
@@ -92,8 +92,8 @@ public class EmployeeProfileServiceTests {
   public void employeeProfileExistsTestFailure() {
     String email = "employeeOne@email.com";
     String phoneNum = "+1-123-456-7904";
-    when(employeeProfileRepository.findByEmailAndPhoneNumber(phoneNum, email)).
-        thenReturn(Optional.of(employeeProfile1));
+    when(employeeProfileRepository.findByEmailAndPhoneNumber(phoneNum, email))
+            .thenReturn(Optional.of(employeeProfile1));
 
     when(companyEmployeesService.verifyIfEmployeeInCompany(1)).thenReturn(false);
 
