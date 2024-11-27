@@ -10,6 +10,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.model.Payroll;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,13 +35,13 @@ public class PdfGenerator {
    *
    * @param payroll (Payroll) : Payroll details
    */
-  public void generatePdfReport(Payroll payroll) {
+  public void generatePdfReport(Payroll payroll, EmployeeProfile employee, Integer leaveCount) {
     Document document = new Document();
 
     try {
       PdfWriter.getInstance(document, new FileOutputStream(getPdfName(payroll)));
       document.open();
-      addDocTitle(document, payroll);
+      addDocTitle(document, payroll, employee, leaveCount);
       createTable(document, payroll);
       addFooter(document);
       document.close();
@@ -50,18 +51,55 @@ public class PdfGenerator {
     }
   }
 
-  private void addDocTitle(Document document, Payroll payroll) throws DocumentException {
+  private void addDocTitle(Document document, Payroll payroll, EmployeeProfile employee,
+                           Integer leaveCount) throws DocumentException {
     final String paymentDate = payroll.getPaymentDate().format(
             DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+    PdfPTable table = new PdfPTable(1);
+    table.setWidthPercentage(100);
+    PdfPCell cell = new PdfPCell();
+    cell.setBorderWidth(2);
+    cell.setPadding(10);
+
+    Paragraph p1Title = new Paragraph("Payroll Report", COURIER);
+    p1Title.setAlignment(Element.ALIGN_CENTER);
+    leaveEmptyLine(p1Title, 1);
+    cell.addElement(p1Title);
+    table.addCell(cell);
+    document.add(table);
+
+    Paragraph p1Space = new Paragraph();
+    leaveEmptyLine(p1Space, 3);
+    document.add(p1Space);
+
+    table = new PdfPTable(1);
+    table.setWidthPercentage(100);
+    cell = new PdfPCell();
+    cell.setBorderWidth(2);
+    cell.setPadding(10);
+
     Paragraph p1 = new Paragraph();
     leaveEmptyLine(p1, 1);
-    p1.add(new Paragraph("Payroll Report", COURIER));
-    p1.setAlignment(Element.ALIGN_CENTER);
-    leaveEmptyLine(p1, 1);
     p1.add(new Paragraph("Report generated on " + paymentDate, COURIER_SMALL));
-
-    document.add(p1);
-
+    leaveEmptyLine(p1, 2);
+    p1.add(new Paragraph("Name: " + employee.getName(), COURIER_SMALL_FOOTER));
+    leaveEmptyLine(p1, 1);
+    p1.add(new Paragraph("Phone Number: " + employee.getPhoneNumber(), COURIER_SMALL_FOOTER));
+    leaveEmptyLine(p1, 1);
+    p1.add(new Paragraph("Designation: " + employee.getDesignation(), COURIER_SMALL_FOOTER));
+    leaveEmptyLine(p1, 1);
+    p1.add(new Paragraph("Email: " + employee.getEmail(), COURIER_SMALL_FOOTER));
+    leaveEmptyLine(p1, 1);
+    p1.add(new Paragraph("Emergency Contact: " + employee.getEmergencyContactNumber(),
+            COURIER_SMALL_FOOTER));
+    leaveEmptyLine(p1, 1);
+    p1.add(new Paragraph("Base Salary: " + employee.getBaseSalary(), COURIER_SMALL_FOOTER));
+    leaveEmptyLine(p1, 1);
+    p1.add(new Paragraph("Leave Count: " + leaveCount, COURIER_SMALL_FOOTER));
+    leaveEmptyLine(p1, 1);
+    cell.addElement(p1);
+    table.addCell(cell);
+    document.add(table);
   }
 
   private void createTable(Document document, Payroll payroll) throws DocumentException {
@@ -69,13 +107,13 @@ public class PdfGenerator {
     leaveEmptyLine(paragraph, 3);
     document.add(paragraph);
     PdfPTable table = new PdfPTable(4);
-    List<String> columnNames = new ArrayList<>(Arrays.asList("Employee Id", "Salary",
+    List<String> columnNames = new ArrayList<>(Arrays.asList("Employee ID", "Current Month Salary",
             "Tax", "Net Salary"));
 
     for (int i = 0; i < 4; i++) {
       PdfPCell cell = new PdfPCell(new Phrase(columnNames.get(i)));
       cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-      cell.setBackgroundColor(BaseColor.CYAN);
+      cell.setBackgroundColor(BaseColor.YELLOW);
       table.addCell(cell);
     }
 
@@ -112,7 +150,13 @@ public class PdfGenerator {
     }
   }
 
-  private String getPdfName(Payroll payroll) {
+  /**
+   * Get the name of the pdf file from the payroll.
+   *
+   * @param payroll Payroll
+   * @return String
+   */
+  public String getPdfName(Payroll payroll) {
     return payroll.getEmployeeId() + "_"
         + payroll.getPaymentDate().getMonthValue() + "_"
         + payroll.getPaymentDate().getYear() + ".pdf";
