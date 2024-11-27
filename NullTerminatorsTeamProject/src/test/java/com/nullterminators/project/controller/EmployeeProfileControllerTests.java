@@ -90,6 +90,18 @@ public class EmployeeProfileControllerTests {
   }
 
   @Test
+  public void getEmployeeIdException() {
+    when(employeeProfileService.getEmployeeProfile(1)).thenThrow(
+      new RuntimeException()
+    );
+
+    ResponseEntity<?> response = employeeProfileController.getEmployee(1);
+
+    assertEquals("java.lang.RuntimeException", response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+  }
+
+  @Test
   public void getEmployeeIdSuccess() {
     when(employeeProfileService.getEmployeeProfile(1)).thenReturn(
         Optional.of(employeeProfile1)
@@ -113,6 +125,17 @@ public class EmployeeProfileControllerTests {
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
 
+  @Test
+  public void createNewEmployeeTestException() {
+    when(employeeProfileService.employeeProfileExists("employeeOne@email.com",
+        "+1-123-456-7904")).thenThrow(new RuntimeException());
+
+    ResponseEntity<?> response = employeeProfileController.createNewEmployee(employeeProfile1);
+
+    assertEquals("java.lang.RuntimeException", response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+  }
+  
   @Test
   public void createNewEmployeeTestSuccess() {
     when(employeeProfileService.employeeProfileExists("employeeOne@email.com",
@@ -139,6 +162,16 @@ public class EmployeeProfileControllerTests {
   }
 
   @Test
+  public void deleteEmployeeTestException() {
+    when(employeeProfileService.deleteEmployeeProfile(1)).thenThrow(new RuntimeException());
+
+    ResponseEntity<?> response = employeeProfileController.deleteEmployee(1);
+
+    assertEquals("java.lang.RuntimeException", response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+  }
+
+  @Test
   public void deleteEmployeeTestSuccess() {
     when(employeeProfileService.deleteEmployeeProfile(1))
         .thenReturn(true);
@@ -158,6 +191,17 @@ public class EmployeeProfileControllerTests {
 
     assertEquals("Employee profile not found.", response.getBody());
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+  }
+
+  @Test
+  public void updateEmployeeNameTestException() {
+    when(employeeProfileService.updateEmployeeName(1, "name")).
+        thenThrow(new RuntimeException());
+
+    ResponseEntity<?> response = employeeProfileController.updateEmployeeName(1, "name");
+
+    assertEquals("java.lang.RuntimeException", response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
   }
 
   @Test
@@ -185,6 +229,19 @@ public class EmployeeProfileControllerTests {
   }
 
   @Test
+  public void updateEmployeeEmailIdTestException() {
+    int id = 1;
+    String emailId = "New@gmail.com";
+    when(employeeProfileService.updateEmployeeEmailId(id, emailId)).
+        thenThrow(new RuntimeException());
+
+    ResponseEntity<?> response = employeeProfileController.updateEmployeeEmailId(id, emailId);
+
+    assertEquals("java.lang.RuntimeException", response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+  }
+
+  @Test
   public void updateEmployeeEmailIdTestSuccess() {
     int id = 1;
     String emailId = "New@gmail.com";
@@ -205,6 +262,19 @@ public class EmployeeProfileControllerTests {
     ResponseEntity<?> response = employeeProfileController.updateEmployeeEmailId(id, emailId);
 
     assertEquals("Employee not found.", response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+  }
+
+  @Test
+  public void updateEmployeeDesignationdTestException() {
+    int id = 1;
+    String designation = "new designation";
+    when(employeeProfileService.updateEmployeeDesignation(id, designation)).
+        thenThrow(new RuntimeException());
+
+    ResponseEntity<?> response = employeeProfileController.updateEmployeeDesignation(id, designation);
+
+    assertEquals("java.lang.RuntimeException", response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
   }
 
@@ -235,6 +305,19 @@ public class EmployeeProfileControllerTests {
   }
 
   @Test
+  public void updateEmployeePhoneNumberTestException() {
+    int id = 1;
+    String phoneNumber = "1234657890";
+    when(employeeProfileService.updateEmployeePhoneNumber(id, phoneNumber)).
+        thenThrow(new RuntimeException());
+
+    ResponseEntity<?> response = employeeProfileController.updateEmployeePhoneNumber(id, phoneNumber);
+
+    assertEquals("java.lang.RuntimeException", response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+  }
+
+  @Test
   public void updateEmployeePhoneNumberTestSuccess() {
     int id = 1;
     String phoneNumber = "1234657890";
@@ -261,6 +344,19 @@ public class EmployeeProfileControllerTests {
   }
 
   @Test
+  public void updateEmployeeBaseSalaryTestException() {
+    int id = 1;
+    int baseSalary = 1234484;
+    when(employeeProfileService.updateBaseSalary(id, baseSalary)).
+        thenThrow(new RuntimeException());
+
+    ResponseEntity<?> response = employeeProfileController.updateBaseSalary(id, baseSalary);
+
+    assertEquals("java.lang.RuntimeException", response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+  }
+
+  @Test
   public void updateEmployeeBaseSalaryTestSuccess() {
     int id = 1;
     int baseSalary = 1234484;
@@ -281,6 +377,20 @@ public class EmployeeProfileControllerTests {
     ResponseEntity<?> response = employeeProfileController.updateBaseSalary(id, baseSalary);
 
     assertEquals("Employee not found.", response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+  }
+
+  @Test
+  public void updateEmergencyContactTestException() {
+    int id = 1;
+    String emergencyContact = "9876543210";
+    when(employeeProfileService.updateEmergencyContact(id, emergencyContact)).
+        thenThrow(new RuntimeException());
+
+    ResponseEntity<?> response = employeeProfileController.updateEmergencyContact
+        (id, emergencyContact);
+
+    assertEquals("java.lang.RuntimeException", response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
   }
 
