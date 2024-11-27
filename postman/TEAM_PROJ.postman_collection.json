@@ -609,6 +609,27 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Delete timeOff",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/timeoff/75/38",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"timeoff",
+								"75",
+								"38"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

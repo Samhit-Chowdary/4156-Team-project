@@ -180,6 +180,13 @@ POST /company/changePassword
 * Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
 * Upon Failure: HTTP 404 Status Code is returned if the employee does not exist, the time-off request is not found, or if the action is not applicable.
 
+#### DELETE /timeoff/{employeeId}/{timeOffId}
+* Expected Input Parameters: employeeId (Integer), timeOffId (Integer)
+* Expected Output: Success or failure message
+* Deletes a specific time-off request for an employee
+* Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
+* Upon Failure: HTTP 404 Status Code is returned if the employee does not exist or the time-off request is not found. HTTP 400 Status Code is returned if the `timeOffId` is invalid (e.g., null or non-positive).
+
 ### Payroll Management (/payroll):
 
 #### GET /payroll/{employeeId}
