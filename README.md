@@ -60,6 +60,13 @@ POST /registerCompany
 * Upon Success: HTTP 201 Status Code is returned along with "Company is registered successfully." in the response body.
 * Upon Failure: HTTP 400 Status Code is returned along with appropriate message in the response body.
 
+POST /company/changePassword
+* Expected Input Parameters: new password (String)
+* Expected Output: Success or failure message
+* Changes the password of the company.
+* Upon Success: HTTP 200 Status Code is returned along with "Password changed successfully." in the response body.
+* Upon Failure: HTTP 400 Status Code is returned along with appropriate message in the response body.
+
 ### Employee Profile Management (/employeeProfile):
 
 #### GET /getAllEmployees, GET/

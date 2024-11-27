@@ -195,8 +195,8 @@ public class EmployeeProfileControllerTests {
 
   @Test
   public void updateEmployeeNameTestException() {
-    when(employeeProfileService.updateEmployeeName(1, "name")).
-        thenThrow(new RuntimeException());
+    when(employeeProfileService.updateEmployeeName(1, "name"))
+            .thenThrow(new RuntimeException());
 
     ResponseEntity<?> response = employeeProfileController.updateEmployeeName(1, "name");
 
@@ -232,8 +232,8 @@ public class EmployeeProfileControllerTests {
   public void updateEmployeeEmailIdTestException() {
     int id = 1;
     String emailId = "New@gmail.com";
-    when(employeeProfileService.updateEmployeeEmailId(id, emailId)).
-        thenThrow(new RuntimeException());
+    when(employeeProfileService.updateEmployeeEmailId(id, emailId))
+            .thenThrow(new RuntimeException());
 
     ResponseEntity<?> response = employeeProfileController.updateEmployeeEmailId(id, emailId);
 
@@ -269,10 +269,11 @@ public class EmployeeProfileControllerTests {
   public void updateEmployeeDesignationdTestException() {
     int id = 1;
     String designation = "new designation";
-    when(employeeProfileService.updateEmployeeDesignation(id, designation)).
-        thenThrow(new RuntimeException());
+    when(employeeProfileService.updateEmployeeDesignation(id, designation))
+            .thenThrow(new RuntimeException());
 
-    ResponseEntity<?> response = employeeProfileController.updateEmployeeDesignation(id, designation);
+    ResponseEntity<?> response = employeeProfileController
+            .updateEmployeeDesignation(id, designation);
 
     assertEquals("java.lang.RuntimeException", response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -308,10 +309,11 @@ public class EmployeeProfileControllerTests {
   public void updateEmployeePhoneNumberTestException() {
     int id = 1;
     String phoneNumber = "1234657890";
-    when(employeeProfileService.updateEmployeePhoneNumber(id, phoneNumber)).
-        thenThrow(new RuntimeException());
+    when(employeeProfileService.updateEmployeePhoneNumber(id, phoneNumber))
+            .thenThrow(new RuntimeException());
 
-    ResponseEntity<?> response = employeeProfileController.updateEmployeePhoneNumber(id, phoneNumber);
+    ResponseEntity<?> response = employeeProfileController
+            .updateEmployeePhoneNumber(id, phoneNumber);
 
     assertEquals("java.lang.RuntimeException", response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -347,8 +349,8 @@ public class EmployeeProfileControllerTests {
   public void updateEmployeeBaseSalaryTestException() {
     int id = 1;
     int baseSalary = 1234484;
-    when(employeeProfileService.updateBaseSalary(id, baseSalary)).
-        thenThrow(new RuntimeException());
+    when(employeeProfileService.updateBaseSalary(id, baseSalary))
+            .thenThrow(new RuntimeException());
 
     ResponseEntity<?> response = employeeProfileController.updateBaseSalary(id, baseSalary);
 
@@ -384,11 +386,11 @@ public class EmployeeProfileControllerTests {
   public void updateEmergencyContactTestException() {
     int id = 1;
     String emergencyContact = "9876543210";
-    when(employeeProfileService.updateEmergencyContact(id, emergencyContact)).
-        thenThrow(new RuntimeException());
+    when(employeeProfileService.updateEmergencyContact(id, emergencyContact))
+            .thenThrow(new RuntimeException());
 
-    ResponseEntity<?> response = employeeProfileController.updateEmergencyContact
-        (id, emergencyContact);
+    ResponseEntity<?> response = employeeProfileController
+            .updateEmergencyContact(id, emergencyContact);
 
     assertEquals("java.lang.RuntimeException", response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
