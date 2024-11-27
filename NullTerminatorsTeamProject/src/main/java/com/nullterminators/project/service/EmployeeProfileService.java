@@ -26,10 +26,12 @@ public class EmployeeProfileService {
    * Creates a new employee profile and saves it in the DB.
    *
    * @param employee (EmployeeProfile)
+   * @return employee id of the record created
    */
-  public void createNewEmployee(EmployeeProfile employee) {
+  public int createNewEmployee(EmployeeProfile employee) {
     employeeProfileRepository.save(employee);
     companyEmployeesService.addEmployeeToCompany(employee.getId());
+    return employee.getId();
   }
 
   /**

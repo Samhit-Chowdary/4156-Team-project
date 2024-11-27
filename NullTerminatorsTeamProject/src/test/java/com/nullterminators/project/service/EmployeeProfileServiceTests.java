@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +41,7 @@ public class EmployeeProfileServiceTests {
 
   private EmployeeProfile employeeProfile1;
   private EmployeeProfile employeeProfile2;
-  
+
   /**
    * Setting up employee profiles.
    */
@@ -74,6 +75,30 @@ public class EmployeeProfileServiceTests {
 
     when(companyEmployeesService.verifyIfEmployeeInCompany(anyInt())).thenReturn(true);
   }
+  
+  @Test
+  public void employeeProfileExistsTestSuccess() {
+    String email = "employeeOne@email.com";
+    String phoneNum = "+1-123-456-7904";
+    when(employeeProfileRepository.findByEmailAndPhoneNumber(phoneNum, email)).
+        thenReturn(Optional.of(employeeProfile1));
+
+    when(companyEmployeesService.verifyIfEmployeeInCompany(1)).thenReturn(true);
+
+    assertTrue(employeeProfileService.employeeProfileExists(email, phoneNum));
+  }
+
+  @Test
+  public void employeeProfileExistsTestFailure() {
+    String email = "employeeOne@email.com";
+    String phoneNum = "+1-123-456-7904";
+    when(employeeProfileRepository.findByEmailAndPhoneNumber(phoneNum, email)).
+        thenReturn(Optional.of(employeeProfile1));
+
+    when(companyEmployeesService.verifyIfEmployeeInCompany(1)).thenReturn(false);
+
+    assertFalse(employeeProfileService.employeeProfileExists(email, phoneNum));
+  }
 
   @Test
   public void createNewEmployeeProfileTest() {
@@ -92,12 +117,12 @@ public class EmployeeProfileServiceTests {
     when(employeeProfileRepository.findById(2)).thenReturn(Optional.of(employeeProfile2));
 
     Optional<EmployeeProfile> result1 = employeeProfileService.getEmployeeProfile(1);
-    
+
     verify(employeeProfileRepository).findById(1);
     assertEquals(Optional.of(employeeProfile1), result1);
 
     Optional<EmployeeProfile> result2 = employeeProfileService.getEmployeeProfile(2);
-    
+
     verify(employeeProfileRepository).findById(2);
     assertEquals(Optional.of(employeeProfile2), result2);
   }
@@ -251,6 +276,49 @@ public class EmployeeProfileServiceTests {
 
     boolean result = employeeProfileService.updateEmergencyContact(id, newPhoneNum);
     assertFalse(result);
+  }
+
+  @Test
+  public void deleteEmployeeSuccess() {
+    when(employeeProfileRepository.findById(1))
+        .thenReturn(Optional.of(employeeProfile1));
+    when(companyEmployeesService.verifyIfEmployeeInCompany(1))
+        .thenReturn(true);
+    boolean res = employeeProfileService.deleteEmployeeProfile(1);
+    assertTrue(res);
+  }
+
+  @Test
+  public void deleteEmployeeNotFound() {
+    when(employeeProfileRepository.findById(1))
+        .thenReturn(Optional.empty());
+
+    boolean res = employeeProfileService.deleteEmployeeProfile(1);
+    assertFalse(res);
+  }
+
+  @Test
+  public void deleteEmployeeWrongCompany() {
+    when(employeeProfileRepository.findById(1))
+        .thenReturn(Optional.empty());
+    when(companyEmployeesService.verifyIfEmployeeInCompany(1))
+        .thenReturn(false);
+    boolean res = employeeProfileService.deleteEmployeeProfile(1);
+    assertFalse(res);
+  }
+
+  @Test
+  public void doesEmployeeExistTestFalse() {
+    assertFalse(employeeProfileService.doesEmployeeExist(0));
+  }
+
+  @Test
+  public void doesEmployeeExistTestTrue() {
+    when(employeeProfileRepository.findById(1))
+        .thenReturn(Optional.of(employeeProfile1));
+    when(companyEmployeesService.verifyIfEmployeeInCompany(1))
+        .thenReturn(true);
+    assertTrue(employeeProfileService.doesEmployeeExist(1));
   }
 
 }

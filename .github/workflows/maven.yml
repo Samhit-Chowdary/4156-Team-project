@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Build and Run Tests
+name: Run All Checks
 
 on:
   push:
@@ -31,4 +31,17 @@ jobs:
       run: sed -i 's/<db_password>/${{ secrets.DATABASE_SECRET }}/' NullTerminatorsTeamProject/src/main/resources/application.properties
     - name: Build with Maven
       run: mvn -B package --file NullTerminatorsTeamProject/pom.xml
+    - name: Run JUnit tests with Maven
+      run: mvn test --file NullTerminatorsTeamProject/pom.xml
+    - name: ReportGenerator
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
+      with:
+        reports: NullTerminatorsTeamProject/target/site/jacoco/jacoco.xml
+        reporttypes: HtmlInline;Cobertura;TextSummary
+        sourcedirs: NullTerminatorsTeamProject/src/main/java/com/nullterminators/project
+        title: JaCoCo code coverage report
+    - name: JaCoCoSummary
+      run: cat coveragereport/Summary.txt
+    - name: Run PMD Static Analysis
+      run: mvn pmd:check --file NullTerminatorsTeamProject/pom.xml
 

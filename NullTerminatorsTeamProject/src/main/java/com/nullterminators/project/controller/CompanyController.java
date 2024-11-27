@@ -24,7 +24,6 @@ public class CompanyController {
     this.companyService = companyService;
   }
 
-
   /**
    * POST /registerCompany - registers a new company.
    *
@@ -35,16 +34,14 @@ public class CompanyController {
   public ResponseEntity<?> registerCompany(@RequestBody Company company) {
     try {
       if (StringUtil.isNullOrBlank(company.getPassword())
-              || StringUtil.isNullOrBlank(company.getUsername())) {
-        return new ResponseEntity<>(Map.of("response", "username and password are required"),
-                HttpStatus.BAD_REQUEST);
+          || StringUtil.isNullOrBlank(company.getUsername())) {
+        return new ResponseEntity<>(
+            Map.of("response", "username and password are required"), HttpStatus.BAD_REQUEST);
       }
       String error = companyService.registerCompany(company);
       if (error == null) {
         return new ResponseEntity<>(
-                Map.of("response", "Company is created successfully."),
-                HttpStatus.CREATED
-        );
+            Map.of("response", "Company is created successfully."), HttpStatus.CREATED);
       }
       return new ResponseEntity<>(Map.of("response", error), HttpStatus.BAD_REQUEST);
     } catch (Exception e) {
@@ -53,9 +50,9 @@ public class CompanyController {
   }
 
   /**
-   * POST /changePassword - changes the password of the company.
+   * POST /company/changePassword - changes the password of the company.
    *
-   * @param body (Map) : contains the new password
+   * @param body ((password: String)): password to be changed
    * @return ResponseEntity with appropriate status and message
    */
   @PostMapping("/company/changePassword")
@@ -63,24 +60,20 @@ public class CompanyController {
     try {
       String password = body.get("password");
       if (StringUtil.isNullOrBlank(password)) {
-        return new ResponseEntity<>(Map.of("response", "proper password is required"),
-                HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+            Map.of("response", "proper password is required"), HttpStatus.BAD_REQUEST);
       }
       boolean passChanged = companyService.changePassword(password);
       if (passChanged) {
         return new ResponseEntity<>(
-                Map.of("response", "Company password changed successfully."),
-                HttpStatus.OK
-        );
+            Map.of("response", "Company password changed successfully."), HttpStatus.OK);
       }
-      return new ResponseEntity<>(Map.of("response", "Company password change failed."),
-              HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(
+          Map.of("response", "Company password change failed."), HttpStatus.BAD_REQUEST);
     } catch (Exception e) {
       return handleException(e);
     }
   }
-
-
 
   private ResponseEntity<?> handleException(Exception e) {
     System.out.println(e.toString());

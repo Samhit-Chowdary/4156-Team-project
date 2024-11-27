@@ -17,8 +17,10 @@ public class CompanyEmployeesService {
 
   @Autowired private CompanyService companyService;
 
-  public CompanyEmployeesService(CompanyEmployeesRepository companyEmployeesRepository,
-                                 CompanyService companyService) {
+  public CompanyEmployeesService(
+          CompanyEmployeesRepository companyEmployeesRepository,
+          CompanyService companyService
+  ) {
     this.companyService = companyService;
     this.companyEmployeesRepository = companyEmployeesRepository;
   }

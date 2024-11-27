@@ -55,10 +55,10 @@ public class CompanyService implements UserDetailsService {
   }
 
   /**
-   * Updates the password of the company.
+   * Change the password of the company.
    *
-   * @param password new password
-   * @return true
+   * @param password password to be changed
+   * @return true if success
    */
   public boolean changePassword(String password) {
     Company company = companyRepository.findByUsername(getCompanyUsername()).get();
