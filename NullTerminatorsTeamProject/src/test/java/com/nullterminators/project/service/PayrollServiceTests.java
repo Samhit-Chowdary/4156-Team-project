@@ -42,6 +42,9 @@ public class PayrollServiceTests {
   private EmployeeProfileService employeeProfileService;
 
   @Mock
+  private TimeOffService timeOffService;
+
+  @Mock
   private PdfGenerator pdfGenerator;
 
   @Mock
@@ -54,7 +57,8 @@ public class PayrollServiceTests {
   @BeforeEach
   void setUp() {
     payrollService = new PayrollService(payrollRepository,
-            employeeProfileService, companyEmployeesService, pdfGenerator, pdfUploader);
+            employeeProfileService, companyEmployeesService, timeOffService,
+            pdfGenerator, pdfUploader);
     payroll = new Payroll();
     payroll.setEmployeeId(1);
     payroll.setPaymentDate(LocalDate.of(2024, 10, 17));
@@ -371,7 +375,8 @@ public class PayrollServiceTests {
     when(pdfUploader.uploadPdf(any(String.class))).thenReturn("url");
     assertEquals(Map.of("response", "Payroll for this month and year has been generated"),
             payrollService.generatePayroll(updates));
-    verify(pdfGenerator).generatePdfReport(any(Payroll.class));
+    verify(pdfGenerator).generatePdfReport(any(Payroll.class), any(EmployeeProfile.class),
+            any(Integer.class));
     verify(payrollRepository).save(any(Payroll.class));
   }
 

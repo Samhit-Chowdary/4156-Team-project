@@ -7,6 +7,7 @@ import com.nullterminators.project.repository.PayrollRepository;
 import com.nullterminators.project.util.pdf.PdfGenerator;
 import com.nullterminators.project.util.pdf.PdfUploader;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class PayrollService {
   private final PayrollRepository payrollRepository;
   private final EmployeeProfileService employeeProfileService;
   private final CompanyEmployeesService companyEmployeesService;
+  private final TimeOffService timeOffService;
   private final PdfGenerator pdfGenerator;
   private final PdfUploader pdfUploader;
 
@@ -40,6 +42,7 @@ public class PayrollService {
   public PayrollService(PayrollRepository payrollRepository,
                         EmployeeProfileService employeeProfileService,
                         CompanyEmployeesService companyEmployeesService,
+                        TimeOffService timeOffService,
                         PdfGenerator pdfGenerator,
                         PdfUploader pdfUploader) {
     this.payrollRepository = payrollRepository;
@@ -47,6 +50,7 @@ public class PayrollService {
     this.companyEmployeesService = companyEmployeesService;
     this.pdfGenerator = pdfGenerator;
     this.pdfUploader = pdfUploader;
+    this.timeOffService = timeOffService;
   }
 
   /**
@@ -215,7 +219,13 @@ public class PayrollService {
       newPayrollEntry.setTax(calculateTax(data.getSecond().get("salary")));
       newPayrollEntry.setPaymentDate(LocalDate.of(data.getSecond().get("year"),
               data.getSecond().get("month"), data.getSecond().get("day")));
-      pdfGenerator.generatePdfReport(newPayrollEntry);
+      EmployeeProfile employee = employeeProfileService.getEmployeeProfile(employeeId).get();
+      LocalDate startDate = LocalDate.of(data.getSecond().get("year"),
+              data.getSecond().get("month"), 1);
+      LocalDate endDate = startDate.with(TemporalAdjusters.firstDayOfMonth());
+      Integer leaveCount = timeOffService.getTimeOffByEmployeeIdWithDateRange(employee.getId(),
+              startDate, endDate).size();
+      pdfGenerator.generatePdfReport(newPayrollEntry, employee, leaveCount);
       String url = pdfUploader.uploadPdf(pdfGenerator.getPdfName(newPayrollEntry));
       newPayrollEntry.setPaid(1);
       newPayrollEntry.setPayslip(url);
