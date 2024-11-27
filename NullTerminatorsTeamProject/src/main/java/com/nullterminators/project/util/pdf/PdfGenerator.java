@@ -112,7 +112,7 @@ public class PdfGenerator {
     }
   }
 
-  private String getPdfName(Payroll payroll) {
+  public String getPdfName(Payroll payroll) {
     return payroll.getEmployeeId() + "_"
         + payroll.getPaymentDate().getMonthValue() + "_"
         + payroll.getPaymentDate().getYear() + ".pdf";

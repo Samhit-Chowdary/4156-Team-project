@@ -5,6 +5,7 @@ import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.model.Payroll;
 import com.nullterminators.project.repository.PayrollRepository;
 import com.nullterminators.project.util.pdf.PdfGenerator;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import com.nullterminators.project.util.pdf.PdfUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ public class PayrollService {
   private final EmployeeProfileService employeeProfileService;
   private final CompanyEmployeesService companyEmployeesService;
   private final PdfGenerator pdfGenerator;
+  private final PdfUploader pdfUploader;
 
   /**
    * Constructor for PayrollService.
@@ -38,11 +42,13 @@ public class PayrollService {
   public PayrollService(PayrollRepository payrollRepository,
                         EmployeeProfileService employeeProfileService,
                         CompanyEmployeesService companyEmployeesService,
-                        PdfGenerator pdfGenerator) {
+                        PdfGenerator pdfGenerator,
+                        PdfUploader pdfUploader) {
     this.payrollRepository = payrollRepository;
     this.employeeProfileService = employeeProfileService;
     this.companyEmployeesService = companyEmployeesService;
     this.pdfGenerator = pdfGenerator;
+    this.pdfUploader = pdfUploader;
   }
 
   /**
@@ -209,11 +215,12 @@ public class PayrollService {
       newPayrollEntry.setEmployeeId(employeeId);
       newPayrollEntry.setSalary(data.getSecond().get("salary"));
       newPayrollEntry.setTax(calculateTax(data.getSecond().get("salary")));
-      newPayrollEntry.setPayslip("N/A");
       newPayrollEntry.setPaymentDate(LocalDate.of(data.getSecond().get("year"),
               data.getSecond().get("month"), data.getSecond().get("day")));
       pdfGenerator.generatePdfReport(newPayrollEntry);
+      String url = pdfUploader.uploadPdf(pdfGenerator.getPdfName(newPayrollEntry));
       newPayrollEntry.setPaid(1);
+      newPayrollEntry.setPayslip(url);
       payrollRepository.save(newPayrollEntry);
       return PayrollStatus.SUCCESS;
     }
