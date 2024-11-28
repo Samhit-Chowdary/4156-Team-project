@@ -128,6 +128,22 @@ public class EmployeeProfileServiceTests {
   }
 
   @Test
+  public void getEmployeeProfileTestFailEmpNotFound() {
+    when(employeeProfileRepository.findById(1)).thenReturn(Optional.of(employeeProfile1));
+    when(companyEmployeesService.verifyIfEmployeeInCompany(1))
+            .thenReturn(false);
+    Optional<EmployeeProfile> result1 = employeeProfileService.getEmployeeProfile(1);
+    assertEquals(Optional.empty(), result1);
+  }
+
+  @Test
+  public void getEmployeeProfileTestFail() {
+    when(employeeProfileRepository.findById(1)).thenReturn(Optional.empty());
+    Optional<EmployeeProfile> result1 = employeeProfileService.getEmployeeProfile(1);
+    assertEquals(Optional.empty(), result1);
+  }
+
+  @Test
   public void getAllEmployeesTest() {
     List<EmployeeProfile> allEmployees = new ArrayList<>();
     allEmployees.add(employeeProfile1);
@@ -310,6 +326,32 @@ public class EmployeeProfileServiceTests {
   @Test
   public void doesEmployeeExistTestFalse() {
     assertFalse(employeeProfileService.doesEmployeeExist(0));
+  }
+
+  @Test
+  public void doesEmployeeExistTestFalseWithNegative() {
+    assertFalse(employeeProfileService.doesEmployeeExist(-1));
+  }
+
+  @Test
+  public void doesEmployeeExistTestFalseWithNull() {
+    assertFalse(employeeProfileService.doesEmployeeExist(null));
+  }
+
+  @Test
+  public void doesEmployeeExistTestFalseWithEmpNotFound() {
+    when(employeeProfileRepository.findById(1))
+            .thenReturn(Optional.empty());
+    assertFalse(employeeProfileService.doesEmployeeExist(1));
+  }
+
+  @Test
+  public void doesEmployeeExistTestFalseWithEmpNotInCompany() {
+    when(employeeProfileRepository.findById(1))
+            .thenReturn(Optional.of(employeeProfile1));
+    when(companyEmployeesService.verifyIfEmployeeInCompany(1))
+            .thenReturn(false);
+    assertFalse(employeeProfileService.doesEmployeeExist(1));
   }
 
   @Test
