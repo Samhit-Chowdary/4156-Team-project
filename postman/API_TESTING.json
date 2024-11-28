@@ -1,0 +1,783 @@
+{
+	"info": {
+		"_postman_id": "497ba18b-b25c-4397-b193-33bc8bce5244",
+		"name": "API_TESTING",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "30660485"
+	},
+	"item": [
+		{
+			"name": "getEmployee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://35.202.97.222:8080/employeeProfile/1"
+			},
+			"response": []
+		},
+		{
+			"name": "getAllEmployees",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://35.202.97.222:8080/employeeProfile/"
+			},
+			"response": []
+		},
+		{
+			"name": "updateEmpName",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://35.202.97.222:8080/employeeProfile/1/updateName?name=John Doe",
+					"protocol": "http",
+					"host": [
+						"35",
+						"202",
+						"97",
+						"222"
+					],
+					"port": "8080",
+					"path": [
+						"employeeProfile",
+						"1",
+						"updateName"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "John Doe"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateEmpDesignation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://35.202.97.222:8080/employeeProfile/1/updateDesignation?designation=New Designation",
+					"protocol": "http",
+					"host": [
+						"35",
+						"202",
+						"97",
+						"222"
+					],
+					"port": "8080",
+					"path": [
+						"employeeProfile",
+						"1",
+						"updateDesignation"
+					],
+					"query": [
+						{
+							"key": "designation",
+							"value": "New Designation"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateEmpEmail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://35.202.97.222:8080/employeeProfile/1/updateEmailId?emailId=example@example.com",
+					"protocol": "http",
+					"host": [
+						"35",
+						"202",
+						"97",
+						"222"
+					],
+					"port": "8080",
+					"path": [
+						"employeeProfile",
+						"1",
+						"updateEmailId"
+					],
+					"query": [
+						{
+							"key": "emailId",
+							"value": "example@example.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdatePhoneNumeber",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://35.202.97.222:8080/employeeProfile/1/updatePhoneNumber?phoneNumber=+1-999-999-9998",
+					"protocol": "http",
+					"host": [
+						"35",
+						"202",
+						"97",
+						"222"
+					],
+					"port": "8080",
+					"path": [
+						"employeeProfile",
+						"1",
+						"updatePhoneNumber"
+					],
+					"query": [
+						{
+							"key": "phoneNumber",
+							"value": "+1-999-999-9998"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateBaseSalary",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://35.202.97.222:8080/employeeProfile/1/updateBaseSalary?baseSalary=130000",
+					"protocol": "http",
+					"host": [
+						"35",
+						"202",
+						"97",
+						"222"
+					],
+					"port": "8080",
+					"path": [
+						"employeeProfile",
+						"1",
+						"updateBaseSalary"
+					],
+					"query": [
+						{
+							"key": "baseSalary",
+							"value": "130000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateEmergencyContact",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://35.202.97.222:8080/employeeProfile/1/updateEmergencyContact?emergencyContact=1-111-111-1111",
+					"protocol": "http",
+					"host": [
+						"35",
+						"202",
+						"97",
+						"222"
+					],
+					"port": "8080",
+					"path": [
+						"employeeProfile",
+						"1",
+						"updateEmergencyContact"
+					],
+					"query": [
+						{
+							"key": "emergencyContact",
+							"value": "1-111-111-1111"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get payroll information",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "http://35.202.97.222:8080/payroll/1"
+			},
+			"response": []
+		},
+		{
+			"name": "Mark Paid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 400 BAD REQUEST', function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"month\": 11,\r\n    \"year\": 2031\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://35.202.97.222:8080/payroll/1/markPaid"
+			},
+			"response": []
+		},
+		{
+			"name": "Mark unpaid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 400 BAD REQUEST', function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"month\": 12,\r\n    \"year\": 2031\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://35.202.97.222:8080/payroll/1/markUnpaid"
+			},
+			"response": []
+		},
+		{
+			"name": "Adjust day",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"month\": 12,\r\n    \"year\": 2031,\r\n    \"day\": 30\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://35.202.97.222:8080/payroll/1/adjustDay"
+			},
+			"response": []
+		},
+		{
+			"name": "Adjust salary",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"month\": 12,\r\n    \"year\": 2031,\r\n    \"salary\": 12000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://35.202.97.222:8080/payroll/1/adjustSalary"
+			},
+			"response": []
+		},
+		{
+			"name": "getTimeOffForEmployee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "testing",
+						"password": "testing"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://35.202.97.222:8080/timeoff/1"
+			},
+			"response": []
+		},
+		{
+			"name": "getTimeOffForEmployee_dateRange",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "testing",
+						"password": "testing"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://35.202.97.222:8080/timeoff/1/range?startDate=2024-09-09&endDate=2024-11-15",
+					"protocol": "http",
+					"host": [
+						"35",
+						"202",
+						"97",
+						"222"
+					],
+					"port": "8080",
+					"path": [
+						"timeoff",
+						"1",
+						"range"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2024-09-09"
+						},
+						{
+							"key": "endDate",
+							"value": "2024-11-15"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "change password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "testing",
+						"username": "testing"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\": \"testing\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "35.202.97.222:8080/company/changePassword"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Subordinates",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "testing",
+						"password": "testing"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://35.202.97.222:8080/api/employee-hierarchy/subordinates/1"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Supervisor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "testing",
+						"password": "testing"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://35.202.97.222:8080/api/employee-hierarchy/supervisor/37"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tree",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "testing",
+						"password": "testing"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://35.202.97.222:8080/api/employee-hierarchy/tree/1"
+			},
+			"response": []
+		}
+	]
+}
