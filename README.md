@@ -382,8 +382,6 @@ After the style check command is run, the report is generated in the `target/sit
 After the test coverage command is run, the report is generated in the `target/site/jaCoCo` folder as html file.
 This project has 86% branch coverage.
 
-![Branch Coverage Report](reports/branchcoverage.png)
-
 #### PMD Report
 After the PMD check command is run, the report is generated in the `target/report` folder as html file.
 
