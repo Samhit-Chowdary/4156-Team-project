@@ -5,6 +5,8 @@ Team Members:
 
 Abhilash Ganga (ag4797), Ajit Sharma Kasturi (ak5055), Hamsitha Challagundla (hc3540), Madhura Chatterjee (mc5470),  Samhit Chowdary Bhogavalli (sb4845)
 
+## Viewing the Client Repository
+Please use the following link to view the repository relevant to the client: https://github.com/Samhit-Chowdary/4156-Team-project-client
 
 ## Dependencies
 
@@ -31,7 +33,7 @@ mvn pmd:check
 ```
 You can find the report at `target/pmd.xml`
 
-I used the following plugin for pmd static bug analyzer.
+We used the following plugin for pmd static bug analyzer.
 ```declarative
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
@@ -42,6 +44,14 @@ I used the following plugin for pmd static bug analyzer.
     </configuration>
 </plugin>
 ```
+
+## CI Pipeline
+The CI pipeline is defined in the `.github/workflows/main.yml` file, which automatically builds the project and runs various tests, including:
+
+* Style Check using Checkstyle.
+* Static Code Analysis using PMD.
+* Branch Coverage using Jacoco.
+* API Testing using Postman and Newman.
 
 ## Endpoints
 
@@ -314,7 +324,7 @@ Our integration tests are:
 3. **Focus on Logical Flow**: These tests check if the controller's business logic integrates correctly with mocked dependencies, ensuring the controller's endpoints handle input, invoke the correct service or repository methods, and return expected responses.
 
 ### Our integration tests:
-### 1. **`testGetSubordinatesSuccess`**
+#### 1. **`testGetSubordinatesSuccess`**
 - **Purpose**: Validates that the `getSubordinates` endpoint successfully retrieves a supervisor's subordinates.
 - **Integration Points**:
     - **`EmployeeHierarchyRepository`**: Simulates fetching subordinates by supervisor ID.
@@ -326,7 +336,7 @@ Our integration tests are:
     - The number of subordinates matches the expected value.
 
 
-### 2. **`testAddEmployeeSupervisorEdgeSuccess`**
+#### 2. **`testAddEmployeeSupervisorEdgeSuccess`**
 - **Purpose**: Verifies that an edge between an employee and a supervisor is successfully created when valid data is provided.
 - **Integration Points**:
     - **`EmployeeHierarchyRepository`**: Checks for existing supervisors and subtree data to prevent cycles.
@@ -336,7 +346,7 @@ Our integration tests are:
     - Response status code is `200 OK`.
     - The response body contains a success message: `"Edge added successfully."`
 
-### 3. **`testAddEmployeeSupervisorEdgeFailureCycle`**
+#### 3. **`testAddEmployeeSupervisorEdgeFailureCycle`**
 - **Purpose**: Ensures the system prevents adding an edge that would create a cycle in the hierarchy.
 - **Integration Points**:
     - **`EmployeeHierarchyRepository`**: Simulates a condition where a cycle would occur if the edge is added.
@@ -346,7 +356,7 @@ Our integration tests are:
     - Response status code is `400 Bad Request`.
     - The response body contains the error message: `"Operation failed: Employee already has a supervisor, or adding this edge would create a cycle."`
 
-### 4. **`testGetSubordinatesFailure`**
+#### 4. **`testGetSubordinatesFailure`**
 - **Purpose**: Validates that the `getSubordinates` endpoint correctly handles a scenario where the supervisor ID does not exist.
 - **Integration Points**:
     - **`EmployeeHierarchyRepository`**: Simulates a case where no subordinates are found for the given supervisor ID.
@@ -370,7 +380,7 @@ After the style check command is run, the report is generated in the `target/sit
 
 #### Branch Coverage Report
 After the test coverage command is run, the report is generated in the `target/site/jaCoCo` folder as html file.
-This project has 94% branch coverage.
+This project has 86% branch coverage.
 
 ![Branch Coverage Report](reports/branchcoverage.png)
 
