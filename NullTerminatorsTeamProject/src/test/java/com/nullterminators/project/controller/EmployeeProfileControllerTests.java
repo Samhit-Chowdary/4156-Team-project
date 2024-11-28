@@ -130,8 +130,10 @@ public class EmployeeProfileControllerTests {
     when(employeeProfileService.employeeProfileExists("employeeOne@email.com",
         "+1-123-456-7904")).thenThrow(new RuntimeException());
 
-    ResponseEntity<?> response = employeeProfileController.createNewEmployee("name", "+1-123-456-7904"
-        , "female", 23, LocalDate.now(), "Manager", "employeeOne@email.com", "13245678904", 12000);
+    ResponseEntity<?> response = employeeProfileController
+        .createNewEmployee("name", "+1-123-456-7904",
+        "female", 23, LocalDate.now(), "Manager",
+        "employeeOne@email.com", "13245678904", 12000);
 
     assertEquals("java.lang.RuntimeException", response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -142,8 +144,10 @@ public class EmployeeProfileControllerTests {
     when(employeeProfileService.employeeProfileExists("employeeOne@email.com",
         "+1-123-456-7904")).thenReturn(false);
 
-    ResponseEntity<?> response = employeeProfileController.createNewEmployee("name", "+1-123-456-7904"
-        , "female", 23, LocalDate.now(), "Manager", "employeeOne@email.com", "13245678904", 12000);
+    ResponseEntity<?> response = employeeProfileController
+        .createNewEmployee("name", "+1-123-456-7904",
+        "female", 23, LocalDate.now(), "Manager",
+        "employeeOne@email.com", "13245678904", 12000);
 
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
   }
@@ -153,9 +157,11 @@ public class EmployeeProfileControllerTests {
     when(employeeProfileService.employeeProfileExists("employeeOne@email.com",
         "+1-123-456-7904")).thenReturn(true);
 
-    ResponseEntity<?> response = employeeProfileController.createNewEmployee("name", "+1-123-456-7904"
-        , "female", 23, LocalDate.now(), "Manager", "employeeOne@email.com", "13245678904", 12000);
-
+    ResponseEntity<?> response = employeeProfileController
+        .createNewEmployee("name", "+1-123-456-7904",
+        "female", 23, LocalDate.now(), "Manager",
+        "employeeOne@email.com", "13245678904", 12000);
+ 
     assertEquals("Employee profile with given email-id and phone number exists.",
         response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -391,8 +397,8 @@ public class EmployeeProfileControllerTests {
     when(employeeProfileService.updateEmergencyContact(id, emergencyContact))
         .thenThrow(new RuntimeException());
 
-    ResponseEntity<?> response = employeeProfileController.updateEmergencyContact
-        (id, emergencyContact);
+    ResponseEntity<?> response = employeeProfileController
+            .updateEmergencyContact(id, emergencyContact);
 
     assertEquals("java.lang.RuntimeException", response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

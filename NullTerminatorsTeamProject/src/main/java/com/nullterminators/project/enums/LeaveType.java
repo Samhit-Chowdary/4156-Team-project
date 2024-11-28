@@ -8,9 +8,6 @@ public enum LeaveType {
     SICK,
     HOLIDAY,
     MATERNITY,
-    PATERNITY,
-    EMERGENCY,
-    ANNUAL,
-    OTHER
+    PATERNITY
 }
 

@@ -4,6 +4,7 @@ import com.nullterminators.project.model.TimeOff;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 /** Repository for storing timeoff records DB. */
@@ -21,4 +22,11 @@ public interface TimeOffRepository extends JpaRepository<TimeOff, Integer> {
       value = "SELECT * FROM timeoff t WHERE t.employee_id = ?1 ORDER BY t.start_date DESC",
       nativeQuery = true)
   List<TimeOff> findAllByEmployeeIdOrderByStartDateDesc(Integer employeeId);
+
+  @Modifying
+  @Query(
+          value = "DELETE FROM timeoff WHERE employee_id = ?1 AND id = ?2",
+          nativeQuery = true)
+  int deleteByEmployeeIdAndTimeOffId(Integer employeeId, Integer timeOffId);
+
 }

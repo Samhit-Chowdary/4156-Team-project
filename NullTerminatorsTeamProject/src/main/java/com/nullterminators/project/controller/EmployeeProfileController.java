@@ -2,7 +2,6 @@ package com.nullterminators.project.controller;
 
 import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.service.EmployeeProfileService;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -65,17 +64,18 @@ public class EmployeeProfileController {
     }
   }
 
+  
   /**
    * POST /employeeProfile/createNewEmployee - creates new employee profile.
    *
-   * @param employeeProfile (EmployeeProfile)
    * @return ResponseEntity with appropriate status and message
    */
   @PostMapping("/createNewEmployee")
-  public ResponseEntity<?> createNewEmployee(@RequestParam String name, @RequestParam String phoneNumber
-      , @RequestParam String gender, @RequestParam int age, @RequestParam LocalDate startDate
-      , @RequestParam String designation, @RequestParam String email, @RequestParam String emergencyContact
-      , @RequestParam int baseSalary) {
+  public ResponseEntity<?> createNewEmployee(@RequestParam String name, 
+      @RequestParam String phoneNumber, @RequestParam String gender, 
+      @RequestParam int age, @RequestParam LocalDate startDate,
+      @RequestParam String designation, @RequestParam String email,
+      @RequestParam String emergencyContact, @RequestParam int baseSalary) {
     try {
       EmployeeProfile employeeProfile = new EmployeeProfile();
       employeeProfile.setName(name);
@@ -95,7 +95,7 @@ public class EmployeeProfileController {
       }
       int id = employeeProfileService.createNewEmployee(employeeProfile);
       return new ResponseEntity<>(
-          id , HttpStatus.CREATED);
+          id, HttpStatus.CREATED);
     } catch (Exception e) {
       return handleException(e);
     }

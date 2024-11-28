@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.nullterminators.project.enums.LeaveStatus;
+import com.nullterminators.project.enums.LeaveType;
 import com.nullterminators.project.model.TimeOff;
 import com.nullterminators.project.repository.TimeOffRepository;
 import java.time.LocalDate;
@@ -33,6 +34,7 @@ class TimeOffServiceTests {
 
   private TimeOff timeOff1;
   private TimeOff timeOff2;
+
 
   @BeforeEach
   void setUp() {
@@ -150,4 +152,45 @@ class TimeOffServiceTests {
     assertEquals(LeaveStatus.PENDING, timeOff1.getStatus()); // Status should not change
     verify(timeOffRepository, never()).save(any(TimeOff.class));
   }
+
+  @Test
+  void testDeleteTimeOffRequestSuccess() {
+    when(timeOffRepository.deleteByEmployeeIdAndTimeOffId(123, 1)).thenReturn(1);
+
+    boolean result = timeOffService.deleteTimeOffRequest(123, 1);
+
+    assertTrue(result);
+    verify(timeOffRepository, times(1)).deleteByEmployeeIdAndTimeOffId(123, 1);
+  }
+
+  @Test
+  void testDeleteTimeOffRequestFailureTimeOffNotFound() {
+    when(timeOffRepository.deleteByEmployeeIdAndTimeOffId(123, 1)).thenReturn(0);
+
+    boolean result = timeOffService.deleteTimeOffRequest(123, 1);
+
+    assertFalse(result);
+    verify(timeOffRepository, times(1)).deleteByEmployeeIdAndTimeOffId(123, 1);
+  }
+
+  @Test
+  void testDeleteTimeOffRequestEmployeeMismatch() {
+    when(timeOffRepository.deleteByEmployeeIdAndTimeOffId(123, 1)).thenReturn(1);
+
+    boolean result = timeOffService.deleteTimeOffRequest(456, 1);
+
+    assertFalse(result);
+    verify(timeOffRepository, times(1)).deleteByEmployeeIdAndTimeOffId(456, 1);
+  }
+
+  @Test
+  void testDeleteTimeOffRequestInvalidTimeOffId() {
+    when(timeOffRepository.deleteByEmployeeIdAndTimeOffId(123, 999)).thenReturn(0);
+
+    boolean result = timeOffService.deleteTimeOffRequest(123, 999);
+
+    assertFalse(result);
+    verify(timeOffRepository, times(1)).deleteByEmployeeIdAndTimeOffId(123, 999);
+  }
+
 }
