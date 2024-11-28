@@ -303,6 +303,61 @@ POST /company/changePassword
 * Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
 * Upon Failure: HTTP 404 Status Code is returned if the employee does not exist and HTTP 400 Status Code if the employee is not an employee and HTTP 409 Status Code if the edge does not exist.
 
+## Integration Tests
+
+This section provides details on the internal integration tests for the `EmployeeHierarchyController` in the `com.nullterminators.project.integration.internal` package. These tests ensure the controller integrates correctly with its dependencies, including repositories and services.
+Unlike **unit tests**, which test individual components in isolation, **integration tests** validate how different components work together. These tests focus on the internal integration of the `EmployeeHierarchyController` with its immediate dependencies, such as repositories and services, to ensure the system behaves as expected in real-world scenarios.
+
+Our integration tests are:
+1. **Controller-Centric**: The tests directly call the controller methods (`EmployeeHierarchyController`) and validate their responses.
+2. **Dependency Interaction**: The tests mock the behavior of repositories (`EmployeeHierarchyRepository` and `CompanyEmployeesRepository`) to simulate database interactions.
+3. **Focus on Logical Flow**: These tests check if the controller's business logic integrates correctly with mocked dependencies, ensuring the controller's endpoints handle input, invoke the correct service or repository methods, and return expected responses.
+
+### Our integration tests:
+### 1. **`testGetSubordinatesSuccess`**
+- **Purpose**: Validates that the `getSubordinates` endpoint successfully retrieves a supervisor's subordinates.
+- **Integration Points**:
+    - **`EmployeeHierarchyRepository`**: Simulates fetching subordinates by supervisor ID.
+- **Setup**:
+    - Mock data for subordinates is returned from the repository.
+- **Assertions**:
+    - Response status code is `200 OK`.
+    - The response body contains the correct list of subordinates.
+    - The number of subordinates matches the expected value.
+
+
+### 2. **`testAddEmployeeSupervisorEdgeSuccess`**
+- **Purpose**: Verifies that an edge between an employee and a supervisor is successfully created when valid data is provided.
+- **Integration Points**:
+    - **`EmployeeHierarchyRepository`**: Checks for existing supervisors and subtree data to prevent cycles.
+- **Setup**:
+    - Mocks simulate no existing supervisor for the employee and no cycle in the hierarchy.
+- **Assertions**:
+    - Response status code is `200 OK`.
+    - The response body contains a success message: `"Edge added successfully."`
+
+### 3. **`testAddEmployeeSupervisorEdgeFailureCycle`**
+- **Purpose**: Ensures the system prevents adding an edge that would create a cycle in the hierarchy.
+- **Integration Points**:
+    - **`EmployeeHierarchyRepository`**: Simulates a condition where a cycle would occur if the edge is added.
+- **Setup**:
+    - Mock repository returns a subtree indicating a cycle.
+- **Assertions**:
+    - Response status code is `400 Bad Request`.
+    - The response body contains the error message: `"Operation failed: Employee already has a supervisor, or adding this edge would create a cycle."`
+
+### 4. **`testGetSubordinatesFailure`**
+- **Purpose**: Validates that the `getSubordinates` endpoint correctly handles a scenario where the supervisor ID does not exist.
+- **Integration Points**:
+    - **`EmployeeHierarchyRepository`**: Simulates a case where no subordinates are found for the given supervisor ID.
+- **Setup**:
+    - Mock repository returns an empty result for the nonexistent supervisor ID.
+- **Assertions**:
+    - Response status code is `404 Not Found`.
+    - The response body contains the error message: `"Employee with ID 999 not found"`
+
+
+
 ## Postman Testing
 The Postman Collection is located in the `postman` folder.
 
