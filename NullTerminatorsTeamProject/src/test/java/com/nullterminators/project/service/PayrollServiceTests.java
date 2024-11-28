@@ -1,6 +1,8 @@
 package com.nullterminators.project.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.nullterminators.project.enums.PayrollStatus;
@@ -8,6 +10,7 @@ import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.model.Payroll;
 import com.nullterminators.project.repository.PayrollRepository;
 import com.nullterminators.project.util.pdf.PdfGenerator;
+import com.nullterminators.project.util.pdf.PdfUploader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +42,13 @@ public class PayrollServiceTests {
   private EmployeeProfileService employeeProfileService;
 
   @Mock
+  private TimeOffService timeOffService;
+
+  @Mock
   private PdfGenerator pdfGenerator;
+
+  @Mock
+  private PdfUploader pdfUploader;
 
   private PayrollService payrollService;
 
@@ -48,7 +57,8 @@ public class PayrollServiceTests {
   @BeforeEach
   void setUp() {
     payrollService = new PayrollService(payrollRepository,
-            employeeProfileService, companyEmployeesService, pdfGenerator);
+            employeeProfileService, companyEmployeesService, timeOffService,
+            pdfGenerator, pdfUploader);
     payroll = new Payroll();
     payroll.setEmployeeId(1);
     payroll.setPaymentDate(LocalDate.of(2024, 10, 17));
@@ -352,24 +362,22 @@ public class PayrollServiceTests {
 
   @Test
   void testGeneratePayrollSuccess() {
-    final Map<String, Object> updates = new HashMap<>(Map.of("day", 10, "month", 10, "year", 2024));
-    EmployeeProfile employeeProfile1 = new EmployeeProfile();
-    employeeProfile1.setId(100);
-    employeeProfile1.setBaseSalary(10000);
-    EmployeeProfile employeeProfile2 = new EmployeeProfile();
-    employeeProfile2.setId(200);
-    employeeProfile2.setBaseSalary(10000);
-    when(companyEmployeesService.getAllEmployeesInCompany()).thenReturn(Arrays.asList(100, 200));
-    when(employeeProfileService.getEmployeeProfile(100)).thenReturn(Optional.of(employeeProfile1));
-    when(companyEmployeesService.verifyIfEmployeeInCompany(100)).thenReturn(true);
-    when(payrollRepository.findByEmployeeIdPaymentMonthAndYear(100, 10, 2024))
+    final Map<String, Object> updates = new HashMap<>(Map.of("day", 17, "month", 10, "year", 2024));
+    EmployeeProfile employeeProfile = new EmployeeProfile();
+    employeeProfile.setId(1);
+    employeeProfile.setBaseSalary(10000);
+    when(companyEmployeesService.getAllEmployeesInCompany()).thenReturn(List.of(1));
+    when(employeeProfileService.getEmployeeProfile(1)).thenReturn(Optional.of(employeeProfile));
+    when(companyEmployeesService.verifyIfEmployeeInCompany(1)).thenReturn(true);
+    when(payrollRepository.findByEmployeeIdPaymentMonthAndYear(1, 10, 2024))
         .thenReturn(null);
-    when(employeeProfileService.getEmployeeProfile(200)).thenReturn(Optional.of(employeeProfile2));
-    when(companyEmployeesService.verifyIfEmployeeInCompany(200)).thenReturn(true);
-    when(payrollRepository.findByEmployeeIdPaymentMonthAndYear(200, 10, 2024))
-        .thenReturn(null);
+    when(pdfGenerator.getPdfName(any(Payroll.class))).thenReturn("pdfName");
+    when(pdfUploader.uploadPdf(any(String.class))).thenReturn("url");
     assertEquals(Map.of("response", "Payroll for this month and year has been generated"),
             payrollService.generatePayroll(updates));
+    verify(pdfGenerator).generatePdfReport(any(Payroll.class), any(EmployeeProfile.class),
+            any(Integer.class));
+    verify(payrollRepository).save(any(Payroll.class));
   }
 
   @Test

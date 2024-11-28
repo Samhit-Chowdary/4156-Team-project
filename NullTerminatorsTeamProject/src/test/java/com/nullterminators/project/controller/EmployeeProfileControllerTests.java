@@ -199,6 +199,7 @@ public class EmployeeProfileControllerTests {
     when(employeeProfileService.updateEmployeeName(1, "name"))
         .thenThrow(new RuntimeException());
 
+
     ResponseEntity<?> response = employeeProfileController
         .updateEmployeeName(1, "name");
 
@@ -317,6 +318,7 @@ public class EmployeeProfileControllerTests {
     ResponseEntity<?> response = employeeProfileController
         .updateEmployeePhoneNumber(id, phoneNumber);
 
+
     assertEquals("java.lang.RuntimeException", response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
   }
@@ -391,8 +393,8 @@ public class EmployeeProfileControllerTests {
     when(employeeProfileService.updateEmergencyContact(id, emergencyContact))
         .thenThrow(new RuntimeException());
 
-    ResponseEntity<?> response = employeeProfileController.updateEmergencyContact
-        (id, emergencyContact);
+    ResponseEntity<?> response = employeeProfileController
+            .updateEmergencyContact(id, emergencyContact);
 
     assertEquals("java.lang.RuntimeException", response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

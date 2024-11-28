@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Service for employees timeoff records. */
 @Service
@@ -106,4 +107,18 @@ public class TimeOffService {
       return false;
     }
   }
+
+  /**
+   * Deletes a specific time-off request for a given employee.
+   *
+   * @param employeeId the ID of the employee whose time-off request needs to be deleted
+   * @param timeOffId the ID of the time-off request to be deleted
+   * @return true if the time-off request was successfully deleted, false otherwise
+   */
+  @Transactional
+  public boolean deleteTimeOffRequest(Integer employeeId, Integer timeOffId) {
+    int rowsAffected = timeOffRepository.deleteByEmployeeIdAndTimeOffId(employeeId, timeOffId);
+    return rowsAffected > 0;
+  }
+
 }

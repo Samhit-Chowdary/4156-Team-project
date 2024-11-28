@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -165,6 +166,38 @@ public class TimeOffController {
       return handleException(e);
     }
   }
+
+  /**
+   * DELETE /timeoff/{employeeId}/{timeOffId} - deletes a specific time-off request for an employee.
+   *
+   * @param employeeId the ID of the employee
+   * @param timeOffId the ID of the time-off request
+   * @return ResponseEntity with appropriate status and message
+   */
+  @DeleteMapping(value = "/{employeeId}/{timeOffId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> deleteTimeOffRequest(
+          @PathVariable("employeeId") Integer employeeId,
+          @PathVariable("timeOffId") Integer timeOffId) {
+    if (!employeeProfileService.doesEmployeeExist(employeeId)) {
+      return new ResponseEntity<>("Employee does not exist", HttpStatus.NOT_FOUND);
+    }
+
+    if (timeOffId == null || timeOffId <= 0) {
+      return new ResponseEntity<>("Invalid time-off request ID", HttpStatus.BAD_REQUEST);
+    }
+
+    try {
+      boolean isDeleted = timeOffService.deleteTimeOffRequest(employeeId, timeOffId);
+      if (isDeleted) {
+        return new ResponseEntity<>("Time-off request deleted successfully", HttpStatus.OK);
+      }
+      return new ResponseEntity<>(
+              "Time-off request not found or already deleted", HttpStatus.NOT_FOUND);
+    } catch (Exception e) {
+      return handleException(e);
+    }
+  }
+
 
   private ResponseEntity<?> handleException(Exception e) {
     System.out.println(e.toString());
