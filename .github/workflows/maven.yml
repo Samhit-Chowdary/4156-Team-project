@@ -27,6 +27,8 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - name: Install Newman
+      run: npm install -g newman
     - name: Update db password
       run: sed -i 's/<db_password>/${{ secrets.DATABASE_SECRET }}/' NullTerminatorsTeamProject/src/main/resources/application.properties
     - name: Build with Maven
@@ -46,4 +48,8 @@ jobs:
       run: mvn pmd:check --file NullTerminatorsTeamProject/pom.xml
     - name: Run Style check
       run: mvn checkstyle:check --file NullTerminatorsTeamProject/pom.xml
+    - name: Run Postman Tests
+      run: |
+        cd postman
+        newman run API_TESTING.json
 
