@@ -31,6 +31,8 @@ jobs:
       run: npm install -g newman
     - name: Update db password
       run: sed -i 's/<db_password>/${{ secrets.DATABASE_SECRET }}/' NullTerminatorsTeamProject/src/main/resources/application.properties
+    - name: Update testing db password
+      run: sed -i 's/<test_db_password>/${{ secrets.TEST_DB_SECRET }}/' NullTerminatorsTeamProject/src/test/resources/application-test.properties
     - name: Build with Maven
       run: mvn -B package --file NullTerminatorsTeamProject/pom.xml
     - name: Run JUnit tests with Maven
