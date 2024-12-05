@@ -71,6 +71,7 @@ public class EmployeeProfileManagementInternalIntegrationTests {
     when(employeeProfileRepository.findAll()).thenReturn(List.of(mockProfile));
     when(employeeProfileRepository.findById(1)).thenReturn(Optional.of(mockProfile));
     when(companyEmployeesRepository.findAllByCompanyUsernameAndEmployeeId("testCompany", 1)).thenReturn(List.of(mockEmployee));
+
   }
 
   @Test
@@ -84,17 +85,14 @@ public class EmployeeProfileManagementInternalIntegrationTests {
     ResponseEntity<?> response = employeeProfileController.getEmployee(1);
     assertEquals(HttpStatus.OK, response.getStatusCode());
   }
-//
-//  @Test
-//  public void updateEmployeeNameSuccessTest() throws Exception {
-//    String newName = "new name";
-//    when(companyEmployeesService.verifyIfEmployeeInCompany(empOneId))
-//        .thenReturn(true);
-//    ResponseEntity<?> response = employeeProfileController.updateEmployeeName(
-//        empOneId, newName);
-//    assertEquals(HttpStatus.OK, response.getStatusCode());
-//    employeeProfileController.deleteEmployee(empOneId);
-//  }
+
+ @Test
+ public void updateEmployeeNameSuccessTest() throws Exception {
+   String newName = "new name";
+   ResponseEntity<?> response = employeeProfileController.updateEmployeeName(
+       1, newName);
+   assertEquals(HttpStatus.OK, response.getStatusCode());
+ }
 //
 //  @Test
 //  public void updateEmployeeEmailIdSuccessTest() throws Exception {
