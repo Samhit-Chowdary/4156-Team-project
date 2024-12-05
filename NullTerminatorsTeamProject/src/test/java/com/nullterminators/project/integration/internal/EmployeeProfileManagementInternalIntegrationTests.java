@@ -132,7 +132,6 @@ public class EmployeeProfileManagementInternalIntegrationTests {
    ResponseEntity<?> response = employeeProfileController.updateEmergencyContact(
        1, newEmergency);
    assertEquals(HttpStatus.OK, response.getStatusCode());
-   employeeProfileController.deleteEmployee(empOneId);
  }
 
 }
