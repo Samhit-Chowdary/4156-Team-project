@@ -112,18 +112,14 @@ public class EmployeeProfileController {
   public ResponseEntity<?> updateEmployeeName(@PathVariable int id, @RequestParam String name) {
     try {
       boolean completed = employeeProfileService.updateEmployeeName(id, name);
-      System.out.println("L115");
       if (completed) {
-        System.out.println("L117");
         return new ResponseEntity<>(
           "Employee name updated successfully.", HttpStatus.OK);
       } else {
-        System.out.println("L121");
         return new ResponseEntity<>(
           "Employee not found.", HttpStatus.BAD_REQUEST);
       } 
     } catch (Exception e) {
-      System.out.println("L27");
       return handleException(e);
     }
   }
