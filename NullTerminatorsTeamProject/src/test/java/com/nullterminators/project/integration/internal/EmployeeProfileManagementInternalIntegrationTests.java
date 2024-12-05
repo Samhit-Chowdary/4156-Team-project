@@ -8,17 +8,12 @@ import com.nullterminators.project.model.CompanyEmployees;
 import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.repository.CompanyEmployeesRepository;
 import com.nullterminators.project.repository.EmployeeProfileRepository;
-import com.nullterminators.project.service.CompanyEmployeesService;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import com.nullterminators.project.service.CompanyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -42,12 +37,8 @@ public class EmployeeProfileManagementInternalIntegrationTests {
   @MockBean
   private CompanyEmployeesRepository companyEmployeesRepository;
 
-  @Autowired private CompanyService companyService;
-
-  private int empOneId;
-
   @BeforeEach
-  void setUp() { 
+  void setUp() {
     SecurityContextHolder.getContext()
         .setAuthentication(new UsernamePasswordAuthenticationToken("testCompany", null));
 
@@ -67,10 +58,12 @@ public class EmployeeProfileManagementInternalIntegrationTests {
     mockProfile.setStartDate(LocalDate.now());
     mockProfile.setEmergencyContactNumber("9876543210");
     mockProfile.setBaseSalary(233445);
-    when(companyEmployeesRepository.findAllByCompanyUsername("testCompany")).thenReturn(List.of(mockEmployee));
+    when(companyEmployeesRepository.findAllByCompanyUsername("testCompany"))
+        .thenReturn(List.of(mockEmployee));
     when(employeeProfileRepository.findAll()).thenReturn(List.of(mockProfile));
     when(employeeProfileRepository.findById(1)).thenReturn(Optional.of(mockProfile));
-    when(companyEmployeesRepository.findAllByCompanyUsernameAndEmployeeId("testCompany", 1)).thenReturn(List.of(mockEmployee));
+    when(companyEmployeesRepository.findAllByCompanyUsernameAndEmployeeId(
+        "testCompany", 1)).thenReturn(List.of(mockEmployee));
 
   }
 
@@ -86,52 +79,52 @@ public class EmployeeProfileManagementInternalIntegrationTests {
     assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
- @Test
- public void updateEmployeeNameSuccessTest() throws Exception {
-   String newName = "new name";
-   ResponseEntity<?> response = employeeProfileController.updateEmployeeName(
-       1, newName);
-   assertEquals(HttpStatus.OK, response.getStatusCode());
- }
+  @Test
+  public void updateEmployeeNameSuccessTest() throws Exception {
+    String newName = "new name";
+    ResponseEntity<?> response = employeeProfileController.updateEmployeeName(
+        1, newName);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
 
- @Test
- public void updateEmployeeEmailIdSuccessTest() throws Exception {
-   String newEmail = "newemail@gmail.com";
-   ResponseEntity<?> response = employeeProfileController.updateEmployeeEmailId(
-       1, newEmail);
-   assertEquals(HttpStatus.OK, response.getStatusCode());
- }
+  @Test
+  public void updateEmployeeEmailIdSuccessTest() throws Exception {
+    String newEmail = "newemail@gmail.com";
+    ResponseEntity<?> response = employeeProfileController.updateEmployeeEmailId(
+        1, newEmail);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
 
- @Test
- public void updateEmployeeDesignationSuccessTest() throws Exception {
-   String newDesignation = "Manager";
-   ResponseEntity<?> response = employeeProfileController.updateEmployeeDesignation(
-       1, newDesignation);
-   assertEquals(HttpStatus.OK, response.getStatusCode());
- }
+  @Test
+  public void updateEmployeeDesignationSuccessTest() throws Exception {
+    String newDesignation = "Manager";
+    ResponseEntity<?> response = employeeProfileController.updateEmployeeDesignation(
+        1, newDesignation);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
 
- @Test
- public void updateEmployeePhoneNumSuccessTest() throws Exception {
-   String newPhoneNum = "00000000000";
-   ResponseEntity<?> response = employeeProfileController.updateEmployeePhoneNumber(
-       1, newPhoneNum);
-   assertEquals(HttpStatus.OK, response.getStatusCode());
- }
+  @Test
+  public void updateEmployeePhoneNumSuccessTest() throws Exception {
+    String newPhoneNum = "00000000000";
+    ResponseEntity<?> response = employeeProfileController.updateEmployeePhoneNumber(
+        1, newPhoneNum);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
 
- @Test
- public void updateEmployeeBaseSalarySuccessTest() throws Exception {
-   int newBase = 100000;
-   ResponseEntity<?> response = employeeProfileController.updateBaseSalary(
-       1, newBase);
-   assertEquals(HttpStatus.OK, response.getStatusCode());
- }
+  @Test
+  public void updateEmployeeBaseSalarySuccessTest() throws Exception {
+    int newBase = 100000;
+    ResponseEntity<?> response = employeeProfileController.updateBaseSalary(
+        1, newBase);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
 
- @Test
- public void updateEmployeeEmergencySuccessTest() throws Exception {
-   String newEmergency = "00000000000";
-   ResponseEntity<?> response = employeeProfileController.updateEmergencyContact(
-       1, newEmergency);
-   assertEquals(HttpStatus.OK, response.getStatusCode());
- }
+  @Test
+  public void updateEmployeeEmergencySuccessTest() throws Exception {
+    String newEmergency = "00000000000";
+    ResponseEntity<?> response = employeeProfileController.updateEmergencyContact(
+        1, newEmergency);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
 
 }
