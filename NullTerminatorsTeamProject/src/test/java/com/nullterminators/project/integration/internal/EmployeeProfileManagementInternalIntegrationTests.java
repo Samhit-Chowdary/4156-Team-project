@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import com.nullterminators.project.controller.EmployeeProfileController;
+import com.nullterminators.project.model.CompanyEmployees;
+import com.nullterminators.project.model.EmployeeProfile;
 import com.nullterminators.project.service.CompanyEmployeesService;
 import java.time.LocalDate;
 import java.util.List;
@@ -44,11 +46,15 @@ public class EmployeeProfileManagementInternalIntegrationTests {
         "+1-123-456-7789", "Female", 50, LocalDate.now(),
         "Manager", "employeeOne@email.com", "9876543210",
         233445);
-   
+        
     Object body = resp.getBody();
     if (body instanceof Integer) {
       empOneId = (Integer) body;
     }
+    CompanyEmployees mockEmployee = new CompanyEmployees();
+    mockEmployee.setId(1);
+    mockEmployee.setCompanyUsername("testCompany");
+    mockEmployee.setEmployeeId(empOneId);
   }
 
   @Test
