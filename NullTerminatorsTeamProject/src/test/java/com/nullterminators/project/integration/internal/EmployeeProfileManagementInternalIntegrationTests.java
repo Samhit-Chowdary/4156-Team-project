@@ -11,6 +11,7 @@ import com.nullterminators.project.repository.EmployeeProfileRepository;
 import com.nullterminators.project.service.CompanyEmployeesService;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import com.nullterminators.project.service.CompanyService;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,6 +69,8 @@ public class EmployeeProfileManagementInternalIntegrationTests {
     mockProfile.setBaseSalary(233445);
     when(companyEmployeesRepository.findAllByCompanyUsername("testCompany")).thenReturn(List.of(mockEmployee));
     when(employeeProfileRepository.findAll()).thenReturn(List.of(mockProfile));
+    when(employeeProfileRepository.findById(1)).thenReturn(Optional.of(mockProfile));
+    when(companyEmployeesRepository.findAllByCompanyUsernameAndEmployeeId("testCompany", 1)).thenReturn(List.of(mockEmployee));
   }
 
   @Test
@@ -76,14 +79,11 @@ public class EmployeeProfileManagementInternalIntegrationTests {
     assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
-//  @Test
-//  public void getEmployeesSuccessTest() throws Exception {
-//    when(companyEmployeesService.verifyIfEmployeeInCompany(empOneId))
-//        .thenReturn(true);
-//    ResponseEntity<?> response = employeeProfileController.getEmployee(empOneId);
-//    assertEquals(HttpStatus.OK, response.getStatusCode());
-//    employeeProfileController.deleteEmployee(empOneId);
-//  }
+  @Test
+  public void getEmployeesSuccessTest() throws Exception {
+    ResponseEntity<?> response = employeeProfileController.getEmployee(1);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
 //
 //  @Test
 //  public void updateEmployeeNameSuccessTest() throws Exception {
