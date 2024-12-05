@@ -93,60 +93,46 @@ public class EmployeeProfileManagementInternalIntegrationTests {
        1, newName);
    assertEquals(HttpStatus.OK, response.getStatusCode());
  }
-//
-//  @Test
-//  public void updateEmployeeEmailIdSuccessTest() throws Exception {
-//    String newEmail = "newemail@gmail.com";
-//    when(companyEmployeesService.verifyIfEmployeeInCompany(empOneId))
-//        .thenReturn(true);
-//    ResponseEntity<?> response = employeeProfileController.updateEmployeeEmailId(
-//        empOneId, newEmail);
-//    assertEquals(HttpStatus.OK, response.getStatusCode());
-//    employeeProfileController.deleteEmployee(empOneId);
-//  }
-//
-//  @Test
-//  public void updateEmployeeDesignationSuccessTest() throws Exception {
-//    String newDesignation = "Manager";
-//    when(companyEmployeesService.verifyIfEmployeeInCompany(empOneId))
-//        .thenReturn(true);
-//    ResponseEntity<?> response = employeeProfileController.updateEmployeeDesignation(
-//        empOneId, newDesignation);
-//    assertEquals(HttpStatus.OK, response.getStatusCode());
-//    employeeProfileController.deleteEmployee(empOneId);
-//  }
-//
-//  @Test
-//  public void updateEmployeePhoneNumSuccessTest() throws Exception {
-//    String newPhoneNum = "00000000000";
-//    when(companyEmployeesService.verifyIfEmployeeInCompany(empOneId))
-//        .thenReturn(true);
-//    ResponseEntity<?> response = employeeProfileController.updateEmployeePhoneNumber(
-//        empOneId, newPhoneNum);
-//    assertEquals(HttpStatus.OK, response.getStatusCode());
-//    employeeProfileController.deleteEmployee(empOneId);
-//  }
-//
-//  @Test
-//  public void updateEmployeeBaseSalarySuccessTest() throws Exception {
-//    int newBase = 100000;
-//    when(companyEmployeesService.verifyIfEmployeeInCompany(empOneId))
-//        .thenReturn(true);
-//    ResponseEntity<?> response = employeeProfileController.updateBaseSalary(
-//        empOneId, newBase);
-//    assertEquals(HttpStatus.OK, response.getStatusCode());
-//    employeeProfileController.deleteEmployee(empOneId);
-//  }
-//
-//  @Test
-//  public void updateEmployeeEmergencySuccessTest() throws Exception {
-//    String newEmergency = "00000000000";
-//    when(companyEmployeesService.verifyIfEmployeeInCompany(empOneId))
-//        .thenReturn(true);
-//    ResponseEntity<?> response = employeeProfileController.updateEmergencyContact(
-//        empOneId, newEmergency);
-//    assertEquals(HttpStatus.OK, response.getStatusCode());
-//    employeeProfileController.deleteEmployee(empOneId);
-//  }
+
+ @Test
+ public void updateEmployeeEmailIdSuccessTest() throws Exception {
+   String newEmail = "newemail@gmail.com";
+   ResponseEntity<?> response = employeeProfileController.updateEmployeeEmailId(
+       1, newEmail);
+   assertEquals(HttpStatus.OK, response.getStatusCode());
+ }
+
+ @Test
+ public void updateEmployeeDesignationSuccessTest() throws Exception {
+   String newDesignation = "Manager";
+   ResponseEntity<?> response = employeeProfileController.updateEmployeeDesignation(
+       1, newDesignation);
+   assertEquals(HttpStatus.OK, response.getStatusCode());
+ }
+
+ @Test
+ public void updateEmployeePhoneNumSuccessTest() throws Exception {
+   String newPhoneNum = "00000000000";
+   ResponseEntity<?> response = employeeProfileController.updateEmployeePhoneNumber(
+       1, newPhoneNum);
+   assertEquals(HttpStatus.OK, response.getStatusCode());
+ }
+
+ @Test
+ public void updateEmployeeBaseSalarySuccessTest() throws Exception {
+   int newBase = 100000;
+   ResponseEntity<?> response = employeeProfileController.updateBaseSalary(
+       1, newBase);
+   assertEquals(HttpStatus.OK, response.getStatusCode());
+ }
+
+ @Test
+ public void updateEmployeeEmergencySuccessTest() throws Exception {
+   String newEmergency = "00000000000";
+   ResponseEntity<?> response = employeeProfileController.updateEmergencyContact(
+       1, newEmergency);
+   assertEquals(HttpStatus.OK, response.getStatusCode());
+   employeeProfileController.deleteEmployee(empOneId);
+ }
 
 }
