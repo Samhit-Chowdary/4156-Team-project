@@ -8,6 +8,8 @@ Abhilash Ganga (ag4797), Ajit Sharma Kasturi (ak5055), Hamsitha Challagundla (hc
 ## Viewing the Client Repository
 Please use the following link to view the repository relevant to the client: https://github.com/Samhit-Chowdary/4156-Team-project-client
 
+This service is deployed and can be accessed using the following link: http://104.197.175.33:8080.
+
 ## Dependencies
 
 In order to build and use our service you must install the following:
@@ -52,6 +54,15 @@ The CI pipeline is defined in the `.github/workflows/main.yml` file, which autom
 * Static Code Analysis using PMD.
 * Branch Coverage using Jacoco.
 * API Testing using Postman and Newman.
+
+## CI Build Report
+
+The CI build reports can be found here: https://github.com/Samhit-Chowdary/4156-Team-project/actions
+(One of the build reports can be found here: https://github.com/Samhit-Chowdary/4156-Team-project/actions/runs/12201880494/job/34041277308)
+
+## JIRA Board
+
+The JIRA board for the project can be found here: https://null-terminators.atlassian.net/jira/software/projects/SCRUM/boards/1
 
 ## Endpoints
 
@@ -313,17 +324,16 @@ POST /company/changePassword
 * Upon Success: HTTP 200 Status Code is returned along with a success message in the response body.
 * Upon Failure: HTTP 404 Status Code is returned if the employee does not exist and HTTP 400 Status Code if the employee is not an employee and HTTP 409 Status Code if the edge does not exist.
 
-## Integration Tests
+## Internal Integration Tests
 
-This section provides details on the internal integration tests for the `EmployeeHierarchyController` in the `com.nullterminators.project.integration.internal` package. These tests ensure the controller integrates correctly with its dependencies, including repositories and services.
-Unlike **unit tests**, which test individual components in isolation, **integration tests** validate how different components work together. These tests focus on the internal integration of the `EmployeeHierarchyController` with its immediate dependencies, such as repositories and services, to ensure the system behaves as expected in real-world scenarios.
-
-Our integration tests are:
-1. **Controller-Centric**: The tests directly call the controller methods (`EmployeeHierarchyController`) and validate their responses.
-2. **Dependency Interaction**: The tests mock the behavior of repositories (`EmployeeHierarchyRepository` and `CompanyEmployeesRepository`) to simulate database interactions.
+This section provides details on the internal integration tests in the `com.nullterminators.project.integration.internal` package. These tests ensure the controller integrates correctly with its dependencies, including repositories and services.
+Unlike **unit tests**, which test individual components in isolation, **internal integration tests** validate how different components work together.
+Our internal  integration tests are:
+1. **Controller-Centric**: The tests directly call the controller methods and validate their responses.
+2. **Dependency Interaction**: The tests mock the behavior of repositories (`EmployeeHierarchyRepository`, `CompanyEmployeesRepository`, `PayrollRepository`, etc) to simulate database interactions.
 3. **Focus on Logical Flow**: These tests check if the controller's business logic integrates correctly with mocked dependencies, ensuring the controller's endpoints handle input, invoke the correct service or repository methods, and return expected responses.
-
-### Our integration tests:
+ 
+### Our internal integration tests:
 #### 1. **`testGetSubordinatesSuccess`**
 - **Purpose**: Validates that the `getSubordinates` endpoint successfully retrieves a supervisor's subordinates.
 - **Integration Points**:
@@ -334,7 +344,6 @@ Our integration tests are:
     - Response status code is `200 OK`.
     - The response body contains the correct list of subordinates.
     - The number of subordinates matches the expected value.
-
 
 #### 2. **`testAddEmployeeSupervisorEdgeSuccess`**
 - **Purpose**: Verifies that an edge between an employee and a supervisor is successfully created when valid data is provided.
@@ -366,7 +375,191 @@ Our integration tests are:
     - Response status code is `404 Not Found`.
     - The response body contains the error message: `"Employee with ID 999 not found"`
 
+#### 5. **`testGetPayrollByEmployeeIdSuccess`**
+- **Purpose**: Validates that the `getPayrollByEmployeeId` endpoint successfully retrieves list of  payrolls.
+- **Integration Points**:
+    - **`PayrollRepository`**: Simulates fetching payroll by employee ID.
+    - **'CompanyEmployeesRepository'**: Simulates verification of employee existence in company by employee ID.
+- **Setup**:
+    - Mock data for payroll is returned from the repository.
+- **Assertions**:
+    - Response status code is `200 OK`.
+    - The response body contains the correct payroll information.
 
+#### 6. **`testMarkAsPaidSuccess`**
+- **Purpose**: Validates that the `markAsPaid` endpoint successfully marks a specific payroll record as paid.
+- **Integration Points**:
+    - **`PayrollRepository`**: Simulates updating a specific payroll record to mark it as paid.
+    - **`CompanyEmployeesRepository`**: Simulates verification of employee existence in company by employee ID.
+- **Setup**:
+    - Mock data for a paid payroll record is returned from the repository.
+- **Assertions**:
+    - Response status code is `200 OK`.
+    - The response body contains a success message: `"Attribute was updated successfully"`
+
+#### 7. **`testMarkAsUnpaidAlreadyCompleted`**
+- **Purpose**: Validates that the `markAsUnpaid` endpoint correctly handles a scenario where the payroll record is already marked as unpaid.
+- **Integration Points**:
+    - **`PayrollRepository`**: Simulates a case where the payroll record is already marked as unpaid.
+    - **`CompanyEmployeesRepository`**: Simulates verification of employee existence in company by employee ID.
+- **Setup**:
+    - Mock data for an already unpaid payroll record is returned from the repository.
+- **Assertions**:
+    - Response status code is `400 Bad Request`.
+    - The response body contains the error message: `"Employee has already been marked as Not Paid"`
+
+#### 8. **`testAdjustSalarySuccess`**
+- **Purpose**: Validates that the `adjustSalary` endpoint successfully adjusts the salary of a specific payroll record.
+- **Integration Points**:
+    - **`PayrollRepository`**: Simulates updating a specific payroll record to adjust its salary.
+    - **`CompanyEmployeesRepository`**: Simulates verification of employee existence in company by employee ID.
+- **Setup**:
+    - Mock data for an adjusted salary payroll record is returned from the repository.
+- **Assertions**:
+    - Response status code is `200 OK`.
+    - The response body contains a success message: `"Attribute was updated successfully"`
+
+#### 9. **`testAdjustDaySuccess`**
+- **Purpose**: Validates that the `adjustDay` endpoint successfully adjusts the payment day of a specific payroll record.
+- **Integration Points**:
+    - **`PayrollRepository`**: Simulates updating a specific payroll record to adjust its payment day.
+    - **`CompanyEmployeesRepository`**: Simulates verification of employee existence in company by employee ID.
+- **Setup**:
+    - Mock data for an adjusted payment day payroll record is returned from the repository.
+- **Assertions**:
+    - Response status code is `200 OK`.
+    - The response body contains a success message: `"Attribute was updated successfully"`
+
+#### 10. **`testDeletePayrollByEmployeeIdSuccess`**
+- **Purpose**: Validates that the `deletePayrollByEmployeeId` endpoint successfully deletes a specific payroll record.
+- **Integration Points**:
+    - **`PayrollRepository`**: Simulates deleting a specific payroll record.
+    - **`CompanyEmployeesRepository`**: Simulates verification of employee existence in company by employee ID.
+- **Setup**:
+    - Mock data for a deleted payroll record is returned from the repository.
+- **Assertions**:
+    - Response status code is `200 OK`.
+    - The response body contains a success message: `"Attribute was deleted successfully"`
+
+#### 11. **`testAddPayrollByEmployeeIdInvalidFormat`**
+- **Purpose**: Validates that the `addPayrollByEmployeeId` endpoint correctly handles invalid input format.
+- **Integration Points**:
+    - **`PayrollRepository`**: Simulates a case where the input format is invalid.
+    - **`CompanyEmployeesRepository`**: Simulates verification of employee existence in company by employee ID.
+- **Setup**:
+    - Mock data for an invalid input format is given as input.
+- **Assertions**:
+    - Response status code is `400 Bad Request`.
+    - The response body contains the error message: `"Invalid input format for payroll data"`
+
+#### 12. **`testDeletePayroll`**
+- **Purpose**: Validates that the `deletePayroll` endpoint successfully deletes all payroll records for month and year.
+- **Integration Points**:
+    - **`PayrollRepository`**: Simulates deleting payroll records.
+    - **`CompanyEmployeesRepository`**: Simulates getting list of employees in company.
+- **Setup**:
+    - Mock data for a deleted payroll record is returned from the repository.
+- **Assertions**:
+    - Response status code is `200 OK`.
+    - The response body contains a success message: `"Payroll for this month and year has been deleted"`
+
+#### 13. **`testCreateCompanySuccess`**
+- **Purpose**: Validates that the `createCompany` endpoint successfully creates a new company.
+- **Integration Points**:
+    - **`CompanyRepository`**: Simulates creating a new company.
+- **Setup**:
+    - Mock data for a new company is returned from the repository.
+- **Assertions**:
+    - Response status code is `201 CREATED`.
+
+#### 14. **`testCreateCompanyFailure`**
+- **Purpose**: Validates that the `createCompany` endpoint correctly handles a scenario where the company already exists.
+- **Integration Points**:
+    - **`CompanyRepository`**: Simulates a case where the company already exists.
+- **Setup**:
+    - Mock data for an existing company is given as input.
+- **Assertions**:
+    - Response status code is `400 Bad Request`.
+
+#### 15. **`testChangePasswordSuccess`**
+- **Purpose**: Validates that the `changePassword` endpoint successfully changes the password of a company.
+- **Integration Points**:
+    - **`CompanyRepository`**: Simulates changing the password of a company.
+- **Setup**:
+    - Mock data for a company with a new password is returned from the repository.
+- **Assertions**:
+    - Response status code is `200 OK`.
+
+#### 16. **`testChangePasswordFailure`**
+- **Purpose**: Validates that the `changePassword` endpoint correctly handles a scenario where the company does not exist.
+- **Integration Points**:
+    - **`CompanyRepository`**: Simulates a case where the company does not exist.
+- **Setup**:
+    - Mock data for a non-existent company is given as input.
+- **Assertions**:
+    - Response status code is `400 Bad Request`.
+
+#### 17. **`getAllEmployeesSuccessTest`**
+- **Purpose**: Validates that the `getAllEmployees` endpoint successfully returns a list of employees.
+- **Integration Points**:
+    - **`CompanyEmployeesRepository`**: Simulates getting a list of employees in a company.
+    - **`EmployeeRepository`**: Simulates getting a list of employees.
+- **Setup**:
+    - Mock data for a list of employees is returned from the repository.
+- **Assertions**:
+    - Response status code is `200 OK`.
+
+## External Integration Tests
+
+This section provides details on the internal integration tests in the `com.nullterminators.project.integration.external` package. These tests ensure the calls to the repositories are handled correctly and integrates correctly.
+Our external integration tests directly call the repository methods and validate their responses.
+
+### Our external integration tests:
+
+#### 1. **`testFindAllByEmployeeIdOrderByPaymentDateDesc`**
+- **Purpose**: Validates that the `findAllByEmployeeIdOrderByPaymentDateDesc` method correctly retrieves payroll records for a specific employee.
+- **Assertions**:
+    - The response contains the correct payroll information.
+
+#### 2. **`testFindByEmployeeIdPaymentMonthAndYear`**
+- **Purpose**: Validates that the `findByEmployeeIdPaymentMonthAndYear` method correctly retrieves a specific payroll record.
+- **Assertions**:
+    - The response contains the correct payroll information.
+
+#### 3. **`testSave`**
+- **Purpose**: Validates that the `save` method correctly saves a new payroll record.
+- **Assertions**:
+    - Checks if the payroll record is saved successfully.
+
+#### 4. **`testDelete`**
+- **Purpose**: Validates that the `delete` method correctly deletes a payroll record.
+- **Assertions**:
+    - Checks if the payroll record is deleted successfully.
+
+#### 5. **`testFindByUserName`**
+- **Purpose**: Validates that the `findByUserName` method correctly retrieves a company record.
+- **Assertions**:
+    - Checks if the company record is retrieved successfully.
+
+#### 6. **`testFindAllByCompanyUsernameAndEmployeeId`**
+- **Purpose**: Validates that the `findAllByCompanyUsernameAndEmployeeId` method correctly retrieves company employees.
+- **Assertions**:
+    - Checks if the employee is in the company.
+
+#### 7. **`testFindAllByEmployeeId`**
+- **Purpose**: Validates that the `findAllByEmployeeId` method correctly retrieves company employees by employee ID.
+- **Assertions**:
+    - Checks if the list of employees is retrieved successfully.
+
+#### 8. **`testFindAllByCompanyUsername`**
+- **Purpose**: Validates that the `findAllByCompanyUsername` method correctly retrieves company employees by company username.
+- **Assertions**:
+    - Checks if the list of employees is retrieved successfully.
+
+## An Initial Note to Developers
+If you intend to use this service, start by creating a company via the `/registerCompany` endpoint. Then, use that company's credentials to access the service endpoints. To segregate your data across environments (e.g., sandbox, dev, and prod), create a separate company for each environment. The service will handle the segregation for you.
+
+Using the provided endpoints as outlined to integrate the service into your client. For detailed instructions on deploying both the client and the service, please refer to the client GitHub repository.
 
 ## Postman Testing
 The Postman Collection is located in the `postman` folder.
@@ -381,6 +574,8 @@ After the style check command is run, the report is generated in the `target/sit
 #### Branch Coverage Report
 After the test coverage command is run, the report is generated in the `target/site/jaCoCo` folder as html file.
 This project has 86% branch coverage.
+
+![Branch Coverage Report](reports/branchcoverage.png)
 
 #### PMD Report
 After the PMD check command is run, the report is generated in the `target/report` folder as html file.
