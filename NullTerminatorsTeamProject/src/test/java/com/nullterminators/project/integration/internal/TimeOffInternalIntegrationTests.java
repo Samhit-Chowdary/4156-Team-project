@@ -1,5 +1,9 @@
 package com.nullterminators.project.integration.internal;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
+
 import com.nullterminators.project.controller.TimeOffController;
 import com.nullterminators.project.enums.LeaveStatus;
 import com.nullterminators.project.model.TimeOff;
@@ -16,141 +20,138 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
-
-/**
- * Internal integration tests for TimeOff endpoints.
- */
+/** Internal integration tests for TimeOff endpoints. */
 @SpringBootTest
 public class TimeOffInternalIntegrationTests {
 
-    private final Integer employeeId = 1;
-    private final Integer timeOffId = 101;
-    @Autowired
-    private TimeOffController timeOffController;
-    @MockBean
-    private TimeOffService timeOffService;
-    @MockBean
-    private EmployeeProfileService employeeProfileService;
-    private TimeOff mockTimeOff;
+  private final Integer employeeId = 1;
+  private final Integer timeOffId = 101;
+  @Autowired private TimeOffController timeOffController;
+  @MockBean private TimeOffService timeOffService;
+  @MockBean private EmployeeProfileService employeeProfileService;
+  private TimeOff mockTimeOff;
 
-    @BeforeEach
-    public void setUp() {
-        mockTimeOff = new TimeOff();
-        mockTimeOff.setId(timeOffId);
-        mockTimeOff.setEmployeeId(employeeId);
-        mockTimeOff.setStartDate(LocalDate.of(2024, 1, 1));
-        mockTimeOff.setEndDate(LocalDate.of(2024, 1, 5));
-        mockTimeOff.setReason("Vacation");
-        mockTimeOff.setStatus(LeaveStatus.PENDING);
 
-        when(employeeProfileService.doesEmployeeExist(employeeId)).thenReturn(true);
-    }
+  /**
+   * Before each test, creates a mock TimeOff object, and sets up mocks for dependent services.
+   * The mock TimeOff object is set up with an ID, employee ID, start date, end date, reason,
+   * and PENDING status. The employee profile service is also mocked to return true for the
+   * given employee ID.
+   */
+  @BeforeEach
+  public void setUp() {
+    mockTimeOff = new TimeOff();
+    mockTimeOff.setId(timeOffId);
+    mockTimeOff.setEmployeeId(employeeId);
+    mockTimeOff.setStartDate(LocalDate.of(2024, 1, 1));
+    mockTimeOff.setEndDate(LocalDate.of(2024, 1, 5));
+    mockTimeOff.setReason("Vacation");
+    mockTimeOff.setStatus(LeaveStatus.PENDING);
 
-    @Test
-    public void getTimeOffByEmployeeIdSuccessTest() {
-        when(timeOffService.getTimeOffByEmployeeId(employeeId)).thenReturn(List.of(mockTimeOff));
+    when(employeeProfileService.doesEmployeeExist(employeeId)).thenReturn(true);
+  }
 
-        ResponseEntity<?> response = timeOffController.getTimeOffByEmployeeId(employeeId);
+  @Test
+  public void getTimeOffByEmployeeIdSuccessTest() {
+    when(timeOffService.getTimeOffByEmployeeId(employeeId)).thenReturn(List.of(mockTimeOff));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(List.of(mockTimeOff), response.getBody());
-    }
+    ResponseEntity<?> response = timeOffController.getTimeOffByEmployeeId(employeeId);
 
-    @Test
-    public void getTimeOffByEmployeeIdNotFoundTest() {
-        when(timeOffService.getTimeOffByEmployeeId(employeeId)).thenReturn(Collections.emptyList());
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(List.of(mockTimeOff), response.getBody());
+  }
 
-        ResponseEntity<?> response = timeOffController.getTimeOffByEmployeeId(employeeId);
+  @Test
+  public void getTimeOffByEmployeeIdNotFoundTest() {
+    when(timeOffService.getTimeOffByEmployeeId(employeeId)).thenReturn(Collections.emptyList());
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("No time-off records found for the employee", response.getBody());
-    }
+    ResponseEntity<?> response = timeOffController.getTimeOffByEmployeeId(employeeId);
 
-    @Test
-    public void createTimeOffRequestSuccessTest() {
-        when(timeOffService.createTimeOffRequest(any(TimeOff.class))).thenReturn(mockTimeOff);
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    assertEquals("No time-off records found for the employee", response.getBody());
+  }
 
-        ResponseEntity<?> response = timeOffController.createTimeOffRequest(mockTimeOff);
+  @Test
+  public void createTimeOffRequestSuccessTest() {
+    when(timeOffService.createTimeOffRequest(any(TimeOff.class))).thenReturn(mockTimeOff);
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(mockTimeOff, response.getBody());
-    }
+    ResponseEntity<?> response = timeOffController.createTimeOffRequest(mockTimeOff);
 
-    @Test
-    public void createTimeOffRequestEmployeeNotFoundTest() {
-        when(employeeProfileService.doesEmployeeExist(employeeId)).thenReturn(false);
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    assertEquals(mockTimeOff, response.getBody());
+  }
 
-        ResponseEntity<?> response = timeOffController.createTimeOffRequest(mockTimeOff);
+  @Test
+  public void createTimeOffRequestEmployeeNotFoundTest() {
+    when(employeeProfileService.doesEmployeeExist(employeeId)).thenReturn(false);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Employee does not exist", response.getBody());
-    }
+    ResponseEntity<?> response = timeOffController.createTimeOffRequest(mockTimeOff);
 
-    @Test
-    public void updateTimeOffStatusSuccessTest() {
-        when(timeOffService.updateTimeOffStatus(employeeId, timeOffId, "approve")).thenReturn(true);
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    assertEquals("Employee does not exist", response.getBody());
+  }
 
-        ResponseEntity<?> response =
-                timeOffController.updateTimeOffStatus(employeeId, timeOffId, "approve");
+  @Test
+  public void updateTimeOffStatusSuccessTest() {
+    when(timeOffService.updateTimeOffStatus(employeeId, timeOffId, "approve")).thenReturn(true);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Time-off request status updated successfully", response.getBody());
-    }
+    ResponseEntity<?> response =
+        timeOffController.updateTimeOffStatus(employeeId, timeOffId, "approve");
 
-    @Test
-    public void updateTimeOffStatusNotFoundTest() {
-        when(timeOffService.updateTimeOffStatus(employeeId, timeOffId, "approve")).thenReturn(false);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals("Time-off request status updated successfully", response.getBody());
+  }
 
-        ResponseEntity<?> response =
-                timeOffController.updateTimeOffStatus(employeeId, timeOffId, "approve");
+  @Test
+  public void updateTimeOffStatusNotFoundTest() {
+    when(timeOffService.updateTimeOffStatus(employeeId, timeOffId, "approve")).thenReturn(false);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Time-off request not found or action not applicable", response.getBody());
-    }
+    ResponseEntity<?> response =
+        timeOffController.updateTimeOffStatus(employeeId, timeOffId, "approve");
 
-    @Test
-    public void deleteTimeOffRequestSuccessTest() {
-        when(timeOffService.deleteTimeOffRequest(employeeId, timeOffId)).thenReturn(true);
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    assertEquals("Time-off request not found or action not applicable", response.getBody());
+  }
 
-        ResponseEntity<?> response = timeOffController.deleteTimeOffRequest(employeeId, timeOffId);
+  @Test
+  public void deleteTimeOffRequestSuccessTest() {
+    when(timeOffService.deleteTimeOffRequest(employeeId, timeOffId)).thenReturn(true);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Time-off request deleted successfully", response.getBody());
-    }
+    ResponseEntity<?> response = timeOffController.deleteTimeOffRequest(employeeId, timeOffId);
 
-    @Test
-    public void deleteTimeOffRequestNotFoundTest() {
-        when(timeOffService.deleteTimeOffRequest(employeeId, timeOffId)).thenReturn(false);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals("Time-off request deleted successfully", response.getBody());
+  }
 
-        ResponseEntity<?> response = timeOffController.deleteTimeOffRequest(employeeId, timeOffId);
+  @Test
+  public void deleteTimeOffRequestNotFoundTest() {
+    when(timeOffService.deleteTimeOffRequest(employeeId, timeOffId)).thenReturn(false);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Time-off request not found or already deleted", response.getBody());
-    }
+    ResponseEntity<?> response = timeOffController.deleteTimeOffRequest(employeeId, timeOffId);
 
-    @Test
-    public void getTimeOffInRangeSuccessTest() {
-        when(timeOffService.getTimeOffByEmployeeIdWithDateRange(
-                employeeId, LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 5)))
-                .thenReturn(List.of(mockTimeOff));
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    assertEquals("Time-off request not found or already deleted", response.getBody());
+  }
 
-        ResponseEntity<?> response =
-                timeOffController.getTimeOffInRange(
-                        employeeId, "2024-01-01", "2024-01-05");
+  @Test
+  public void getTimeOffInRangeSuccessTest() {
+    when(timeOffService.getTimeOffByEmployeeIdWithDateRange(
+            employeeId, LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 5)))
+        .thenReturn(List.of(mockTimeOff));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(List.of(mockTimeOff), response.getBody());
-    }
+    ResponseEntity<?> response =
+        timeOffController.getTimeOffInRange(employeeId, "2024-01-01", "2024-01-05");
 
-    @Test
-    public void getTimeOffInRangeBadRequestTest() {
-        ResponseEntity<?> response =
-                timeOffController.getTimeOffInRange(employeeId, "2024-01-05", "2024-01-01");
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(List.of(mockTimeOff), response.getBody());
+  }
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Start date must be before end date", response.getBody());
-    }
+  @Test
+  public void getTimeOffInRangeBadRequestTest() {
+    ResponseEntity<?> response =
+        timeOffController.getTimeOffInRange(employeeId, "2024-01-05", "2024-01-01");
+
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    assertEquals("Start date must be before end date", response.getBody());
+  }
 }
